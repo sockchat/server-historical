@@ -1,4 +1,4 @@
 sockchat
 ========
 
-Malloc wanted me to create this help
+ajax chat but without ajax but with interneet sockets
