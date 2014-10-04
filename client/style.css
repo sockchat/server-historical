@@ -1,0 +1,93 @@
+body {
+    background: black;
+    color: white;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#chat {
+
+}
+
+#chat #header {
+    width: 100%;
+    height: 75px;
+    /*border: 1px solid white;*/
+}
+
+#chat #header div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+}
+
+#chat #header #chatTitle {
+    display: inline;
+    font-size: 40px;
+    margin-left: 10px;
+}
+
+#chat #center {
+    /*border: 1px solid red;*/
+    width: 100%;
+    height: 100px;
+}
+
+#chat #messageDiv {
+    width: auto;
+    margin-right: 160px;
+    float: none;
+    height: 100%;
+}
+
+#chat #messageDiv #chatList {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    overflow: auto;
+}
+
+.rowEven {
+    background: #212121;
+    width: 100%;
+}
+
+.rowOdd {
+    background: #000;
+    width: 100%;
+}
+
+#chat #userDiv {
+    width: 150px;
+    height: 100%;
+    float: right;
+    margin-right:2px;
+}
+
+#chat #userDiv #userList {
+    width: 100%;
+    height: 100%;
+    border: 1px solid white;
+    overflow: auto;
+}
+
+#chat #footer {
+    height: 125px;
+    width: 100%;
+    /*border: 1px solid white;*/
+}
+
+#chat #footer div {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 125px;
+}
+
+#chat #footer div textarea {
+    width: 95%;
+}
