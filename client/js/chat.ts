@@ -13,8 +13,8 @@ class Chat {
         var name = (<HTMLInputElement>document.getElementById("name")).value;
         document.getElementById("name").disabled = true;
         document.getElementById("loginbtn").disabled = true;
-        Socket.Send(Message.Pack(1, name));
-        UserContext.self = new User(0, name);
+        Socket.Send(Message.Pack(1, name, "#fff"));
+        UserContext.self = new User(0, name, "#fff");
     }
 
     static SendMessage() {

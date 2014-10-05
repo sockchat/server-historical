@@ -1,7 +1,8 @@
 var User = (function () {
-    function User(id, u) {
+    function User(id, u, c) {
         this.username = u;
         this.id = id;
+        this.color = c;
     }
     return User;
 })();

@@ -13,7 +13,7 @@ namespace server {
         static private char Seperator = (char)255;
 
         static void Main(string[] args) {
-            Console.WriteLine("version 0.3");
+            Console.WriteLine("version 0.7");
             WebSocketServer sock = new WebSocketServer();
             sock.Setup(1212);
             sock.NewMessageReceived += sock_NewMessageReceived;
@@ -45,8 +45,8 @@ namespace server {
             }
         }
 
-        static void Broadcast(string name, string msg) {
-            Broadcast(PackMessage(2, "" + CalculateEpoch(), name, msg));
+        static void Broadcast(string name, string color, string msg) {
+            Broadcast(PackMessage(2, "" + CalculateEpoch(), name, color, msg));
         }
 
         static void sock_SessionClosed(WebSocketSession session, CloseReason value) {
@@ -55,7 +55,7 @@ namespace server {
                 if(u.sock.RemoteEndPoint == session.RemoteEndPoint) {
                     Console.WriteLine("found user "+ u.username +", dropped");
                     connectedUsers.Remove(u.id);
-                    Broadcast(PackMessage(3, ""+ u.id, u.username));
+                    Broadcast(PackMessage(3, ""+ u.id, u.username, ""+ CalculateEpoch()));
                 }
             }
         }
@@ -79,17 +79,18 @@ namespace server {
                     if(!UsernameInUse(parts[0])) {
                         for(int i = 1; ; i++) {
                             if(!connectedUsers.ContainsKey(i)) {
-                                Broadcast(PackMessage(1, "" + CalculateEpoch(), "" + i, parts[0]));
+                                Broadcast(PackMessage(1, "" + CalculateEpoch(), "" + i, parts[0], parts[1]));
 
                                 List<string> tmp = new List<string>();
                                 foreach(User u in connectedUsers.Values) {
                                     tmp.Add("" + u.id);
                                     tmp.Add(u.username);
+                                    tmp.Add(u.color);
                                 }
 
                                 Console.WriteLine(PackArray(tmp.ToArray()));
-                                session.Send(PackMessage(1, "y", "" + i, "" + (tmp.Count / 2), PackArray(tmp.ToArray())));
-                                connectedUsers.Add(i, new User(i, parts[0], session));
+                                session.Send(PackMessage(1, "y", "" + i, "" + (tmp.Count / 2), PackArray(tmp.ToArray()), ""+CalculateEpoch()));
+                                connectedUsers.Add(i, new User(i, parts[0], parts[1], session));
                                 break;
                             }
                         }
@@ -104,7 +105,7 @@ namespace server {
                         if(connectedUsers[uid].sock.RemoteEndPoint == session.RemoteEndPoint) {
                             if(parts[1].Trim() != "") {
                                 if(parts[1].Trim()[0] != '/') {
-                                    Broadcast(connectedUsers[uid].username, parts[1]);
+                                    Broadcast(connectedUsers[uid].username, connectedUsers[uid].color, parts[1]);
                                 } else {
                                     // handle commands
                                 }
