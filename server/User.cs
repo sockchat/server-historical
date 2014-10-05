@@ -11,13 +11,15 @@ namespace server {
     class User {
         public int id;
         public string username;
+        public string color;
         public WebSocketSession sock;
 
         public User() { }
 
-        public User(int i, string u, WebSocketSession s) {
+        public User(int i, string u, string c, WebSocketSession s) {
             id = i;
             username = u;
+            color = c;
             sock = s;
         }
     }

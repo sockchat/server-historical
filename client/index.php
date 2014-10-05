@@ -1,3 +1,18 @@
+<?php
+include("config.php");
+
+switch($chat["INTEGRATION"]) {
+    case 0:
+        // do i need to do anything special for the default case?
+        break;
+    case 1:
+        include("headers/". $chat["CINT_FILE"]);
+        break;
+    case 2:
+        include("headers/phpbb.php");
+        break;
+}
+?>
 <html>
 <head>
     <title>SockChat</title>
@@ -11,6 +26,15 @@
         var divSizes = Array(75, 125);
         // header , footer
 
+<?php if($chat["INTEGRATION"] > 0) { ?>
+        UI.useDefaultAuth = false;
+        Socket.username = "<?php echo $out["USERNAME"]; ?>";
+        Socket.color = "<?php echo $out["COLOR"]; ?>";
+        Socket.mod = <?php echo $out["MOD"]; ?>;
+        UI.timezone = <?php echo $out["TIMEZONE"]; ?>;
+        UI.dst = <?php echo $out["DST"]; ?>;
+<?php } ?>
+
         function handleResize() {
             document.getElementById("header").style.height = divSizes[0];
             document.getElementById("center").style.height = window.innerHeight - (divSizes[0] + divSizes[1]);
@@ -23,17 +47,18 @@
 
             if(key == 13) {
                 Chat.SendMessage();
+                e.preventDefault();
+                return false;
             }
-        }
-
-        function what() {
-            alert("hi");
         }
     </script>
 </head>
 <body onload="handleResize();Chat.Main();" onresize="handleResize();">
 <div id="connmsg">
     Connecting to chat server ...
+</div>
+<div id="attemptlogin" style="display: none;">
+    Logging into chat ...
 </div>
 <div id="connerr" style="display: none;">
     Connection interrupted !
@@ -44,7 +69,7 @@
 <div id="chat" style="display: none;">
     <div id="header">
         <div>
-            <div id="chatTitle">hi mom</div>
+            <div id="chatTitle"><?php echo $chat["CHAT_TITLE"]; ?></div>
         </div>
     </div>
     <div id="center">
@@ -63,7 +88,7 @@
         <div>
             <center>
                 <br />
-                <textarea type="text" cols="2" id="message" style="width: 100%" onkeydown="handleMessage(event);"></textarea>
+                <textarea type="text" cols="2" id="message" style="width: 100%" onkeypress="handleMessage(event);"></textarea>
             </center>
             <input type="button" value="Send MEssage" id="send" onclick='Chat.SendMessage();' />
         </div>
