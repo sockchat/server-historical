@@ -1,7 +1,11 @@
 class Message {
-    static Seperator = String.fromCharCode(255);
+    static Separator = "\t";
 
     static Pack(id: number, ...params: string[]): string {
-        return String.fromCharCode(id) + params.join(this.Seperator);
+        return id + this.Separator + params.join(this.Separator);
+    }
+
+    static PackArray(arr: string[]): string {
+        return arr.join(this.Separator);
     }
 }

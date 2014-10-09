@@ -1,1 +1,0 @@
-C:\Users\Mike Dawson\Documents\GitHub\sockchat\server\bin\Debug\server.exe.config

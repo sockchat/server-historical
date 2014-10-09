@@ -1,17 +1,7 @@
 <?php
 include("config.php");
-
-switch($chat["INTEGRATION"]) {
-    case 0:
-        // do i need to do anything special for the default case?
-        break;
-    case 1:
-        include("headers/". $chat["CINT_FILE"]);
-        break;
-    case 2:
-        include("headers/phpbb.php");
-        break;
-}
+$inthref[0] = $chat["CINT_FILE"];
+include("auth/". $inthref[$chat['INTEGRATION']]);
 ?>
 <html>
 <head>
@@ -26,14 +16,9 @@ switch($chat["INTEGRATION"]) {
         var divSizes = Array(75, 125);
         // header , footer
 
-<?php if($chat["INTEGRATION"] > 0) { ?>
-        UI.useDefaultAuth = false;
-        Socket.username = "<?php echo $out["USERNAME"]; ?>";
-        Socket.color = "<?php echo $out["COLOR"]; ?>";
-        Socket.mod = <?php echo $out["MOD"]; ?>;
+        Socket.args = new Array(<?php for($i = 0; $i < count($out["ARGS"]); $i++) { echo ($i==0?"":",") ."'". $out["ARGS"][$i] ."'"; } ?>);
         UI.timezone = <?php echo $out["TIMEZONE"]; ?>;
         UI.dst = <?php echo $out["DST"]; ?>;
-<?php } ?>
 
         function handleResize() {
             document.getElementById("header").style.height = divSizes[0];
@@ -53,7 +38,7 @@ switch($chat["INTEGRATION"]) {
         }
     </script>
 </head>
-<body onload="handleResize();Chat.Main();" onresize="handleResize();">
+<body onload="handleResize();Chat.Main('ws://<?php echo $chat["SERVER_ADDR"]; ?>');" onresize="handleResize();">
 <div id="connmsg">
     Connecting to chat server ...
 </div>
@@ -63,8 +48,8 @@ switch($chat["INTEGRATION"]) {
 <div id="connerr" style="display: none;">
     Connection interrupted !
 </div>
-<div id="login" style="display: none;">
-    Username: <input type="text" id="name" /> <input type="button" id="loginbtn" value="Join" onclick="Chat.AttemptLogin();" />
+<div id="connclose" style="display: none;">
+    Connection closed !
 </div>
 <div id="chat" style="display: none;">
     <div id="header">

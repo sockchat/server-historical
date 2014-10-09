@@ -17,52 +17,45 @@ var Socket = (function () {
     };
 
     Socket.onConnOpen = function (e) {
-        if (UI.useDefaultAuth)
-            UI.ChangeDisplay(1);
-        else {
-            UI.ChangeDisplay(4);
-            Socket.Send(Message.Pack(1, Socket.username, Socket.color));
-            UserContext.self = new User(0, Socket.username, Socket.color);
-        }
+        UI.ChangeDisplay(4);
+        Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
 
     Socket.onMessageRecv = function (e) {
-        var msgid = e.data.charCodeAt(0);
-        var parts = e.data.substr(1).split(Message.Seperator);
+        var parts = e.data.split(Message.Separator);
+        var msgid = +parts[0];
+        parts = parts.slice(1);
 
         switch (msgid) {
             case 1:
                 if (UI.currentView == 2) {
-                    UI.AddUser(+parts[1], parts[2], parts[3]);
-                    UI.AddMessage(+parts[0], "<i>ChatBot</i>", "#C0C0C0", "<i>" + parts[2] + " has joined the chat.</i>");
+                    UI.AddUser(new User(+parts[1], parts[2], parts[3]));
+                    UI.AddMessage(+parts[0], UI.ChatBot, "<i>" + parts[2] + " has joined the chat.</i>");
                 } else {
                     if (parts[0] == "y") {
-                        UserContext.self.id = +parts[1];
+                        UserContext.self = new User(+parts[2], parts[3], parts[4]);
                         UI.ChangeDisplay(2);
-                        UI.AddMessage(+parts[3], "<i>ChatBot</i>", "#C0C0C0", "<i>" + UserContext.self.username + " has joined the chat.</i>");
-                        UI.AddUser(0, UserContext.self.username, UserContext.self.color, false);
+                        UI.AddMessage(+parts[1], UI.ChatBot, "<i>" + UserContext.self.username + " has joined the chat.</i>");
+                        UI.AddUser(UserContext.self, false);
 
-                        if (+parts[2] != 0) {
-                            for (var i = 0; i < +parts[2]; i++) {
-                                UI.AddUser(+parts[3 + 3 * i], parts[4 + 3 * i], parts[5 + 3 * i]);
+                        if (+parts[5] != 0) {
+                            for (var i = 0; i < +parts[5]; i++) {
+                                UI.AddUser(new User(+parts[6 + 3 * i], parts[7 + 3 * i], parts[8 + 3 * i]));
                             }
                         }
                     } else {
                         alert("Username is in use!");
-                        if (UI.useDefaultAuth) {
-                            document.getElementById("name").disabled = false;
-                            document.getElementById("loginbtn").disabled = false;
-                        } else {
-                            // do something?
-                        }
                     }
                 }
                 break;
             case 2:
-                UI.AddMessage(+parts[0], parts[1], parts[2], parts[3]);
+                if (+parts[1] != UserContext.self.id)
+                    UI.AddMessage(+parts[0], UserContext.users[+parts[1]], parts[2]);
+                else
+                    UI.AddMessage(+parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
-                UI.AddMessage(+parts[2], "<i>ChatBot</i>", "#C0C0C0", "<i>" + parts[1] + " has disconnected.</i>");
+                UI.AddMessage(+parts[2], UI.ChatBot, "<i>" + parts[1] + " has disconnected.</i>");
                 UI.RemoveUser(+parts[0]);
                 break;
         }
@@ -73,6 +66,7 @@ var Socket = (function () {
     };
 
     Socket.onConnClose = function (e) {
+        UI.ChangeDisplay(1);
     };
     return Socket;
 })();

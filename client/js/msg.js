@@ -6,9 +6,13 @@ var Message = (function () {
         for (var _i = 0; _i < (arguments.length - 1); _i++) {
             params[_i] = arguments[_i + 1];
         }
-        return String.fromCharCode(id) + params.join(this.Seperator);
+        return id + this.Separator + params.join(this.Separator);
     };
-    Message.Seperator = String.fromCharCode(255);
+
+    Message.PackArray = function (arr) {
+        return arr.join(this.Separator);
+    };
+    Message.Separator = "\t";
     return Message;
 })();
 //# sourceMappingURL=msg.js.map

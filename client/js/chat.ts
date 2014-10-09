@@ -4,24 +4,16 @@
 /// <reference path="sock.ts" />
 
 class Chat {
-    static Main() {
+    static Main(addr: string) {
         UserContext.users = {};
-        Socket.Init("ws://aroltd.com:1212");
-    }
-
-    static AttemptLogin() {
-        var name = (<HTMLInputElement>document.getElementById("name")).value;
-        document.getElementById("name").disabled = true;
-        document.getElementById("loginbtn").disabled = true;
-        Socket.Send(Message.Pack(1, name, "#fff"));
-        UserContext.self = new User(0, name, "#fff");
+        Socket.Init(addr);
     }
 
     static SendMessage() {
         var msg = (<HTMLInputElement>document.getElementById("message")).value;
+        msg = msg.replace(/\t/g, " ");
 
         if(msg.trim() != "") {
-            msg = msg.replace("<","&lt;").replace(">","&gt;");
             Socket.Send(Message.Pack(2, ""+ UserContext.self.id, msg));
         }
 

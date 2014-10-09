@@ -1,4 +1,6 @@
 <?php
+include("constants.php");
+
 $chat = array();
 
 /* CHAT TITLE parameter
@@ -14,20 +16,36 @@ $chat["CHAT_TITLE"] = "Sock Chat";
  * Behaves like an enumeration; takes an integer.
  *
  * Values:
- *  - 0: use built-in system
- *  - 1: use custom integration system (see CUSTOM INTEGRATION FILE parameter)
- *  - 2: use phpbb integration
+ *  - 0: use custom integration system (see CUSTOM INTEGRATION FILE parameter)
+ *  - 1: use phpbb integration
  */
-$chat["INTEGRATION"] = 2;
+$chat["INTEGRATION"] = 1;
 
 /* CUSTOM INTEGRATION FILE parameter
  *
  * Determines the custom header file used when doing integration. This will
  * only be referenced if the INTEGRATION TYPE parameter is set to 1.
- * Takes a string that represents a file in the ./headers directory.
+ * Takes a string that represents a file in the ./auth directory.
  */
 $chat["CINT_FILE"] = "";
 
-/*
+/* SERVER ADDRESS parameter
  *
+ * Tells the socket where it should connect to. Use the format "ADDRESS:PORT".
+ * But make sure not to include any protocol information, like sticking http://
+ * or ws:// or any protocol prefix before the address.
+ * Takes a string.
+ *
+ * EXAMPLE: "nas.moe:6770" represents a connection to the address 'nas.moe'
+ * on port 6770.
  */
+$chat["SERVER_ADDR"] = "aroltd.com:12120";
+
+/* REDIRECT ADDRESS parameter
+ *
+ * Tells the architecture where to send a user when the socket errors or any
+ * other circumstance where a redirect is necessary. This is typically a login
+ * page or index page or anything of the sort.
+ * Takes a string that's in the form of a proper URL (include http/https)
+ */
+$chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB3";
