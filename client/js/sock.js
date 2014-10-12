@@ -7,7 +7,6 @@ var Socket = (function () {
     Socket.Send = function (msg) {
         this.sock.send(msg);
     };
-
     Socket.Init = function (addr) {
         this.sock = new WebSocket(addr);
         this.sock.onopen = this.onConnOpen;
@@ -15,35 +14,33 @@ var Socket = (function () {
         this.sock.onerror = this.onConnError;
         this.sock.onclose = this.onConnClose;
     };
-
     Socket.onConnOpen = function (e) {
         UI.ChangeDisplay(4);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
-
     Socket.onMessageRecv = function (e) {
         var parts = e.data.split(Message.Separator);
         var msgid = +parts[0];
         parts = parts.slice(1);
-
         switch (msgid) {
             case 1:
                 if (UI.currentView == 2) {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3]));
                     UI.AddMessage(+parts[0], UI.ChatBot, "<i>" + parts[2] + " has joined the chat.</i>");
-                } else {
+                }
+                else {
                     if (parts[0] == "y") {
                         UserContext.self = new User(+parts[2], parts[3], parts[4]);
                         UI.ChangeDisplay(2);
                         UI.AddMessage(+parts[1], UI.ChatBot, "<i>" + UserContext.self.username + " has joined the chat.</i>");
                         UI.AddUser(UserContext.self, false);
-
                         if (+parts[5] != 0) {
                             for (var i = 0; i < +parts[5]; i++) {
                                 UI.AddUser(new User(+parts[6 + 3 * i], parts[7 + 3 * i], parts[8 + 3 * i]));
                             }
                         }
-                    } else {
+                    }
+                    else {
                         alert("Username is in use!");
                     }
                 }
@@ -60,11 +57,9 @@ var Socket = (function () {
                 break;
         }
     };
-
     Socket.onConnError = function (e) {
         UI.ChangeDisplay(3);
     };
-
     Socket.onConnClose = function (e) {
         UI.ChangeDisplay(1);
     };
