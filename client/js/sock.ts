@@ -18,8 +18,13 @@ class Socket {
         this.sock.onclose = this.onConnClose;
     }
 
+    static ping() {
+        this.sock.send(Message.Pack(0, "ping"));
+    }
+
     static onConnOpen(e) {
         UI.ChangeDisplay(4);
+        setInterval("Socket.ping();", 60000);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
 
@@ -51,9 +56,12 @@ class Socket {
                 }
                 break;
             case 2:
-                if(+parts[1] != UserContext.self.id)
-                    UI.AddMessage(+parts[0], UserContext.users[+parts[1]], parts[2]);
-                else
+                if(+parts[1] != UserContext.self.id) {
+                    if(+parts[1] != -1)
+                        UI.AddMessage(+parts[0], UserContext.users[+parts[1]], parts[2]);
+                    else
+                        UI.AddMessage(+parts[0], UI.ChatBot, parts[2]);
+                } else
                     UI.AddMessage(+parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
@@ -64,10 +72,12 @@ class Socket {
     }
 
     static onConnError(e) {
+        //alert("errored! error is "+ e.get);
         UI.ChangeDisplay(3);
     }
 
     static onConnClose(e) {
+        //alert("closed because"+ e.reason);
         UI.ChangeDisplay(1);
     }
 }

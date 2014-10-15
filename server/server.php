@@ -1,12 +1,17 @@
 <?php
+namespace sockchat;
 require __DIR__ ."/vendor/autoload.php";
 use \Ratchet\MessageComponentInterface;
 use \Ratchet\ConnectionInterface;
 use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
-use \Ratchet\Http\HttpRequestParser;
 include("config.php");
+
+foreach(glob("commands/*.php") as $fn) {
+    if($fn != "commands/generic_cmd.php")
+        include($fn);
+}
 
 class User {
     public $id;
@@ -14,6 +19,7 @@ class User {
     public $color;
     public $permissions;
     public $sock;
+    public $ping;
 
     public function __construct($id, $username, $color, $permissions, $sock) {
         $this->id = $id;
@@ -21,25 +27,37 @@ class User {
         $this->color = $color;
         $this->permissions = $permissions;
         $this->sock = $sock;
+        $ping = gmdate("U");
+    }
+
+    public function getRank() {
+        return $this->permissions[0];
+    }
+
+    public function canModerate() {
+        return $this->permissions[1] == "1";
     }
 }
 
 class Chat implements MessageComponentInterface {
-    protected $connectedUsers = array();
-    protected $separator;
-    protected $reqParser;
+    public $connectedUsers = array();
+    public $chatbot;
+    protected $separator = "\t";
     protected $chat;
 
     public function __construct() {
-        $this->separator = "\t";
-        $this->reqParser = new HttpRequestParser;
         $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
         $this->chat = $GLOBALS["chat"];
+        $this->chatbot = new User(-1, "", "", "", null);
         echo "Server started.\n";
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        // not used at the moment
+        $this->checkPings();
+    }
+
+    protected function checkPings() {
+
     }
 
     protected function getHeader($sock, $name) {
@@ -58,18 +76,18 @@ class Chat implements MessageComponentInterface {
         return true;
     }
 
-    protected function PackMessage($id, $params) {
+    public function PackMessage($id, $params) {
         return $id . $this->separator . join($this->separator, $params);
     }
 
-    protected function Broadcast($msg) {
+    public function Broadcast($msg) {
         foreach($this->connectedUsers as $user) {
             $user->sock->send($msg);
         }
     }
 
-    protected function BroadcastMessage($user, $msg) {
-        $this->Broadcast($this->PackMessage(2, array(date("U"), $user->id, $msg)));
+    public function BroadcastMessage($user, $msg) {
+        Chat::Broadcast(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg)));
     }
 
     protected function Sanitize($str) {
@@ -84,6 +102,7 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onMessage(ConnectionInterface $conn, $msg) {
+        $this->checkPings();
         if(substr($this->getHeader($conn, "Origin"), -strlen($this->chat["HOST"])) == $this->chat["HOST"]) {
             $this->PackMessage(1, array());
 
@@ -92,6 +111,9 @@ class Chat implements MessageComponentInterface {
             $parts = array_slice($parts, 1);
 
             switch($id) {
+                case 0:
+                    $conn->send($this->PackMessage(0, array("pong")));
+                    break;
                 case 1:
                     $arglist = "";
                     for($i = 0; $i < count($parts); $i++)
@@ -115,8 +137,8 @@ class Chat implements MessageComponentInterface {
                             foreach($this->connectedUsers as $user)
                                 $userstr .= $this->separator . join($this->separator, array($user->id, $user->username, $user->color));
 
-                            $this->Broadcast($this->PackMessage(1, array(date("U"), $id, $this->Sanitize($aparts[1]), $aparts[2])));
-                            $conn->send($this->PackMessage(1, array("y", date("U"), $id, $aparts[1], $aparts[2], $userstr)));
+                            $this->Broadcast($this->PackMessage(1, array(gmdate("U"), $id, $this->Sanitize($aparts[1]), $aparts[2])));
+                            $conn->send($this->PackMessage(1, array("y", gmdate("U"), $id, $aparts[1], $aparts[2], $userstr)));
 
                             $this->connectedUsers[$id] = new User($id, $this->Sanitize($aparts[1]), $aparts[2], $aparts[3], $conn);
                         } else {
@@ -131,7 +153,18 @@ class Chat implements MessageComponentInterface {
                                 if(trim($parts[1])[0] != "/") {
                                     $this->BroadcastMessage($this->connectedUsers[$parts[0]], $this->Sanitize($parts[1]));
                                 } else {
-                                    // handle commands
+                                    $parts[1] = substr(trim($parts[1]), 1);
+                                    $cmdparts = explode(" ", $parts[1]);
+                                    $cmd = str_replace(".","",$cmdparts[0]);
+                                    $cmdparts = array_slice($cmdparts, 1);
+                                    $user = $this->connectedUsers[$parts[0]];
+                                    for($i = 0; $i < count($cmdparts); $i++)
+                                        $cmdparts[$i] = $this->Sanitize($cmdparts[$i]);
+
+                                    if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php"))
+                                        eval("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand(\$this, \$user, \$cmdparts);");
+                                    else
+                                        $conn->send(/* TODO error code stuff */);
                                 }
                             }
                         }
@@ -147,14 +180,16 @@ class Chat implements MessageComponentInterface {
         foreach($this->connectedUsers as $user) {
             if($user->sock == $conn) {
                 echo "found user ". $user->username .", dropped\n";
-                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, date("U"))));
+                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, gmdate("U"))));
                 unset($this->connectedUsers[$user->id]);
             }
         }
+        $this->checkPings();
     }
 
     public function onError(ConnectionInterface $conn, \Exception $err) {
-
+        $this->checkPings();
+        echo "Error on ". $conn->remoteAddress .": ". $err ."\n";
     }
 }
 
@@ -164,7 +199,7 @@ $server = IoServer::factory(
             new Chat()
         )
     ),
-    $chat["PORT"]
+    $GLOBALS["chat"]["PORT"]
 );
 
 $server->run();
