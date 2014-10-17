@@ -5,6 +5,7 @@
 class Socket {
     static sock: WebSocket;
     static args: string[];
+    static pingTime: number;
 
     static Send(msg: string) {
         this.sock.send(msg);
@@ -19,12 +20,12 @@ class Socket {
     }
 
     static ping() {
-        this.sock.send(Message.Pack(0, "ping"));
+        this.sock.send(Message.Pack(0, ""+UserContext.self.id));
     }
 
     static onConnOpen(e) {
         UI.ChangeDisplay(4);
-        setInterval("Socket.ping();", 60000);
+        setInterval("Socket.ping();", Socket.pingTime*1000);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
 

@@ -49,3 +49,12 @@ $chat["SERVER_ADDR"] = "aroltd.com:12120";
  * Takes a string that's in the form of a proper URL (include http/https)
  */
 $chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB3";
+
+/* PING PERIOD parameter
+ *
+ * Tells the client how often to send the server a keepalive ping. Should not be
+ * greater than five minutes / 300 seconds (as that is the default max idle time
+ * on most browser implementation of web sockets).
+ * Takes a number that represents seconds between ping pulses.
+ */
+$chat["PING_PERIOD"] = 60;

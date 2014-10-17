@@ -17,12 +17,12 @@ var Socket = (function () {
     };
 
     Socket.ping = function () {
-        this.sock.send(Message.Pack(0, "ping"));
+        this.sock.send(Message.Pack(0, "" + UserContext.self.id));
     };
 
     Socket.onConnOpen = function (e) {
         UI.ChangeDisplay(4);
-        setInterval("Socket.ping();", 60000);
+        setInterval("Socket.ping();", Socket.pingTime * 1000);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
 

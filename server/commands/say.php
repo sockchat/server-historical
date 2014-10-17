@@ -1,7 +1,6 @@
 <?php
 namespace sockchat\cmds;
-
-include("generic_cmd.php");
+use sockchat\cmds\GenericCommand;
 
 class say implements GenericCommand {
     public static function doCommand($chat, $user, $arr) {

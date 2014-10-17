@@ -8,6 +8,7 @@ use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
 include("config.php");
 
+require "commands/generic_cmd.php";
 foreach(glob("commands/*.php") as $fn) {
     if($fn != "commands/generic_cmd.php")
         include($fn);
@@ -27,7 +28,7 @@ class User {
         $this->color = $color;
         $this->permissions = $permissions;
         $this->sock = $sock;
-        $ping = gmdate("U");
+        $this->ping = gmdate("U");
     }
 
     public function getRank() {
@@ -36,6 +37,10 @@ class User {
 
     public function canModerate() {
         return $this->permissions[1] == "1";
+    }
+
+    public function canViewLogs() {
+        return $this->permissions[2] == "1";
     }
 }
 
@@ -57,7 +62,13 @@ class Chat implements MessageComponentInterface {
     }
 
     protected function checkPings() {
-
+        foreach($this->connectedUsers as $user) {
+            if(gmdate("U") - $user->ping > $this->chat["MAX_IDLE_TIME"]) {
+                $user->sock->close();
+                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, gmdate("U"))));
+                unset($this->connectedUsers[$user->id]);
+            }
+        }
     }
 
     protected function getHeader($sock, $name) {
@@ -112,6 +123,8 @@ class Chat implements MessageComponentInterface {
 
             switch($id) {
                 case 0:
+                    if(array_key_exists($parts[0], $this->connectedUsers))
+                        $this->connectedUsers[$parts[0]]->ping = gmdate("U");
                     $conn->send($this->PackMessage(0, array("pong")));
                     break;
                 case 1:
@@ -164,7 +177,7 @@ class Chat implements MessageComponentInterface {
                                     if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php"))
                                         eval("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand(\$this, \$user, \$cmdparts);");
                                     else
-                                        $conn->send(/* TODO error code stuff */);
+                                        $conn->send($this->PackMessage(2, array(gmdate("U"), -1, "<i><span style='color: red;'>Error: Command not found!</span></i>")));
                                 }
                             }
                         }

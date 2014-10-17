@@ -1,0 +1,70 @@
+/*
+
+BBCODE PARSING FILE
+
+This file defines how the context handles
+the parsing of bbcode as displayed to the
+end user.
+
+To define a new BBCode entry, create a new
+object in the bbcode array that has three
+properties: tag, arg, and swap.
+
+Tag is the name of the tag being parsed. For
+instance, if you wanted to parse the [url]
+tag, you would set the tag property to "url".
+
+Arg is a boolean that determines if the code
+in question should expect an argument in the
+form of [tagname=arg]. Set this to true if
+you want to record this, and false if you
+don't expect such an argument.
+
+Swap is the HTML code that the bbcode is
+exchanged for. Depending on how you set
+the arg property, you will have to deal
+with this property differently:
+    - If the arg property is set to false,
+      the value $1 is replaced with the
+      contents inside of the tag; eg. the
+      tag pair [b]hello[/b] would store
+      hello in $1.
+    - If the arg property is set to true,
+      the value $1 is replaced with the
+      argument specified by the user and
+      $2 is the contents inside of the
+      tag; eg. the pair [col=blue]hi[/col]
+      would store blue in $1 and hi in $2.
+
+
+#########################
+# ~~ !! IMPORTANT !! ~~ #
+#                       #
+#   Using single line   #
+#   comments can break  #
+#   the interpreter !   #
+#                       #
+#########################
+
+ */
+
+{
+    "bbcode":
+        [
+            {
+                "tag": "b",
+                "arg": false,
+                "swap": "<b>$1</b>"
+            },
+            {
+                "tag": "i",
+                "arg": false,
+                "swap": "<i>$1</i>"
+            },
+            {
+                "tag": "u",
+                "arg": false,
+                "swap": "<u>$1</u>"
+            }
+        ]
+}

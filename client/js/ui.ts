@@ -5,6 +5,7 @@ class UI {
     static rowEven = [false, false];
     static currentView = 0;
     static ChatBot = new User(0, "<i>ChatBot</i>", "#C0C0C0");
+    static bbcode = Array();
 
     static timezone = 0.00;
     static dst = false;
@@ -20,10 +21,14 @@ class UI {
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[0])?"rowEven":"rowOdd";
 
-        // TODO fix date timezone correction algorithm
-        var dateval = /*new Date((date + ((((UI.dst)?1:0)+UI.timezone)*3600))*1000);*/ new Date();
+        /*var timecorrection = (new Date()).getTimezoneOffset()*60000;
+        var dateval = new Date((date + ((((UI.dst)?0:1)+UI.timezone)*3600))*1000 + timecorrection);*/
+        var dateval = new Date(date*1000);
         var datestr = (((dateval.getHours() > 9)?"":"0") + dateval.getHours()) +":"+ (((dateval.getMinutes() > 9)?"":"0") + dateval.getMinutes()) +":"+ (((dateval.getSeconds() > 9)?"":"0") + dateval.getSeconds());
-        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ u.username +"</span>: "+ msg +"";
+        var outmsg = msg;
+        for(var i = 0; i < UI.bbcode.length; i++)
+            outmsg = outmsg.replace(UI.bbcode[i][0], UI.bbcode[i][1]);
+        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ u.username +"</span>: "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;

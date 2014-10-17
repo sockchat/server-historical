@@ -11,6 +11,10 @@ $chat["AUTH_TYPE"] = AUTH_PHPBB;
 $chat["CAUTH_FILE"] = "authfile.php";
 $chat["AUTOID"] = false;
 
+$chat["MAX_IDLE_TIME"] = 90;
+
+$GLOBALS["chat"] = $chat;
+
 /*$chat["DB_TYPE"] = NO_DB;
 $chat["DB_NAME"] = "sockchat";
 $chat["DB_HOST"] = "localhost";
