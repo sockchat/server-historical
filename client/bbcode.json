@@ -65,6 +65,21 @@ with this property differently:
                 "tag": "u",
                 "arg": false,
                 "swap": "<u>$1</u>"
+            },
+            {
+                "tag": "color",
+                "arg": true,
+                "swap": "<span style='color:$1;'>$2</span>"
+            },
+            {
+                "tag": "url",
+                "arg": false,
+                "swap": "<a href='$1' onclick='window.open(this.href);return false;'>$1</a>"
+            },
+            {
+                "tag": "url",
+                "arg": true,
+                "swap": "<a href='$1' onclick='window.open(this.href);return false;'>$2</a>"
             }
         ]
 }

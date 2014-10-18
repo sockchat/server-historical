@@ -28,6 +28,16 @@ class UI {
         var outmsg = msg;
         for(var i = 0; i < UI.bbcode.length; i++)
             outmsg = outmsg.replace(UI.bbcode[i][0], UI.bbcode[i][1]);
+
+        var tmp = outmsg.split(' ');
+        for(var i = 0; i < tmp.length; i++) {
+            if(tmp[i].substr(0, 7) == "http://" ||
+               tmp[i].substr(0, 8) == "https://" ||
+               tmp[i].substr(0, 6) == "ftp://")
+                tmp[i] = "<a href='"+ tmp[i] +"' onclick='window.open(this.href);return false;'>"+ tmp[i] +"</a>";
+        }
+        outmsg = tmp.join(" ");
+
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ u.username +"</span>: "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
