@@ -6,12 +6,34 @@ use \Ratchet\ConnectionInterface;
 use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
+use \SQLite3;
 include("config.php");
 
 require "commands/generic_cmd.php";
 foreach(glob("commands/*.php") as $fn) {
     if($fn != "commands/generic_cmd.php")
         include($fn);
+}
+
+class Database {
+    static protected $conn;
+
+    static public function init() {
+        if(file_exists("chat.db"))
+            Database::$conn = new SQLite3("chat.db");
+        else {
+            Database::$conn = new SQLite3("chat.db");
+            Database::$conn->query("CREATE TABLE `logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT,`timestamp` INTEGER,`username` TEXT,`message` TEXT);CREATE TABLE `bans` (`uid` INTEGER,`username` TEXT,`ip` TEXT,`expiration` INTEGER);");
+        }
+    }
+
+    static public function query($str) {
+        return Database::$conn->query($str);
+    }
+
+    static public function logMessage($time, $username, $msg) {
+        Database::query("INSERT INTO `logs` ()");
+    }
 }
 
 class User {
@@ -49,6 +71,7 @@ class Chat implements MessageComponentInterface {
     public $chatbot;
     protected $separator = "\t";
     protected $chat;
+    protected $msgid;
 
     public function __construct() {
         $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];

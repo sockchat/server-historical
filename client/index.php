@@ -31,7 +31,6 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
                 if(elt.arg)
                     UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"=([^\\s\\]]+)\\s*\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));
                 else
-                    ///\[url\](.*(?=\[\/url\]))\[\/url\]/g
                     UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));
             });
         }
