@@ -1,0 +1,12 @@
+{
+    "name": "English",
+    "dir": "ltr",
+    "menuText": [
+        "Channel",
+        "Style",
+        "Language"
+    ],
+    "botText": [
+
+    ]
+}

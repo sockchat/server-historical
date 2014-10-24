@@ -6,6 +6,7 @@ class Socket {
     static sock: WebSocket;
     static args: string[];
     static pingTime: number;
+    static redirectUrl: string;
 
     static Send(msg: string) {
         this.sock.send(msg);
@@ -74,11 +75,11 @@ class Socket {
 
     static onConnError(e) {
         //alert("errored! error is "+ e.get);
-        UI.ChangeDisplay(3);
     }
 
     static onConnClose(e) {
         //alert("closed because"+ e.reason);
-        UI.ChangeDisplay(1);
+        UI.ChangeDisplay(3);
+        //window.location.href = Socket.redirectUrl;
     }
 }

@@ -6,6 +6,7 @@ var User = (function () {
     }
     return User;
 })();
+
 var UserContext = (function () {
     function UserContext() {
     }

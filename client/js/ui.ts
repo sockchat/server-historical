@@ -2,7 +2,7 @@
 
 class UI {
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
-    static rowEven = [false, false];
+    static rowEven = [true, false];
     static currentView = 0;
     static ChatBot = new User(0, "<i>ChatBot</i>", "#C0C0C0");
     static bbcode = Array();

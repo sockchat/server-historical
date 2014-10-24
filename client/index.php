@@ -5,6 +5,7 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
 ?>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="charset=UTF-8" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="js/user.js"></script>
@@ -18,6 +19,7 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
 
         Socket.args = new Array(<?php for($i = 0; $i < count($out["ARGS"]); $i++) { echo ($i==0?"":",") ."'". $out["ARGS"][$i] ."'"; } ?>);
         Socket.pingTime = <?php echo $chat["PING_PERIOD"]; ?>;
+        Socket.redirectUrl = "<?php echo $chat["REDIRECT_ADDR"]; ?>";
         //UI.timezone = <?php echo $out["TIMEZONE"]; ?>;
         //UI.dst = <?php echo $out["DST"]; ?>;
 
@@ -113,7 +115,7 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
                     Just remember that the top right corner will
                     look really boring without it.
                 -->
-                <div id="therearefourfundamentalfreedomseveryuserofsoftwaremusthave">Sock Chat &copy; <a href="http://aroltd.com">aroltd.com</a></div>
+                <div id="therearefourfundamentalfreedomseveryuserofsoftwaremusthave"><a href="https://github.com/flashii/sockchat">Sock Chat</a> &copy; <a href="http://aroltd.com">aroltd.com</a></div>
             </div>
         </div>
     </div>
@@ -125,7 +127,9 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
         </div>
         <div id="userDiv">
             <div id="userList">
-
+                <div id="top" class="rowEven">
+                    Online users
+                </div>
             </div>
         </div>
     </div>

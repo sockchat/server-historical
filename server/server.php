@@ -32,8 +32,10 @@ class Database {
     }
 
     static public function logMessage($time, $username, $msg) {
-        Database::query("INSERT INTO `logs` ()");
+        Database::query("INSERT INTO `logs` (`timestamp`, `username`, `message`) VALUES (". $time .", '". $username ."','". $msg ."')");
     }
+
+    static public function
 }
 
 class User {
@@ -71,7 +73,7 @@ class Chat implements MessageComponentInterface {
     public $chatbot;
     protected $separator = "\t";
     protected $chat;
-    protected $msgid;
+    protected $msgid = 1;
 
     public function __construct() {
         $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
@@ -121,7 +123,17 @@ class Chat implements MessageComponentInterface {
     }
 
     public function BroadcastMessage($user, $msg) {
-        Chat::Broadcast(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg)));
+        Chat::Broadcast(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg, $this->msgid)));
+        $this->msgid++;
+    }
+
+    public function SendMessage($user, $to, $msg) {
+        $to->sock->send(2, array(gmdate("U"), $user->id, $msg, $this->msgid));
+        $this->msgid++;
+    }
+
+    public function FormatBotMessage() {
+
     }
 
     protected function Sanitize($str) {
@@ -173,8 +185,9 @@ class Chat implements MessageComponentInterface {
                             foreach($this->connectedUsers as $user)
                                 $userstr .= $this->separator . join($this->separator, array($user->id, $user->username, $user->color));
 
-                            $this->Broadcast($this->PackMessage(1, array(gmdate("U"), $id, $this->Sanitize($aparts[1]), $aparts[2])));
-                            $conn->send($this->PackMessage(1, array("y", gmdate("U"), $id, $aparts[1], $aparts[2], $userstr)));
+                            $this->Broadcast($this->PackMessage(1, array(gmdate("U"), $id, $this->Sanitize($aparts[1]), $aparts[2], $this->msgid)));
+                            $conn->send($this->PackMessage(1, array("y", gmdate("U"), $id, $aparts[1], $aparts[2], $userstr, $this->msgid)));
+                            $this->msgid++;
 
                             $this->connectedUsers[$id] = new User($id, $this->Sanitize($aparts[1]), $aparts[2], $aparts[3], $conn);
                         } else {
@@ -200,7 +213,7 @@ class Chat implements MessageComponentInterface {
                                     if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php"))
                                         eval("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand(\$this, \$user, \$cmdparts);");
                                     else
-                                        $conn->send($this->PackMessage(2, array(gmdate("U"), -1, "<i><span style='color: red;'>Error: Command not found!</span></i>")));
+                                        $this->SendMessage($this->chatbot, $this->connectedUsers[$parts[0]], "<i><span style='color: red;'>Error: Command not found!</span></i>");
                                 }
                             }
                         }
@@ -216,7 +229,8 @@ class Chat implements MessageComponentInterface {
         foreach($this->connectedUsers as $user) {
             if($user->sock == $conn) {
                 echo "found user ". $user->username .", dropped\n";
-                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, gmdate("U"))));
+                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, gmdate("U"), $this->msgid)));
+                $this->msgid++;
                 unset($this->connectedUsers[$user->id]);
             }
         }

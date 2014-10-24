@@ -129,6 +129,15 @@ a:hover {
     overflow: auto;
 }
 
+#chat #userDiv #userList #top {
+    width: auto;
+    padding: 4px 10px;
+    word-wrap: break-word;
+    font-size: 0.8em;
+    text-align: center;
+    font-weight: bold;
+}
+
 #chat #userDiv #userList div, #chat #messageDiv #chatList div {
     width: auto;
     padding: 2px 10px;
