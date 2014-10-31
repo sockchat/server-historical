@@ -13,6 +13,8 @@ $chat["AUTOID"] = false;
 
 $chat["MAX_IDLE_TIME"] = 90;
 
+$chat["BACKLOG_LENGTH"] = 9;
+
 $GLOBALS["chat"] = $chat;
 
 /*$chat["DB_TYPE"] = NO_DB;

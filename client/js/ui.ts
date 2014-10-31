@@ -7,6 +7,8 @@ class UI {
     static ChatBot = new User(0, "<i>ChatBot</i>", "#C0C0C0");
     static bbcode = Array();
 
+
+
     static timezone = 0.00;
     static dst = false;
 

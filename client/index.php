@@ -68,7 +68,7 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
         function handleMessage(e) {
             var key = ('which' in e) ? e.which : e.keyCode;
 
-            if(key == 13) {
+            if(key == 13 && !e.shiftKey) {
                 Chat.SendMessage();
                 e.preventDefault();
                 return false;

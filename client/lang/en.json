@@ -1,12 +1,19 @@
 {
     "name": "English",
     "dir": "ltr",
+    "default": true,
     "menuText": [
         "Channel",
         "Style",
-        "Language"
+        "Language",
+        "Online Users",
+        "Submit"
     ],
     "botText": [
-
+        "{0} has joined the chat.",
+        "{0} has disconnected."
+    ],
+    "botErrText": [
+        "Error: Command {0} not found!"
     ]
 }

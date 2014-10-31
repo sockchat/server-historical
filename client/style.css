@@ -94,6 +94,10 @@ a:hover {
     overflow-y: auto;
 }
 
+#chat #messageDiv #chatList .botError {
+    color: #F00;
+}
+
 #chat #messageDiv #chatList a, #chat #messageDiv #chatList a:visited {
     color: #1E90FF;
 }
