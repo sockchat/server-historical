@@ -35,7 +35,7 @@ class Database {
         Database::query("INSERT INTO `logs` (`timestamp`, `username`, `message`) VALUES (". $time .", '". $username ."','". $msg ."')");
     }
 
-    static public function
+    //static public function
 }
 
 class User {
