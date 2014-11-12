@@ -1,0 +1,92 @@
+{
+    "emotes": [
+        {
+            "img" : "smile.png",
+            "syn" : [":)","(:"]
+        },
+        {
+            "img" : "sad.png",
+            "syn" : [":(","):"]
+        },
+        {
+            "img" : "wink.png",
+            "syn" : [";)","(;"]
+        },
+        {
+            "img" : "razz.png",
+            "syn" : [":P",":p","d:"]
+        },
+        {
+            "img" : "grin.png",
+            "syn" : [":D"]
+        },
+        {
+            "img" : "plain.png",
+            "syn" : [":|"]
+        },
+        {
+            "img" : "surprise.png",
+            "syn" : [":O",":o"]
+        },
+        {
+            "img" : "confused.png",
+            "syn" : [":?"]
+        },
+        {
+            "img" : "glasses.png",
+            "syn" : ["8)","8-)"]
+        },
+        {
+            "img" : "eek.png",
+            "syn" : ["8O","8o"]
+        },
+        {
+            "img" : "cool.png",
+            "syn" : [":-)","(-:"]
+        },
+        {
+            "img" : "smile-big.png",
+            "syn" : [":-D"]
+        },
+        {
+            "img" : "crying.png",
+            "syn" : [";(",");",":-(",")-:"]
+        },
+        {
+            "img" : "kiss.png",
+            "syn" : [":*",":-*","*:","*-:"]
+        },
+        {
+            "img" : "angel.png",
+            "syn" : ["O:-D","O:-)","O:D","O:)"]
+        },
+        {
+            "img" : "devilish.png",
+            "syn" : [">:-D",">:D",">:-)",">:)"]
+        },
+        {
+            "img" : "monkey.png",
+            "syn" : [":o)",":O)",":oD",":OD"]
+        },
+        {
+            "img" : "idea.png",
+            "syn" : [":idea:"]
+        },
+        {
+            "img" : "important.png",
+            "syn" : [":important:"]
+        },
+        {
+            "img" : "help.png",
+            "syn" : [":help:"]
+        },
+        {
+            "img" : "error.png",
+            "syn" : [":error:"]
+        },
+        {
+            "img" : "warning.png",
+            "syn" : [":warning:"]
+        }
+    ]
+}

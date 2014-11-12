@@ -1,7 +1,11 @@
 <?php
 include("config.php");
+include("system.php");
+
 $inthref[0] = $chat["CINT_FILE"];
 include("auth/". $inthref[$chat['INTEGRATION']]);
+
+$packs = SoundPackHandler::getAllSoundPacks();
 ?>
 <html>
 <head>
@@ -20,14 +24,13 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
         Socket.args = new Array(<?php for($i = 0; $i < count($out["ARGS"]); $i++) { echo ($i==0?"":",") ."'". $out["ARGS"][$i] ."'"; } ?>);
         Socket.pingTime = <?php echo $chat["PING_PERIOD"]; ?>;
         Socket.redirectUrl = "<?php echo $chat["REDIRECT_ADDR"]; ?>";
-        //UI.timezone = <?php echo $out["TIMEZONE"]; ?>;
-        //UI.dst = <?php echo $out["DST"]; ?>;
 
-        function loadBBCode() {
-            var tmp = "<?php echo str_replace('"', '\\"', trim(preg_replace('/\s+/', ' ', preg_replace('!/\*.*?\*/!s', '', file_get_contents("bbcode.json"))))); ?>";
+        UI.spacks = new Array(<?php for($i = 0; $i < count($packs); $i++) { echo ($i==0?"":",") ."'". $packs[$i] ."'"; } ?>);
+        UI.currentPack = <?php echo SoundPackHandler::findDefaultPack($packs); ?>;
+
+        function loadChatData() {
+            var tmp = "<?php echo getFileContents("bbcode.json"); ?>";
             tmp = JSON.parse(tmp);
-
-            console.log(tmp);
 
             tmp.bbcode.forEach(function(elt, i, arr) {
                 if(elt.arg)
@@ -35,8 +38,15 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
                 else
                     UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));
             });
+
+            tmp = "<?php echo getFileContents("emotes.json"); ?>";
+            tmp = JSON.parse(tmp);
+
+            tmp.emotes.forEach(function(elt, i, arr) {
+                UI.emotes.push(Array(elt.img, elt.syn));
+            });
         }
-        loadBBCode();
+        loadChatData();
 
         function handleResize() {
             var header = document.getElementById("header");
@@ -139,8 +149,11 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
 
         </div>
         <div class="alignRight">
-            <input type="button" value="Submit" id="send" onclick='Chat.SendMessage();' />
+            <input type="button" value="Submit" id="sendmsg" onclick='Chat.SendMessage();' />
         </div>
+    </div>
+    <div id="hidden">
+        <?php SoundPackHandler::printSoundPack($packs[0]); ?>
     </div>
 </div>
 </body>

@@ -5,12 +5,15 @@ class UI {
     static rowEven = [true, false];
     static currentView = 0;
     static ChatBot = new User(0, "<i>ChatBot</i>", "#C0C0C0");
+
     static bbcode = Array();
+    static emotes = Array();
 
+    static spacks = Array();
+    static currentPack = 0;
 
-
-    static timezone = 0.00;
-    static dst = false;
+    static langs = Array();
+    static currentLang = 0;
 
     static ChangeDisplay(id: number) {
         for(var i = 0; i < this.displayDivs.length; i++)

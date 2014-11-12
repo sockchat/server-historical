@@ -58,3 +58,11 @@ $chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB3";
  * Takes a number that represents seconds between ping pulses.
  */
 $chat["PING_PERIOD"] = 60;
+
+/* DEFAULT SOUND PACK parameter
+ *
+ * Tells the client which sound pack to select as the default pack for users that
+ * have not set an alternate sound pack.
+ * Takes a string that represents a folder in the ./sound directory
+ */
+$chat["DEFAULT_SPACK"] = "default";

@@ -169,6 +169,10 @@ a:hover {
     margin-top: 8px;
 }
 
+#hidden {
+    display: none;
+}
+
 /*#chat #footer div {
     position: absolute;
     bottom: 0;
