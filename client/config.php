@@ -48,7 +48,7 @@ $chat["SERVER_ADDR"] = "aroltd.com:12120";
  * page or index page or anything of the sort.
  * Takes a string that's in the form of a proper URL (include http/https)
  */
-$chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB3";
+$chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB31";
 
 /* PING PERIOD parameter
  *
