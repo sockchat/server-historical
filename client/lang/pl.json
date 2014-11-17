@@ -1,0 +1,19 @@
+{
+    "name": "Polski",
+    "dir": "ltr",
+    "default": true,
+    "menuText": [
+        "Kanał",
+        "Styl",
+        "Język",
+        "Użytkowników Online",
+        "Wyślij"
+    ],
+    "botText": [
+        "{0} dołączył do czat.",
+        "{0} rozłączył się z czatu."
+    ],
+    "botErrText": [
+        "Błąd: Rozkaz {0} nie znaleziono!"
+    ]
+}
