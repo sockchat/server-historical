@@ -6,6 +6,7 @@
 class Chat {
     static Main(addr: string) {
         UserContext.users = {};
+        UI.RedrawDropDowns();
         Socket.Init(addr);
     }
 

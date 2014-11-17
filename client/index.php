@@ -12,21 +12,28 @@ $packs = SoundPackHandler::getAllSoundPacks();
     <meta http-equiv="Content-Type" content="charset=UTF-8" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/cookies.js"></script>
     <script type="text/javascript" src="js/user.js"></script>
     <script type="text/javascript" src="js/msg.js"></script>
     <script type="text/javascript" src="js/ui.js"></script>
     <script type="text/javascript" src="js/sock.js"></script>
     <script type="text/javascript" src="js/chat.js"></script>
     <script type="text/javascript">
-        var divSizes = Array(57, 122, 200);
+        var divSizes = [57, 122, 200];
         // header , footer , sidebar
 
-        Socket.args = new Array(<?php for($i = 0; $i < count($out["ARGS"]); $i++) { echo ($i==0?"":",") ."'". $out["ARGS"][$i] ."'"; } ?>);
+        Socket.args = [<?php for($i = 0; $i < count($out["ARGS"]); $i++) { echo ($i==0?"":",") ."'". $out["ARGS"][$i] ."'"; } ?>];
         Socket.pingTime = <?php echo $chat["PING_PERIOD"]; ?>;
         Socket.redirectUrl = "<?php echo $chat["REDIRECT_ADDR"]; ?>";
 
-        UI.spacks = new Array(<?php for($i = 0; $i < count($packs); $i++) { echo ($i==0?"":",") ."'". $packs[$i] ."'"; } ?>);
+        UI.spacks = [<?php for($i = 0; $i < count($packs); $i++) { echo ($i==0?"":",") ."'". $packs[$i] ."'"; } ?>];
         UI.currentPack = <?php echo SoundPackHandler::findDefaultPack($packs); ?>;
+
+        UI.langs = [<?php
+                        $langs = glob("./lang/*.json");
+                        for($i = 0; $i < count($langs); $i++)
+                            echo ($i==0?"":",") ."JSON.parse(\"". getFileContents($langs[$i]) ."\")";
+                    ?>];
 
         function loadChatData() {
             var tmp = "<?php echo getFileContents("bbcode.json"); ?>";
@@ -106,16 +113,15 @@ $packs = SoundPackHandler::getAllSoundPacks();
                 <div id="chatTitle"><?php echo $chat["CHAT_TITLE"]; ?></div>
                 <div id="userData">
                     Channel:&nbsp;
-                    <select>
+                    <select id="channeldd">
                         <option>Public</option>
                     </select>
                     &nbsp;Style:&nbsp;
-                    <select>
+                    <select id="styledd">
                         <option>black</option>
                     </select>
                     &nbsp;Language:&nbsp;
-                    <select>
-                        <option>English</option>
+                    <select id="langdd">
                     </select>
                 </div>
             </div>

@@ -9,11 +9,11 @@
         "Online Users",
         "Submit"
     ],
-    "botText": [
-        "{0} has joined the chat.",
-        "{0} has disconnected."
-    ],
-    "botErrText": [
-        "Error: Command {0} not found!"
-    ]
+    "botText": {
+        "join":     "{0} has joined the chat.",
+        "leave":    "{0} has disconnected."
+    },
+    "botErrText": {
+        "nocmd":    "Error: Command {0} not found!"
+    }
 }

@@ -15,6 +15,18 @@ class UI {
     static langs = Array();
     static currentLang = 0;
 
+    static styles = Array();
+    static currentStyle = 0;
+
+    static RedrawDropDowns() {
+        document.getElementById("langdd").innerHTML = "";
+        UI.langs.forEach(function(elem, i, arr) {
+            var e = document.createElement("option");
+            e.innerHTML = elem.name;
+            document.getElementById("langdd").appendChild(e);
+        });
+    }
+
     static ChangeDisplay(id: number) {
         for(var i = 0; i < this.displayDivs.length; i++)
             document.getElementById(this.displayDivs[i]).style.display = "none";

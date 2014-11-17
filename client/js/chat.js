@@ -7,17 +7,15 @@ var Chat = (function () {
     }
     Chat.Main = function (addr) {
         UserContext.users = {};
+        UI.RedrawDropDowns();
         Socket.Init(addr);
     };
-
     Chat.SendMessage = function () {
         var msg = document.getElementById("message").value;
         msg = msg.replace(/\t/g, " ");
-
         if (msg.trim() != "") {
             Socket.Send(Message.Pack(2, "" + UserContext.self.id, msg));
         }
-
         document.getElementById("message").value = "";
         document.getElementById("message").focus();
     };

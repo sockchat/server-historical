@@ -5,7 +5,7 @@
 
 $phpbb = array();
 
-$phpbb["PHPBB_DIR"] =  $_SERVER["DOCUMENT_ROOT"] ."/phpBB31/";
+$phpbb["PHPBB_DIR"] =  $_SERVER["DOCUMENT_ROOT"] ."/phpBB3/";
 
 /*
  * END CONFIGURATION
