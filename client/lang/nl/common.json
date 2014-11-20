@@ -1,0 +1,19 @@
+{
+    "name": "Nederlands",
+    "dir": "ltr",
+    "menuText": [
+        "Kanaal",
+        "Stijl",
+        "Taal",
+        "Online Gebruikers",
+        "Verzend"
+    ],
+    "botText": {
+        "join":     "{0} logt in.",
+        "leave":    "{0} logt uit."
+    },
+    "botErrText": {
+        "nolang":   "Error: Chatbot sent message id '{0}' with no definition in this language!",
+        "nocmd":    "Fout: Commando {0} niet gevonden!"
+    }
+}

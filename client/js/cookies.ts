@@ -12,8 +12,7 @@ class Cookies {
     }
 
     public static Get(cookie: number): string {
-        var c = document.cookie;
-        c = c.split(";");
+        var c = document.cookie.split(";");
 
         for(var i = 0; i < c.length; i++) {
             var entry = c[i].trim().split("=");

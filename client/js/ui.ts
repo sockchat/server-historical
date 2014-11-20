@@ -1,10 +1,49 @@
 /// <reference path="user.ts" />
+/// <reference path="utils.ts" />
+/// <reference path="lang.ts" />
+
+class Title {
+    static username = "";
+    static num = 0;
+
+    static started = false;
+    static on = false;
+
+    static strobeCallback() {
+        if(Title.num > 0) {
+            document.title = (Title.on?"[@ ]":"[ @]") +" "+ Title.username +" - "+ UI.chatTitle;
+            Title.num--;
+            Title.on = !Title.on;
+        } else Title.Normalize();
+    }
+
+    static Strobe(name: string) {
+        Title.num = 6;
+        Title.username = name;
+
+        if(!Title.started) {
+            Title.started = true;
+            setInterval("Title.strobeCallback();", 500);
+        }
+    }
+
+    static Normalize() {
+        document.title = UI.chatTitle;
+    }
+}
+
+class Options {
+    static getValue(): number {
+        return 2;
+    }
+}
 
 class UI {
+    static chatTitle = "";
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
-    static ChatBot = new User(0, "<i>ChatBot</i>", "#C0C0C0");
+    static ChatBot = new User(0, "ChatBot", "#C0C0C0");
 
     static bbcode = Array();
     static emotes = Array();
@@ -12,11 +51,34 @@ class UI {
     static spacks = Array();
     static currentPack = 0;
 
-    static langs = Array();
+    static langs: Language[];
     static currentLang = 0;
 
     static styles = Array();
     static currentStyle = 0;
+
+    static ParseChatbotMessage(msg: string): string {
+        var parts = msg.split("\f");
+
+        return "";
+    }
+
+    static AppendChatText(sin: string) {
+        (<HTMLInputElement>document.getElementById("message")).value += sin;
+        (<HTMLInputElement>document.getElementById("message")).focus();
+    }
+
+    static RenderEmotes() {
+        document.getElementById("emotes").innerHTML = "";
+        UI.emotes.forEach(function(elem, i, arr) {
+            var egami = document.createElement("img");
+            egami.src = "img/emotes/"+ elem[0];
+            egami.alt = egami.title = elem[1][0];
+            egami.onclick = function(e) { UI.AppendChatText(egami.alt); };
+            document.getElementById("emotes").appendChild(egami);
+        });
+        (<HTMLInputElement>document.getElementById("message")).value = "";
+    }
 
     static RedrawDropDowns() {
         document.getElementById("langdd").innerHTML = "";
@@ -34,7 +96,21 @@ class UI {
         this.currentView = id;
     }
 
-    static AddMessage(date: number, u: User, msg: string) {
+    static RenderLanguage() {
+        var id = (<HTMLSelectElement>document.getElementById("langdd")).selectedIndex;
+        this.currentLang = id;
+
+        document.getElementById("tchan").innerHTML = UI.langs[id].menuText[0];
+        document.getElementById("tstyle").innerHTML = UI.langs[id].menuText[1];
+        document.getElementById("tlang").innerHTML = UI.langs[id].menuText[2];
+
+        document.getElementById("top").innerHTML = UI.langs[id].menuText[3];
+        (<HTMLInputElement>document.getElementById("sendmsg")).value = UI.langs[id].menuText[4];
+
+        // TODO message reparsing
+    }
+
+    static AddMessage(date: number, u: User, msg: string, strobe = true) {
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[0])?"rowEven":"rowOdd";
 
@@ -43,6 +119,13 @@ class UI {
         var dateval = new Date(date*1000);
         var datestr = (((dateval.getHours() > 9)?"":"0") + dateval.getHours()) +":"+ (((dateval.getMinutes() > 9)?"":"0") + dateval.getMinutes()) +":"+ (((dateval.getSeconds() > 9)?"":"0") + dateval.getSeconds());
         var outmsg = msg;
+
+        UI.emotes.forEach(function(elem, i, arr) {
+            elem[1].forEach(function(elt, j, akbar) {
+                outmsg = Utils.replaceAll(outmsg, Utils.Sanitize(elt), "<img src='img/emotes/"+ elem[0] +"' class='chatEmote' />");
+            });
+        });
+
         for(var i = 0; i < UI.bbcode.length; i++)
             outmsg = outmsg.replace(UI.bbcode[i][0], UI.bbcode[i][1]);
 
@@ -55,10 +138,13 @@ class UI {
         }
         outmsg = tmp.join(" ");
 
-        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ u.username +"</span>: "+ outmsg +"";
+        var name = (u.id == -1)?"<i>"+ u.username +"</i>": u.username;
+        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>: "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
+
+        if(strobe) Title.Strobe(u.username);
     }
 
     static AddUser(u: User, addToContext = true) {
@@ -79,7 +165,7 @@ class UI {
     }
 
     static RedrawUserList() {
-        document.getElementById("userList").innerHTML = "";
+        document.getElementById("userList").innerHTML = '<div id="top" class="rowEven">'+ UI.langs[UI.currentLang].menuText[3] +'</div>';
         this.AddUser(UserContext.self, false);
         for(var key in UserContext.users) {
             this.AddUser(<User>UserContext.users[key], false);

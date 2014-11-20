@@ -12,6 +12,8 @@ $packs = SoundPackHandler::getAllSoundPacks();
     <meta http-equiv="Content-Type" content="charset=UTF-8" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/lang.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/cookies.js"></script>
     <script type="text/javascript" src="js/user.js"></script>
     <script type="text/javascript" src="js/msg.js"></script>
@@ -26,13 +28,16 @@ $packs = SoundPackHandler::getAllSoundPacks();
         Socket.pingTime = <?php echo $chat["PING_PERIOD"]; ?>;
         Socket.redirectUrl = "<?php echo $chat["REDIRECT_ADDR"]; ?>";
 
+        UI.chatTitle = "<?php echo addslashes($chat["CHAT_TITLE"]); ?>";
         UI.spacks = [<?php for($i = 0; $i < count($packs); $i++) { echo ($i==0?"":",") ."'". $packs[$i] ."'"; } ?>];
         UI.currentPack = <?php echo SoundPackHandler::findDefaultPack($packs); ?>;
 
         UI.langs = [<?php
-                        $langs = glob("./lang/*.json");
-                        for($i = 0; $i < count($langs); $i++)
-                            echo ($i==0?"":",") ."JSON.parse(\"". getFileContents($langs[$i]) ."\")";
+                        $langs = glob("./lang/*", GLOB_ONLYDIR);
+                        for($i = 0; $i < count($langs); $i++) {
+                            $code = substr($langs[$i], strrpos($langs[$i], "/")+1);
+                            echo ($i==0?"":",") ."new Language(\"$code\", [JSON.parse(\"". getFileContents($langs[$i] ."/common.json") ."\")])";
+                        }
                     ?>];
 
         function loadChatData() {
@@ -73,7 +78,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
             var csize = window.innerHeight-divSizes[0]-divSizes[1]-40-16;
             center.style.height =  csize +"px";
 
-            footer.style.bottom = "16px";
+            footer.style.bottom = "20px";
             footer.style.left = "20px";
             footer.style.width = (window.innerWidth-40) +"px";
             footer.style.height = divSizes[1] +"px";
@@ -109,23 +114,21 @@ $packs = SoundPackHandler::getAllSoundPacks();
 <div id="chat" style="display: none;">
     <div id="header">
         <div>
-            <div class="alignLeft">
-                <div id="chatTitle"><?php echo $chat["CHAT_TITLE"]; ?></div>
-                <div id="userData">
-                    Channel:&nbsp;
-                    <select id="channeldd">
-                        <option>Public</option>
-                    </select>
-                    &nbsp;Style:&nbsp;
-                    <select id="styledd">
-                        <option>black</option>
-                    </select>
-                    &nbsp;Language:&nbsp;
-                    <select id="langdd">
-                    </select>
-                </div>
+            <div class="topleft" id="chatTitle"><?php echo $chat["CHAT_TITLE"]; ?></div>
+            <div class="botleft" id="userData">
+                <span id="tchan">Channel</span>:&nbsp;
+                <select id="channeldd">
+                    <option>Public</option>
+                </select>
+                &nbsp;<span id="tstyle">Style</span>:&nbsp;
+                <select id="styledd">
+                    <option>black</option>
+                </select>
+                &nbsp;<span id="tlang">Language</span>:&nbsp;
+                <select id="langdd" onchange="UI.RenderLanguage();">
+                </select>
             </div>
-            <div class="alignRight">
+            <div class="topright">
                 <!--
                     Remove this if you want, I don't really care.
                     Just remember that the top right corner will
@@ -151,11 +154,21 @@ $packs = SoundPackHandler::getAllSoundPacks();
     </div>
     <div id="footer">
         <textarea type="text" cols="2" id="message" style="width: 100%" onkeypress="handleMessage(event);"></textarea>
-        <div class="alignLeft">
-
+        <div class="botleft" style="padding: 3px;">
+            <span id="emotes"><img src="img/emotes/smile-big.png" /></span>
+            <div style="margin-top: 8px;">
+                <input type="button" value="Test" />
+            </div>
         </div>
-        <div class="alignRight">
+        <div class="alignRight" style="margin-top: 6px;">
             <input type="button" value="Submit" id="sendmsg" onclick='Chat.SendMessage();' />
+        </div>
+        <div class="botright" id="options" style="padding: 3px;">
+            <?php
+            $btns = ["help", "settings", "users", "audio", "autoscroll"];
+            foreach($btns as $btn)
+                echo '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
+            ?>
         </div>
     </div>
     <div id="hidden">

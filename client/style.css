@@ -151,7 +151,7 @@ a:hover {
 
 #chat #footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 25px;
     left: 20px;
     height: 125px;
     width: 100%;
@@ -165,8 +165,56 @@ a:hover {
     height: 40px;
 }
 
-#chat #footer div {
+#chat #footer div:first-child {
     margin-top: 8px;
+}
+
+#chat #footer #options img {
+    margin: 0 0 0 5px;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+}
+
+#chat #footer #options img:hover {
+    cursor: pointer;
+}
+
+#chat #footer #emotes img {
+    margin: 0 3px 0 0;
+    padding: 0;
+}
+
+.chatEmote {
+    vertical-align: middle;
+}
+
+#chat #footer #emotes img:hover {
+    cursor: pointer;
+}
+
+.topleft {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.topright {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.botleft {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+.botright {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
 }
 
 #hidden {

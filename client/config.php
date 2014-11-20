@@ -8,7 +8,7 @@ $chat = array();
  * Sets the title of the chat as it appears above the message list.
  * Takes a string.
  */
-$chat["CHAT_TITLE"] = "Sock Chat";
+$chat["CHAT_TITLE"] = "Shock Cat Beta";
 
 /* INTEGRATION TYPE parameter
  *
@@ -48,7 +48,7 @@ $chat["SERVER_ADDR"] = "aroltd.com:12120";
  * page or index page or anything of the sort.
  * Takes a string that's in the form of a proper URL (include http/https)
  */
-$chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB31";
+$chat["REDIRECT_ADDR"] = "http://aroltd.com/phpBB3";
 
 /* PING PERIOD parameter
  *
@@ -66,3 +66,21 @@ $chat["PING_PERIOD"] = 60;
  * Takes a string that represents a folder in the ./sound directory
  */
 $chat["DEFAULT_SPACK"] = "default";
+
+/* DEFAULT STYLE parameter
+ *
+ * Tells the client which style to select as the default style for users that
+ * have not set an alternate style.
+ * Takes a string that represents the name of a stylesheet in the ./styles directory
+ * without the .css extension
+ */
+$chat["DEFAULT_STYLE"] = "black";
+
+/* DEFAULT LANGUAGE parameter
+ *
+ * Tells the client which language to select as the default language for users
+ * that have not set an alternate language.
+ * Takes a string that represents the name of a language directory in the
+ * ./lang directory.
+ */
+$chat["DEFAULT_LANG"] = "en";

@@ -50,7 +50,7 @@ class User {
         $this->id = $id;
         $this->username = $username;
         $this->color = $color;
-        $this->permissions = $permissions;
+        $this->permissions = explode("\t", $permissions);
         $this->sock = $sock;
         $this->ping = gmdate("U");
     }
@@ -128,12 +128,12 @@ class Chat implements MessageComponentInterface {
     }
 
     public function SendMessage($user, $to, $msg) {
-        $to->sock->send(2, array(gmdate("U"), $user->id, $msg, $this->msgid));
+        $to->sock->send(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg, $this->msgid)));
         $this->msgid++;
     }
 
-    public function FormatBotMessage() {
-
+    public function FormatBotMessage($type, $id, $params) {
+        return $type ."\f". $id ."\f". implode("\f", $params);
     }
 
     protected function Sanitize($str) {
@@ -210,10 +210,15 @@ class Chat implements MessageComponentInterface {
                                     for($i = 0; $i < count($cmdparts); $i++)
                                         $cmdparts[$i] = $this->Sanitize($cmdparts[$i]);
 
-                                    if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php"))
-                                        eval("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand(\$this, \$user, \$cmdparts);");
-                                    else
-                                        $this->SendMessage($this->chatbot, $this->connectedUsers[$parts[0]], "<i><span style='color: red;'>Error: Command not found!</span></i>");
+                                    if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php")) {
+                                        try {
+                                            call_user_func_array("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand", [$this, $user, $cmdparts]);
+                                        } catch(\Exception $err) {
+                                            $this->BroadcastMessage($this->chatbot, $this->FormatBotMessage(MSG_ERROR, "cmderr", [strtolower($cmd), $err->getMessage()]));
+                                        }
+                                    } else
+                                        $this->SendMessage($this->chatbot, $this->connectedUsers[$parts[0]], $this->FormatBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)]));
+                                        //echo "got here";
                                 }
                             }
                         }

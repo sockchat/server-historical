@@ -1,3 +1,12 @@
+/*
+WARNING !!!
+
+USING THE < OR > CHARACTERS IN EMOTES SYNONYMS
+IN SUCH A WAY THAT THEY COULD RESEMBLE USAGE IN
+AN HTML IMG TAG COULD RESULT IN EVERYTHING
+BREAKING !
+ */
+
 {
     "emotes": [
         {
@@ -18,7 +27,7 @@
         },
         {
             "img" : "grin.png",
-            "syn" : [":D"]
+            "syn" : ["8D"]
         },
         {
             "img" : "plain.png",
@@ -26,7 +35,7 @@
         },
         {
             "img" : "surprise.png",
-            "syn" : [":O",":o"]
+            "syn" : [":O"]
         },
         {
             "img" : "confused.png",
@@ -58,15 +67,15 @@
         },
         {
             "img" : "angel.png",
-            "syn" : ["O:-D","O:-)","O:D","O:)"]
+            "syn" : ["O:D","O:)"]
         },
         {
             "img" : "devilish.png",
-            "syn" : [">:-D",">:D",">:-)",">:)"]
+            "syn" : [">:D",">:)"]
         },
         {
             "img" : "monkey.png",
-            "syn" : [":o)",":O)",":oD",":OD"]
+            "syn" : [":o)",":oD"]
         },
         {
             "img" : "idea.png",

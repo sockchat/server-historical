@@ -1,0 +1,19 @@
+{
+    "name": "Bahasa Indonesia",
+    "dir": "ltr",
+    "menuText": [
+        "Kanal",
+        "Gaya",
+        "Bahasa",
+        "Pengguna Online",
+        "Mengirimkan"
+    ],
+    "botText": {
+        "join":     "{0} telah bergabung obrolan.",
+        "leave":    "{0} memiliki terputus."
+    },
+    "botErrText": {
+        "nolang":   "Error: Chatbot sent message id '{0}' with no definition in this language!",
+        "nocmd":    "Kesalahan: Command {0} tidak ditemukan!"
+    }
+}

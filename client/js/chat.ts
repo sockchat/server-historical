@@ -2,11 +2,14 @@
 /// <reference path="msg.ts" />
 /// <reference path="user.ts" />
 /// <reference path="sock.ts" />
+/// <reference path="cookies.ts" />
 
 class Chat {
     static Main(addr: string) {
         UserContext.users = {};
         UI.RedrawDropDowns();
+        UI.RenderLanguage();
+        UI.RenderEmotes();
         Socket.Init(addr);
     }
 

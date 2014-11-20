@@ -5,6 +5,6 @@ use sockchat\cmds\GenericCommand;
 class say implements GenericCommand {
     public static function doCommand($chat, $user, $arr) {
         if($user->canModerate())
-            $chat->BroadcastMessage($chat->chatbot, "<i>". join(" ", $arr) ."</i>");
+            $chat->BroadcastMessage($chat->chatbot, $chat->FormatBotMessage(MSG_NORMAL, "say", [implode(" ", $arr)]));
     }
 }

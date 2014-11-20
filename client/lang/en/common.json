@@ -13,6 +13,7 @@
         "leave":    "{0} has disconnected."
     },
     "botErrText": {
+        "nolang":   "Error: Chatbot sent message id '{0}' with no definition in this language!",
         "nocmd":    "Error: Command {0} not found!"
     }
 }
