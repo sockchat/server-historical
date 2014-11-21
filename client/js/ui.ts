@@ -43,7 +43,7 @@ class UI {
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
-    static ChatBot = new User(0, "ChatBot", "#C0C0C0");
+    static ChatBot = new User(-1, "ChatBot", "#C0C0C0");
 
     static bbcode = Array();
     static emotes = Array();
@@ -56,12 +56,6 @@ class UI {
 
     static styles = Array();
     static currentStyle = 0;
-
-    static ParseChatbotMessage(msg: string): string {
-        var parts = msg.split("\f");
-
-        return "";
-    }
 
     static AppendChatText(sin: string) {
         (<HTMLInputElement>document.getElementById("message")).value += sin;
@@ -119,6 +113,8 @@ class UI {
         var dateval = new Date(date*1000);
         var datestr = (((dateval.getHours() > 9)?"":"0") + dateval.getHours()) +":"+ (((dateval.getMinutes() > 9)?"":"0") + dateval.getMinutes()) +":"+ (((dateval.getSeconds() > 9)?"":"0") + dateval.getSeconds());
         var outmsg = msg;
+
+        if(u.id == -1) outmsg = UI.langs[UI.currentLang].interpretBotString(msg);
 
         UI.emotes.forEach(function(elem, i, arr) {
             elem[1].forEach(function(elt, j, akbar) {

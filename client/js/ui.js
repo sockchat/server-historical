@@ -46,12 +46,6 @@ var Options = (function () {
 var UI = (function () {
     function UI() {
     }
-    UI.ParseChatbotMessage = function (msg) {
-        var parts = msg.split("\f");
-
-        return "";
-    };
-
     UI.AppendChatText = function (sin) {
         document.getElementById("message").value += sin;
         document.getElementById("message").focus();
@@ -111,6 +105,9 @@ var UI = (function () {
         var datestr = (((dateval.getHours() > 9) ? "" : "0") + dateval.getHours()) + ":" + (((dateval.getMinutes() > 9) ? "" : "0") + dateval.getMinutes()) + ":" + (((dateval.getSeconds() > 9) ? "" : "0") + dateval.getSeconds());
         var outmsg = msg;
 
+        if (u.id == -1)
+            outmsg = UI.langs[UI.currentLang].interpretBotString(msg);
+
         UI.emotes.forEach(function (elem, i, arr) {
             elem[1].forEach(function (elt, j, akbar) {
                 outmsg = Utils.replaceAll(outmsg, Utils.Sanitize(elt), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
@@ -166,7 +163,7 @@ var UI = (function () {
     UI.displayDivs = ["connmsg", "connclose", "chat", "connerr", "attemptlogin"];
     UI.rowEven = [true, false];
     UI.currentView = 0;
-    UI.ChatBot = new User(0, "ChatBot", "#C0C0C0");
+    UI.ChatBot = new User(-1, "ChatBot", "#C0C0C0");
 
     UI.bbcode = Array();
     UI.emotes = Array();

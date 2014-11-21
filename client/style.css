@@ -96,6 +96,7 @@ a:hover {
 
 #chat #messageDiv #chatList .botError {
     color: #F00;
+    font-style: italic;
 }
 
 #chat #messageDiv #chatList a, #chat #messageDiv #chatList a:visited {

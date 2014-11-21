@@ -34,11 +34,30 @@ $packs = SoundPackHandler::getAllSoundPacks();
 
         UI.langs = [<?php
                         $langs = glob("./lang/*", GLOB_ONLYDIR);
+
+                        $firstLang = "";
+                        $foundDefault = false;
+
                         for($i = 0; $i < count($langs); $i++) {
-                            $code = substr($langs[$i], strrpos($langs[$i], "/")+1);
-                            echo ($i==0?"":",") ."new Language(\"$code\", [JSON.parse(\"". getFileContents($langs[$i] ."/common.json") ."\")])";
+                            if(file_exists($langs[$i] ."/common.json")) {
+                                $code = substr($langs[$i], strrpos($langs[$i], "/")+1);
+
+                                $firstLang = ($firstLang == "")?$code:$firstLang;
+                                $foundDefault = ($code == $chat["DEFAULT_LANG"])?true:$foundDefault;
+
+                                echo ($i==0?"":",") ."new Language(\"$code\", [";
+
+                                $files = glob($langs[$i] ."/*.json");
+                                for($j = 0; $j < count($files); $j++)
+                                    echo ($i==0?"":",") ."JSON.parse(\"". getFileContents($files[$j]) ."\")";
+                                echo "])";
+                            }
                         }
+
+                        if(!$foundDefault) $chat["DEFAULT_LANG"] = $firstLang;
                     ?>];
+
+        Cookies.defaultVals = ["<?php echo SoundPackHandler::findDefaultPack($packs); ?>", ""];
 
         function loadChatData() {
             var tmp = "<?php echo getFileContents("bbcode.json"); ?>";

@@ -15,7 +15,14 @@ var Cookies = (function () {
                 return entry[1];
         }
 
-        return "";
+        return undefined;
+    };
+
+    Cookies.Prepare = function () {
+        for (var i = 0; i < Cookies.cookieList.length; i++) {
+            if (Cookies.Get(i) == undefined)
+                Cookies.Set(i, Cookies.defaultVals[i]);
+        }
     };
     Cookies.soundpack = 0;
     Cookies.lang = 1;
@@ -23,6 +30,7 @@ var Cookies = (function () {
     Cookies.opts = 3;
 
     Cookies.cookieList = ["soundpack", "lang", "style", "opts"];
+    Cookies.defaultVals = [];
     return Cookies;
 })();
 //# sourceMappingURL=cookies.js.map

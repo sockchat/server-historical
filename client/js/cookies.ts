@@ -5,6 +5,7 @@ class Cookies {
     public static opts = 3;
 
     public static cookieList = ["soundpack","lang","style","opts"];
+    public static defaultVals = [];
 
     public static Set(cookie: number, value: string) {
         var expire = new Date(Date.now() + 31536000000);
@@ -20,6 +21,13 @@ class Cookies {
                 return entry[1];
         }
 
-        return "";
+        return undefined;
+    }
+
+    public static Prepare() {
+        for(var i = 0; i < Cookies.cookieList.length; i++) {
+            if(Cookies.Get(i) == undefined)
+                Cookies.Set(i, Cookies.defaultVals[i]);
+        }
     }
 }

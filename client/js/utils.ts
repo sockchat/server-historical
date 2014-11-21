@@ -5,12 +5,16 @@ class Utils {
 
     static Sanitize(str: string): string {
         return  Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str,
+            "&", "&amp;"),
             ">", "&gt;"),
             "<", "&lt;"),
-            "&", "&amp;"),
             "'", "&apos;"),
             "\"", "&quot;"),
             "\\", "&#92;"),
             "\n", "<br />");
+    }
+
+    static formatBotMessage(type: string, id: string, params: string[] = []): string {
+        return type +"\f"+ id +"\f"+ params.join("\f");
     }
 }

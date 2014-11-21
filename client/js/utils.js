@@ -7,7 +7,12 @@ var Utils = (function () {
     };
 
     Utils.Sanitize = function (str) {
-        return Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str, ">", "&gt;"), "<", "&lt;"), "&", "&amp;"), "'", "&apos;"), "\"", "&quot;"), "\\", "&#92;"), "\n", "<br />");
+        return Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str, "&", "&amp;"), ">", "&gt;"), "<", "&lt;"), "'", "&apos;"), "\"", "&quot;"), "\\", "&#92;"), "\n", "<br />");
+    };
+
+    Utils.formatBotMessage = function (type, id, params) {
+        if (typeof params === "undefined") { params = []; }
+        return type + "\f" + id + "\f" + params.join("\f");
     };
     return Utils;
 })();

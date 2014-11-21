@@ -1,6 +1,7 @@
 /// <reference path="ui.ts" />
 /// <reference path="msg.ts" />
 /// <reference path="user.ts" />
+/// <reference path="utils.ts" />
 
 class Socket {
     static sock: WebSocket;
@@ -39,12 +40,12 @@ class Socket {
             case 1:
                 if(UI.currentView == 2) {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3]));
-                    UI.AddMessage(+parts[0], UI.ChatBot, "<i>"+ parts[2] +" has joined the chat.</i>");
+                    UI.AddMessage(+parts[0], UI.ChatBot, Utils.formatBotMessage("0","join",[parts[2]]));
                 } else {
                     if(parts[0] == "y") {
                         UserContext.self = new User(+parts[2], parts[3], parts[4]);
                         UI.ChangeDisplay(2);
-                        UI.AddMessage(+parts[1], UI.ChatBot, "<i>"+ UserContext.self.username +" has joined the chat.</i>");
+                        UI.AddMessage(+parts[1], UI.ChatBot, Utils.formatBotMessage("0","join",[UserContext.self.username]));
                         UI.AddUser(UserContext.self, false);
 
                         if(+parts[5] != 0) {
@@ -67,7 +68,7 @@ class Socket {
                     UI.AddMessage(+parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
-                UI.AddMessage(+parts[2], UI.ChatBot, "<i>"+ parts[1] +" has disconnected.</i>");
+                UI.AddMessage(+parts[2], UI.ChatBot, Utils.formatBotMessage("0","leave",[parts[1]]));
                 UI.RemoveUser(+parts[0]);
                 break;
         }
