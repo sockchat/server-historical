@@ -13,7 +13,7 @@
         "leave":    "{0} logt uit."
     },
     "botErrText": {
-        "nolang":   "Error: Chatbot sent message id '{0}' with no definition in this language!",
+        "nolang":   "Fout: Chatbot verzond bericht id '{0}' maar dit bericht heeft geen definitie in deze taal!",
         "nocmd":    "Fout: Commando {0} niet gevonden!"
     }
 }
