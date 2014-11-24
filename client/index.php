@@ -7,11 +7,17 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
 
 $packs = SoundPackHandler::getAllSoundPacks();
 ?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="charset=UTF-8" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 11 Sep 2001 09:11:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/black.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="js/lang.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/cookies.js"></script>
@@ -57,7 +63,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
                         if(!$foundDefault) $chat["DEFAULT_LANG"] = $firstLang;
                     ?>];
 
-        Cookies.defaultVals = ["<?php echo SoundPackHandler::findDefaultPack($packs); ?>", ""];
+        Cookies.defaultVals = ["<?php echo SoundPackHandler::findDefaultPack($packs); ?>", "<?php echo $chat["DEFAULT_LANG"]; ?>", "<?php echo $chat["DEFAULT_STYLE"]; ?>", ""];
 
         function loadChatData() {
             var tmp = "<?php echo getFileContents("bbcode.json"); ?>";

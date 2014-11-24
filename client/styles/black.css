@@ -1,0 +1,32 @@
+@import url("_global.css");
+
+body {
+    background: black;
+    color: white;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+#chat #header a, #chat #header a:visited {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#chat #header div {
+    font-family: "Trebuchet MS",Verdana,Arial,sans-serif;
+}
+
+#chat #header #chatTitle {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+#chat #header #therearefourfundamentalfreedomseveryuserofsoftwaremusthave {
+    font-size: 0.8em;
+}
