@@ -5,8 +5,6 @@ function getFileContents($fname) {
 
 class SoundPackHandler {
     private static $expectedFiles = ["chatbot","error","join","leave","receive","send"];
-    private static $soundExtension = "mp3";
-    private static $soundMime = "audio/mpeg";
 
     public static function getAllSoundPacks() {
         $packs = [];
@@ -14,7 +12,8 @@ class SoundPackHandler {
         foreach(glob("./sound/*", GLOB_ONLYDIR) as $dir) {
             $valid = true;
             foreach(SoundPackHandler::$expectedFiles as $file) {
-                if(!file_exists($dir ."/". $file .".". SoundPackHandler::$soundExtension)) {
+                $test = glob($dir ."/". $file .".*");
+                if(empty($test)) {
                     $valid = false;
                     break;
                 }
@@ -39,9 +38,15 @@ class SoundPackHandler {
         return $ret;
     }
 
-    public static function printSoundPack($pack) {
-        foreach(SoundPackHandler::$expectedFiles as $file) {
-            echo "<audio id='". $file ."'><source id='". $file ."src' src='./sound/". $pack ."/". $file .".". SoundPackHandler::$soundExtension ."' type='". SoundPackHandler::$soundMime ."'></audio>";
+    public static function printSoundPacks($packs) {
+        foreach($packs as $pack) {
+            foreach(SoundPackHandler::$expectedFiles as $file) {
+                echo "<audio id='". $pack .".". $file ."'>";
+                $fdata = glob("./sound/$pack/$file.*");
+                foreach($fdata as $dfatas)
+                    echo "<source src='$dfatas' type='". finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dfatas) ."' />";
+                echo "</audio>";
+            }
         }
     }
 }

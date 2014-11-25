@@ -1,6 +1,7 @@
 /// <reference path="user.ts" />
 /// <reference path="utils.ts" />
 /// <reference path="lang.ts" />
+/// <reference path="cookies.ts" />
 
 class Title {
     static username = "";
@@ -78,9 +79,24 @@ class UI {
         document.getElementById("langdd").innerHTML = "";
         UI.langs.forEach(function(elem, i, arr) {
             var e = document.createElement("option");
+            e.value = elem.code;
             e.innerHTML = elem.name;
             document.getElementById("langdd").appendChild(e);
         });
+    }
+
+    static ChangeStyle() {
+        var selected = (<HTMLSelectElement>document.getElementById("styledd")).value;
+        Cookies.Set(Cookies.style, selected);
+
+        var oldlink = document.getElementsByTagName("link").item(0);
+
+        var newlink = document.createElement("link");
+        newlink.setAttribute("rel", "stylesheet");
+        newlink.setAttribute("type", "text/css");
+        newlink.setAttribute("href", "./styles/"+ selected +".css");
+
+        document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     }
 
     static ChangeDisplay(id: number) {
@@ -93,6 +109,8 @@ class UI {
     static RenderLanguage() {
         var id = (<HTMLSelectElement>document.getElementById("langdd")).selectedIndex;
         this.currentLang = id;
+
+        Cookies.Set(Cookies.lang, UI.langs[id].code);
 
         document.getElementById("tchan").innerHTML = UI.langs[id].menuText[0];
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText[1];
@@ -162,6 +180,7 @@ class UI {
 
     static RedrawUserList() {
         document.getElementById("userList").innerHTML = '<div id="top" class="rowEven">'+ UI.langs[UI.currentLang].menuText[3] +'</div>';
+        this.rowEven[1] = false;
         this.AddUser(UserContext.self, false);
         for(var key in UserContext.users) {
             this.AddUser(<User>UserContext.users[key], false);

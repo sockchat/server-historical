@@ -17,7 +17,9 @@ $packs = SoundPackHandler::getAllSoundPacks();
     <meta http-equiv="expires" content="Tue, 11 Sep 2001 09:11:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
-    <link href="styles/black.css" rel="stylesheet" type="text/css" />
+    <?php
+    echo "<link href='./styles/". $chat["DEFAULT_STYLE"] .".css' rel='stylesheet' type='text/css' />\n";
+    ?>
     <script type="text/javascript" src="js/lang.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/cookies.js"></script>
@@ -36,8 +38,6 @@ $packs = SoundPackHandler::getAllSoundPacks();
 
         UI.chatTitle = "<?php echo addslashes($chat["CHAT_TITLE"]); ?>";
         UI.spacks = [<?php for($i = 0; $i < count($packs); $i++) { echo ($i==0?"":",") ."'". $packs[$i] ."'"; } ?>];
-        UI.currentPack = <?php echo SoundPackHandler::findDefaultPack($packs); ?>;
-
         UI.langs = [<?php
                         $langs = glob("./lang/*", GLOB_ONLYDIR);
 
@@ -105,8 +105,9 @@ $packs = SoundPackHandler::getAllSoundPacks();
 
             footer.style.bottom = "20px";
             footer.style.left = "20px";
-            footer.style.width = (window.innerWidth-40) +"px";
+            footer.style.width = (window.innerWidth-44) +"px";
             footer.style.height = divSizes[1] +"px";
+            document.getElementById("message").style.width = footer.style.width;
 
             message.style.width = (window.innerWidth-42-divSizes[2]-10) +"px";
             user.style.width = divSizes[2] +"px";
@@ -146,8 +147,18 @@ $packs = SoundPackHandler::getAllSoundPacks();
                     <option>Public</option>
                 </select>
                 &nbsp;<span id="tstyle">Style</span>:&nbsp;
-                <select id="styledd">
-                    <option>black</option>
+                <select id="styledd" onchange="UI.ChangeStyle();">
+                    <?php
+                    $styles = glob("./styles/*.css");
+
+                    foreach($styles as $style) {
+                        $name = substr($style, strrpos($style, "/")+1);
+                        $name = substr($name, 0, strrpos($name, "."));
+
+                        if($name[0] != "_")
+                            echo "<option value='$name' ". ($name == $chat["DEFAULT_STYLE"] ? " selected='selected'" : "") .">$name</option>\n";
+                    }
+                    ?>
                 </select>
                 &nbsp;<span id="tlang">Language</span>:&nbsp;
                 <select id="langdd" onchange="UI.RenderLanguage();">
@@ -178,15 +189,15 @@ $packs = SoundPackHandler::getAllSoundPacks();
         </div>
     </div>
     <div id="footer">
-        <textarea type="text" cols="2" id="message" style="width: 100%" onkeypress="handleMessage(event);"></textarea>
+        <textarea type="text" cols="2" id="message" style="width: 100%;" onkeypress="handleMessage(event);"></textarea>
         <div class="botleft" style="padding: 3px;">
-            <span id="emotes"><img src="img/emotes/smile-big.png" /></span>
+            <span id="emotes"></span>
             <div style="margin-top: 8px;">
-                <input type="button" value="Test" />
+                <input type="button" value="Test" class="btn" />
             </div>
         </div>
         <div class="alignRight" style="margin-top: 6px;">
-            <input type="button" value="Submit" id="sendmsg" onclick='Chat.SendMessage();' />
+            <input type="button" value="Submit" id="sendmsg" class="btn" onclick='Chat.SendMessage();' />
         </div>
         <div class="botright" id="options" style="padding: 3px;">
             <?php
@@ -197,7 +208,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
         </div>
     </div>
     <div id="hidden">
-        <?php SoundPackHandler::printSoundPack($packs[0]); ?>
+        <?php SoundPackHandler::printSoundPacks($packs); ?>
     </div>
 </div>
 </body>

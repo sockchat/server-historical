@@ -5,7 +5,7 @@
       <paths name="AROLTD">
         <serverdata>
           <mappings>
-            <mapping deploy="/map" local="$PROJECT_DIR$" web="/map" />
+            <mapping deploy="/chat" local="$PROJECT_DIR$" web="/chat" />
           </mappings>
         </serverdata>
       </paths>

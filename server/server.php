@@ -38,6 +38,15 @@ class Database {
     //static public function
 }
 
+class Backlog {
+    static public $loglen = 10;
+    static public $logs = array();
+
+    static public function Log($user, $msg) {
+
+    }
+}
+
 class User {
     public $id;
     public $username;
