@@ -24,20 +24,6 @@ class SoundPackHandler {
         return $packs;
     }
 
-    public static function findDefaultPack($packarr) {
-        global $chat;
-        $ret = 0;
-
-        for($i = 0; $i < count($packarr); $i++) {
-            if($packarr[$i] == $chat["DEFAULT_SPACK"]) {
-                $ret = $i;
-                break;
-            }
-        }
-
-        return $ret;
-    }
-
     public static function printSoundPacks($packs) {
         foreach($packs as $pack) {
             foreach(SoundPackHandler::$expectedFiles as $file) {
@@ -47,6 +33,7 @@ class SoundPackHandler {
                     echo "<source src='$dfatas' type='". finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dfatas) ."' />";
                 echo "</audio>";
             }
+            echo "\n";
         }
     }
 }

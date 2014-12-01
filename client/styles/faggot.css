@@ -1,17 +1,18 @@
 @import url("_global.css");
 
 body {
-    background: white;
-    color: black;
-    font-family: Verdana,Arial,Helvetica,sans-serif;
-}
+    font-family: Segoe ui;
+    font-size: 1.1em;
+    background-color: #44496c !important;
+    background-image: url("http://puu.sh/ai2PH/1482b01137.png") !important;
+    color: #808080;
 
 #chat #header a, #chat #header a:visited {
-    color: black;
+    color: white;
 }
 
 #chat #messageDiv #chatList a, #chat #messageDiv #chatList a:visited {
-    color: #0F497F;
+    color: #1E90FF;
 }
 
 a {
@@ -19,11 +20,11 @@ a {
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 #chat #header div {
-    font-family: "Trebuchet MS",Verdana,Arial,sans-serif;
+    font-family: Segoe ui;
 }
 
 #chat #header #chatTitle {
@@ -39,29 +40,26 @@ a:hover {
     width: 105px;
     height: 22px;
 
-    color: black;
-    background-color: white;
-    border: 1px solid #808080;
+    color: #3f3f3f;
+    background-color: black;
 }
 
-#chat #messageDiv #chatList {
-    border: 1px solid #808080;
-}
+
 
 #chat #messageDiv #chatList .botName {
-    color: #3F3F3F;
+    color: #C0C0C0;
 }
 
 #chat #messageDiv #chatList .botError {
-    color: #A00;
+    color: #F00;
 }
 
 .rowEven {
-    background: #DEDEDE;
+    background:transparent;
 }
 
 .rowOdd {
-    background: #FFF;
+    background: transparent;
 }
 
 .date {
@@ -83,15 +81,13 @@ a:hover {
 }
 
 #chat #footer textarea {
-    color: black;
-    background: white;
-    border: 1px solid #808080;
+    color: #3f3f3f;
+    background: #3f3f3f;
 }
 
 .btn {
     cursor: pointer;
     padding: 4px 10px;
-    background: linear-gradient(to bottom, #DDD, #FFF) #FFF;
-    color: #0F0F0F;
-    border: 1px solid #808080;
+    background: #3f3f3f;
+    color: #3f3f3f;
 }

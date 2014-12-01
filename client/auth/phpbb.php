@@ -60,7 +60,11 @@ if($qdata["user_id"] == -1) {
         echo ($udata['user_colour']?"#".$udata['user_colour']:"inherit") ."\n";
 
         // permissions string TODO write about this
-        echo $ulevel ."\t". ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0");
+        echo $ulevel ."\t".
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". //
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t".
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t".
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"2":"1");
 
         $user->session_kill();
     } else

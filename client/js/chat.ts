@@ -9,12 +9,14 @@ class Chat {
         UserContext.users = {};
         Cookies.Prepare();
 
-        (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookies.style);
+        (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookie.Style);
         UI.ChangeStyle();
 
         UI.RedrawDropDowns();
-        (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookies.lang);
+        (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
         UI.RenderLanguage();
+
+        Sounds.ChangePack(Cookies.Get(Cookie.Soundpack));
 
         UI.RenderEmotes();
         Socket.Init(addr);

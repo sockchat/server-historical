@@ -1,3 +1,5 @@
+/// <reference path="utils.ts" />
+
 class Language {
     public name: string;
     public code: string;
@@ -51,7 +53,13 @@ class Language {
             }
         }
 
-        if(parts[0] == "1") retval = "<span class='botError'>"+ retval +"</span>";
+        retval = "<span class='"+ (parts[0] == "1" ? "botError" : "botMessage") +"'>"+ retval +"</span>";
         return retval;
+    }
+
+    public isBotMessageError(str: string): boolean {
+        var parts = str.split("\f");
+
+        return (parts[0] == "1") || (((parts[0] == "0")?this.botText[parts[1]]:this.botErrText[parts[1]]) == undefined);
     }
 }

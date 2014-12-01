@@ -20,6 +20,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
     <?php
     echo "<link href='./styles/". $chat["DEFAULT_STYLE"] .".css' rel='stylesheet' type='text/css' />\n";
     ?>
+    <script type="text/javascript" src="js/sound.js"></script>
     <script type="text/javascript" src="js/lang.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/cookies.js"></script>
@@ -63,7 +64,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
                         if(!$foundDefault) $chat["DEFAULT_LANG"] = $firstLang;
                     ?>];
 
-        Cookies.defaultVals = ["<?php echo SoundPackHandler::findDefaultPack($packs); ?>", "<?php echo $chat["DEFAULT_LANG"]; ?>", "<?php echo $chat["DEFAULT_STYLE"]; ?>", ""];
+        Cookies.defaultVals = ["<?php echo $chat["DEFAULT_SPACK"]; ?>", "<?php echo $chat["DEFAULT_LANG"]; ?>", "<?php echo $chat["DEFAULT_STYLE"]; ?>", ""];
 
         function loadChatData() {
             var tmp = "<?php echo getFileContents("bbcode.json"); ?>";
@@ -150,6 +151,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
                 <select id="styledd" onchange="UI.ChangeStyle();">
                     <?php
                     $styles = glob("./styles/*.css");
+                    sort($styles, SORT_NATURAL | SORT_FLAG_CASE);
 
                     foreach($styles as $style) {
                         $name = substr($style, strrpos($style, "/")+1);

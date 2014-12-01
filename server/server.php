@@ -7,6 +7,13 @@ use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
 use \SQLite3;
+
+include("lib/constants.php");
+include("lib/utils.php");
+include("lib/user.php");
+include("lib/context.php");
+include("lib/channel.php");
+include("lib/msg.php");
 include("config.php");
 
 require "commands/generic_cmd.php";
@@ -38,45 +45,6 @@ class Database {
     //static public function
 }
 
-class Backlog {
-    static public $loglen = 10;
-    static public $logs = array();
-
-    static public function Log($user, $msg) {
-
-    }
-}
-
-class User {
-    public $id;
-    public $username;
-    public $color;
-    public $permissions;
-    public $sock;
-    public $ping;
-
-    public function __construct($id, $username, $color, $permissions, $sock) {
-        $this->id = $id;
-        $this->username = $username;
-        $this->color = $color;
-        $this->permissions = explode("\t", $permissions);
-        $this->sock = $sock;
-        $this->ping = gmdate("U");
-    }
-
-    public function getRank() {
-        return $this->permissions[0];
-    }
-
-    public function canModerate() {
-        return $this->permissions[1] == "1";
-    }
-
-    public function canViewLogs() {
-        return $this->permissions[2] == "1";
-    }
-}
-
 class Chat implements MessageComponentInterface {
     public $connectedUsers = array();
     public $chatbot;
@@ -86,8 +54,12 @@ class Chat implements MessageComponentInterface {
 
     public function __construct() {
         $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
-        $this->chat = $GLOBALS["chat"];
-        $this->chatbot = new User(-1, "", "", "", null);
+        Utils::$chat = $GLOBALS["chat"];
+        Message::$bot = new User("-1", "", "bot", "inherit", "", null);
+
+        Context::$chatbot = new User("-1", Utils::$chat["DEFAULT_CHANNEL"], "", "", "", null);
+        Context::CreateChannel(Utils::$chat["DEFAULT_CHANNEL"]);
+
         echo "Server started.\n";
     }
 
@@ -143,17 +115,6 @@ class Chat implements MessageComponentInterface {
 
     public function FormatBotMessage($type, $id, $params) {
         return $type ."\f". $id ."\f". implode("\f", $params);
-    }
-
-    protected function Sanitize($str) {
-        return str_replace("\n", "<br/>", str_replace("\\","&#92;",htmlspecialchars($str, ENT_QUOTES)));
-    }
-
-    protected function GetFileContents($fname) {
-        $fp = fopen($fname, "rb");
-        $retval = stream_get_contents($fp);
-        fclose($fp);
-        return $retval;
     }
 
     public function onMessage(ConnectionInterface $conn, $msg) {

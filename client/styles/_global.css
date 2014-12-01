@@ -55,7 +55,9 @@ body {
     overflow-y: auto;
 }
 
-#chat #messageDiv #chatList .botError {
+#chat #messageDiv #chatList .botError,
+#chat #messageDiv #chatList .botMessage,
+#chat #messageDiv #chatList .botName {
     font-style: italic;
 }
 
@@ -94,10 +96,7 @@ body {
 #chat #footer textarea {
     width: 100%;
     height: 40px;
-}
-
-#chat #footer div:first-child {
-    margin-top: 8px;
+    margin-top: 3px;
 }
 
 #chat #footer #options img {

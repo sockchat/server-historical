@@ -1,18 +1,15 @@
-class Cookies {
-    public static soundpack = 0;
-    public static lang = 1;
-    public static style = 2;
-    public static opts = 3;
+enum Cookie {Soundpack, Language, Style, Options}
 
+class Cookies {
     public static cookieList = ["soundpack","lang","style","opts"];
     public static defaultVals = [];
 
-    public static Set(cookie: number, value: string) {
+    public static Set(cookie: Cookie, value: string) {
         var expire = new Date(Date.now() + 31536000000);
         document.cookie = Cookies.cookieList[cookie] +"="+ value +"; expires="+ expire.toUTCString();
     }
 
-    public static Get(cookie: number): string {
+    public static Get(cookie: Cookie): string {
         var c = document.cookie.split(";");
 
         for(var i = 0; i < c.length; i++) {

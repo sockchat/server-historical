@@ -1,17 +1,17 @@
 @import url("_global.css");
 
 body {
-    background: white;
-    color: black;
+    background: #002545;
+    color: white;
     font-family: Verdana,Arial,Helvetica,sans-serif;
 }
 
 #chat #header a, #chat #header a:visited {
-    color: black;
+    color: white;
 }
 
 #chat #messageDiv #chatList a, #chat #messageDiv #chatList a:visited {
-    color: #0F497F;
+    color: #1E90FF;
 }
 
 a {
@@ -38,30 +38,29 @@ a:hover {
 #chat #header #userData select {
     width: 105px;
     height: 22px;
-
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: #002545;
     border: 1px solid #808080;
 }
 
 #chat #messageDiv #chatList {
-    border: 1px solid #808080;
+    border: 1px solid #003D8E;
 }
 
 #chat #messageDiv #chatList .botName {
-    color: #3F3F3F;
+    color: #C0C0C0;
 }
 
 #chat #messageDiv #chatList .botError {
-    color: #A00;
+    color: #F00;
 }
 
 .rowEven {
-    background: #DEDEDE;
+    background: #0d355d;
 }
 
 .rowOdd {
-    background: #FFF;
+    background: #002545;
 }
 
 .date {
@@ -69,7 +68,7 @@ a:hover {
 }
 
 #chat #userDiv #userList {
-    border: 1px solid #808080;
+    border: 1px solid #003D8E;
 }
 
 #chat #userDiv #userList #top {
@@ -83,15 +82,15 @@ a:hover {
 }
 
 #chat #footer textarea {
-    color: black;
-    background: white;
-    border: 1px solid #808080;
+    color: white;
+    background: #002545;
+    border: 1px solid #003D8E;
 }
 
 .btn {
     cursor: pointer;
     padding: 4px 10px;
-    background: linear-gradient(to bottom, #DDD, #FFF) #FFF;
-    color: #0F0F0F;
+    background: linear-gradient(to bottom, #002545, #000) #002545;
+    color: #F0F0F0;
     border: 1px solid #808080;
 }

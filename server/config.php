@@ -3,6 +3,8 @@ include("constants.php");
 
 $chat = array();
 
+$chat["DEFAULT_CHANNEL"] = "Lobby";
+
 $chat["CHATROOT"] = "http://www.aroltd.com/chat/";
 $chat["HOST"] = "aroltd.com";
 $chat["PORT"] = 12120;

@@ -2,6 +2,7 @@
 /// <reference path="utils.ts" />
 /// <reference path="lang.ts" />
 /// <reference path="cookies.ts" />
+/// <reference path="sound.ts" />
 
 class Title {
     static username = "";
@@ -44,7 +45,7 @@ class UI {
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
-    static ChatBot = new User(-1, "ChatBot", "#C0C0C0");
+    static ChatBot = new User(-1, "ChatBot", "inherit");
 
     static bbcode = Array();
     static emotes = Array();
@@ -87,7 +88,7 @@ class UI {
 
     static ChangeStyle() {
         var selected = (<HTMLSelectElement>document.getElementById("styledd")).value;
-        Cookies.Set(Cookies.style, selected);
+        Cookies.Set(Cookie.Style, selected);
 
         var oldlink = document.getElementsByTagName("link").item(0);
 
@@ -110,7 +111,7 @@ class UI {
         var id = (<HTMLSelectElement>document.getElementById("langdd")).selectedIndex;
         this.currentLang = id;
 
-        Cookies.Set(Cookies.lang, UI.langs[id].code);
+        Cookies.Set(Cookie.Language, UI.langs[id].code);
 
         document.getElementById("tchan").innerHTML = UI.langs[id].menuText[0];
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText[1];
@@ -122,7 +123,7 @@ class UI {
         // TODO message reparsing
     }
 
-    static AddMessage(date: number, u: User, msg: string, strobe = true) {
+    static AddMessage(date: number, u: User, msg: string, strobe = true, playsound = true) {
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[0])?"rowEven":"rowOdd";
 
@@ -133,6 +134,15 @@ class UI {
         var outmsg = msg;
 
         if(u.id == -1) outmsg = UI.langs[UI.currentLang].interpretBotString(msg);
+
+        if(playsound) {
+            if (u.id == -1)
+                Sounds.Play(UI.langs[UI.currentLang].isBotMessageError(msg) ? Sound.Error : Sound.ChatBot);
+            else if (u.id == UserContext.self.id)
+                Sounds.Play(Sound.Send);
+            else
+                Sounds.Play(Sound.Receive);
+        }
 
         UI.emotes.forEach(function(elem, i, arr) {
             elem[1].forEach(function(elt, j, akbar) {
@@ -152,7 +162,7 @@ class UI {
         }
         outmsg = tmp.join(" ");
 
-        var name = (u.id == -1)?"<i>"+ u.username +"</i>": u.username;
+        var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>: "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
@@ -164,7 +174,7 @@ class UI {
     static AddUser(u: User, addToContext = true) {
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[1])?"rowEven":"rowOdd";
-        msgDiv.innerHTML = "<span style='font-weight:bold;color:"+ u.color +";'>"+ u.username +"</span>";
+        msgDiv.innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
         document.getElementById("userList").appendChild(msgDiv);
         this.rowEven[1] = !this.rowEven[1];
 
