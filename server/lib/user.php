@@ -31,4 +31,8 @@ class User {
     public function canViewLogs() {
         return $this->permissions[2] == "1";
     }
+
+    public function __toString() {
+        return join(Utils::$separator, array($this->id, $this->username, $this->color, $this->permissions));
+    }
 }

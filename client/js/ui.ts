@@ -45,7 +45,7 @@ class UI {
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
-    static ChatBot = new User(-1, "ChatBot", "inherit");
+    static ChatBot = new User(-1, "ChatBot", "inherit", "");
 
     static bbcode = Array();
     static emotes = Array();

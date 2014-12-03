@@ -11,10 +11,11 @@ class Context {
     public static function SwitchChannel($user, $to) {
         if($user->channel != $to) {
             if(Context::ChannelExists($to)) {
+                if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
 
-                return true;
-            } else return false;
-        } else return false;
+                } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
+            } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($to), $user);
+        } else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user);
     }
 
     public static function GetUserByID($id) {
@@ -32,7 +33,7 @@ class Context {
 
     public static function GetChannel($name) {
         if(array_key_exists(Context::$channelList, $name)) return Context::$channelList[$name];
-        else return null;
+        else return Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]];
     }
 
     public static function ChannelExists($name) {
@@ -56,7 +57,7 @@ class Context {
 
     }
 
-    public static function Leave($sock) {
+    public static function Leave($user) {
 
     }
 }

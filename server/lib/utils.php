@@ -2,7 +2,7 @@
 namespace sockchat;
 
 class Utils {
-    protected static $separator = "\t";
+    public static $separator = "\t";
     public static $chat;
 
     public static function PackMessage($id, $params) {

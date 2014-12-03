@@ -1,11 +1,13 @@
 var User = (function () {
-    function User(id, u, c) {
+    function User(id, u, c, p) {
         this.username = u;
         this.id = id;
         this.color = c;
+        this.perms = p;
     }
     return User;
 })();
+
 var UserContext = (function () {
     function UserContext() {
     }

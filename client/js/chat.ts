@@ -3,6 +3,7 @@
 /// <reference path="user.ts" />
 /// <reference path="sock.ts" />
 /// <reference path="cookies.ts" />
+/// <reference path="sound.ts" />
 
 class Chat {
     static Main(addr: string) {

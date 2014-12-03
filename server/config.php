@@ -1,6 +1,4 @@
 <?php
-include("constants.php");
-
 $chat = array();
 
 $chat["DEFAULT_CHANNEL"] = "Lobby";

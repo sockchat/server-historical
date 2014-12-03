@@ -10,10 +10,18 @@
     ],
     "botText": {
         "join":     "{0} has joined the chat.",
-        "leave":    "{0} has disconnected."
+        "leave":    "{0} has disconnected.",
+        "jchan":    "{0} entered the channel.",
+        "lchan":    "{0} left the channel.",
+        "say":      "{0}"
     },
     "botErrText": {
         "nolang":   "Error: Chatbot sent {1} id '{0}' with no definition in this language!",
-        "nocmd":    "Error: Command {0} not found!"
+        "nocmd":    "Error: Command {0} not found!",
+        "samechan": "Error: You are already in {0}!",
+        "nochan":   "Error: Channel {0} does not exist!",
+        "ipchan":   "Error: You are not allowed to join {0}!",
+        "nopwchan": "Error: Channel {0} is password-protected! Use '/join {0} [password]'.",
+        "ipwchan":  "Error: Password to channel {0} is incorrect!"
     }
 }

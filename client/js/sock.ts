@@ -40,19 +40,19 @@ class Socket {
         switch (msgid) {
             case 1:
                 if(UI.currentView == 2) {
-                    UI.AddUser(new User(+parts[1], parts[2], parts[3]));
+                    UI.AddUser(new User(+parts[1], parts[2], parts[3], parts[4]));
                     UI.AddMessage(+parts[0], UI.ChatBot, Utils.formatBotMessage("0","join",[parts[2]]), true, false);
                     Sounds.Play(Sound.Join);
                 } else {
                     if(parts[0] == "y") {
-                        UserContext.self = new User(+parts[2], parts[3], parts[4]);
+                        UserContext.self = new User(+parts[2], parts[3], parts[4], parts[5]);
                         UI.ChangeDisplay(2);
                         UI.AddMessage(+parts[1], UI.ChatBot, Utils.formatBotMessage("0","join",[UserContext.self.username]), false, false);
                         UI.AddUser(UserContext.self, false);
 
                         if(+parts[5] != 0) {
                             for(var i = 0; i < +parts[5]; i++) {
-                                UI.AddUser(new User(+parts[6+3*i], parts[7+3*i], parts[8+3*i]));
+                                UI.AddUser(new User(+parts[6+4*i], parts[7+4*i], parts[8+4*i], parts[9+4*i]));
                             }
                         }
                     } else {

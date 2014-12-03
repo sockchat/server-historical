@@ -9,12 +9,12 @@ use \Ratchet\WebSocket\WsServer;
 use \SQLite3;
 
 include("lib/constants.php");
+include("config.php");
 include("lib/utils.php");
 include("lib/user.php");
 include("lib/context.php");
 include("lib/channel.php");
 include("lib/msg.php");
-include("config.php");
 
 require "commands/generic_cmd.php";
 foreach(glob("commands/*.php") as $fn) {
@@ -58,7 +58,7 @@ class Chat implements MessageComponentInterface {
         Message::$bot = new User("-1", "", "bot", "inherit", "", null);
 
         Context::$chatbot = new User("-1", Utils::$chat["DEFAULT_CHANNEL"], "", "", "", null);
-        Context::CreateChannel(Utils::$chat["DEFAULT_CHANNEL"]);
+        Context::CreateChannel(new Channel(Utils::$chat["DEFAULT_CHANNEL"]));
 
         echo "Server started.\n";
     }
@@ -138,8 +138,8 @@ class Chat implements MessageComponentInterface {
                         $arglist .= ($i==0?"?":"&") ."arg". ($i+1) ."=". urlencode($parts[$i]);
                     $aparts = $this->GetFileContents($this->chat['CHATROOT'] ."auth/". $GLOBALS['auth_method'][$this->chat['AUTH_TYPE']] . $arglist);
 
-                    if($aparts != "reject" && trim($aparts) != "") {
-                        $aparts = explode("\n", $aparts);
+                    if(substr($aparts, 0, 3) == "yes") {
+                        $aparts = explode("\n", substr($aparts, 3));
                         if($this->allowUser($aparts[1], $conn)) {
                             $id = 0;
                             if($this->chat["AUTOID"]) {
