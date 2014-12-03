@@ -1,89 +1,92 @@
                       SOCK CHAT PROTOCOL INFORMATION
 
-	Messages sent between the client and server are a series of concatenat-
+    Messages sent between the client and server are a series of concatenat-
 ed strings delimited by the vertical tab character, represented in most la-
 nguages by the escape sequence \t and defined as the ASCII character 0x09. 
 The first string in this concatenation must be the 
 
-                               --- SERVER --- 							   
+                               --- SERVER ---                                
 
                                --- CLIENT ---
 
-1 - 
+1 - User joining message.
 
 4 - Channel creation/deletion/update notification to clients. First parame-
-	ter is either a 0, a 1 or a 2, 0 indicating creation, 1 indicating del-
-	etion, and 2 indicating an update.
-	
-	If 0, the parameters are as follows:
-		- CHANNEL NAME
-		- IS PASSWORD PROTECTED (bool, 1 or 0)
-		- IS TEMPORARY (bool, 1 or 0)
-		
-	If 1, the parameters are as follows:
-		- CHANNEL NAME
-		
-	If 2, the parameters are as follows:
-		
-	
+    ter is either a 0, a 1 or a 2, 0 indicating creation, 1 indicating del-
+    etion, and 2 indicating an update.
+    
+    If 0, the parameters are as follows:
+        - CHANNEL NAME
+        - IS PASSWORD PROTECTED (bool, 1 or 0)
+        - IS TEMPORARY (bool, 1 or 0)
+        
+    If 1, the parameters are as follows:
+        - CHANNEL NAME
+        
+    If 2, the parameters are as follows:
+        
+    
 5 - User changing channel information for clients. First parameter is 0 or 
-	1 to indicate whether the user is joining or leaving, the following pa-
-	rameters depend on the first:
-	
-		Both will start with a message ID representing the ID of the bot
-		message associated with the action.
-	
-		If 0, the parameters are as follows:
-			- USER ID
-			- USER NAME
-			- USER COLOR
-			- PERMISSION STRING
-		And indicates a user joining a channel.
-			
-		If 1, the parameters are as follows:
-			- USER ID
-		And indicates a user leaving a channel.
-		
+    1 to indicate whether the user is joining or leaving, the following pa-
+    rameters depend on the first:
+    
+        Both will start with a message ID representing the ID of the bot
+        message associated with the action.
+    
+        If 0, the parameters are as follows:
+            - USER ID
+            - USER NAME
+            - USER COLOR
+            - PERMISSION STRING
+        And indicates a user joining a channel.
+            
+        If 1, the parameters are as follows:
+            - USER ID
+        And indicates a user leaving a channel.
+        
 6 - Indicates forceful message deletion. The first parameter is the message
-	ID as it is represented in Message::$msgid.
-	
+    ID as it is represented in Message::$msgid.
+    
 7 - Indicates the sending of miscellaneous data to clients for context inf-
-	ormation. First parameter is 0, 1, or 2 to indicate whether the data is
-	a chat message or a user, the following parameters depend on the first:
-	
-		If 0, the parameters are as follows:
-			- A COUNT OF USERS SENT IN PACKET (represented as N)
-			- N REPETITIONS OF
-				- USER ID
-				- USER NAME
-				- USER COLOR
-				- PERMISSION STRING
-			  WHICH EACH REPRESENT A SINGLE USER
-			
-		If 1, the parameters are as follows:
-			- TIMESTAMP
-			- USER ID
-			- USER NAME
-			- USER COLOR
-			- PERMISSION STRING
-			- MESSAGE
-			- MESSAGE ID
-			
-		If 2, the parameters are as follows:
-			
-			  
+    ormation. First parameter is 0, 1, or 2 to indicate whether the data is
+    a chat message, a user, or a channel. The following parameters depend
+    on the first:
+    
+        If 0, the parameters are as follows:
+            - A COUNT OF USERS SENT IN PACKET (represented as N)
+            - N REPETITIONS OF
+                - USER ID
+                - USER NAME
+                - USER COLOR
+                - PERMISSION STRING
+              WHICH EACH REPRESENT A SINGLE USER
+            
+        If 1, the parameters are as follows:
+            - TIMESTAMP
+            - USER ID
+            - USER NAME
+            - USER COLOR
+            - PERMISSION STRING
+            - MESSAGE
+            - MESSAGE ID
+            
+        If 2, the parameters are as follows:
+            - CHANNEL NAME
+            - IS PASSWORD PROTECTED (bool, 1 or 0)
+            - IS TEMPORARY (bool, 1 or 0)
+              
 8 - Forces the client to clear a specific portion of the context. First pa-
-	rameter is an integer from 0 to 4 to indicate what should be cleared.
-	
-		0 represents clearing the message list.
-		1 represents clearing the user list.
-		2 represents clearing the channel list.
-		3 represents clearing both the message and user list.
-		4 represents clearing all three lists.
-		
+    rameter is an integer from 0 to 4 to indicate what should be cleared.
+    
+        0 represents clearing the message list.
+        1 represents clearing the user list.
+        2 represents clearing the channel list.
+        3 represents clearing both the message and user list.
+        4 represents clearing all three lists.
+        
 9 - Tells a client that they are about to have their socket session forcef-
-	ully terminated. Used to indicate either a kick or a ban.
-	
-	First argument is a 0, representing a kick, or a 1, representing a ban.
-	If the first argument is 1, then the following argument is a length sp-
-	ecifier for the ban duration in seconds.
+    ully terminated. Used to indicate either a kick or a ban.
+    
+    First argument is a 0, representing a kick, or a 1, representing a ban.
+    If the first argument is 1, then the following argument is a length sp-
+    ecifier for the ban duration in seconds.
