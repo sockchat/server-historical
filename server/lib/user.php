@@ -7,6 +7,7 @@ class User {
     public $username;
     public $color;
     public $permissions;
+    public $permstr;
     public $sock;
     public $ping;
 
@@ -15,7 +16,8 @@ class User {
         $this->channel = $channel;
         $this->username = $username;
         $this->color = $color;
-        $this->permissions = explode("\t", $permissions);
+        $this->permstr = $permissions;
+        $this->permissions = explode("\f", $permissions);
         $this->sock = $sock;
         $this->ping = gmdate("U");
     }
@@ -33,6 +35,6 @@ class User {
     }
 
     public function __toString() {
-        return join(Utils::$separator, array($this->id, $this->username, $this->color, $this->permissions));
+        return join(Utils::$separator, array($this->id, $this->username, $this->color, $this->permstr));
     }
 }

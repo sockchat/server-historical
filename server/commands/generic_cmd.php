@@ -2,5 +2,5 @@
 namespace sockchat\cmds;
 
 interface GenericCommand {
-    public static function doCommand($chat, $user, $arr);
+    public static function doCommand($user, $args);
 }

@@ -28,7 +28,7 @@ class Context {
     }
 
     public static function GetUserByID($id) {
-        if(array_key_exists(Context::$onlineUsers, $id)) return Context::$onlineUsers[$id];
+        if(array_key_exists($id, Context::$onlineUsers)) return Context::$onlineUsers[$id];
         else return null;
     }
 
@@ -41,7 +41,7 @@ class Context {
     }
 
     public static function GetChannel($name) {
-        if(array_key_exists(Context::$channelList, $name)) return Context::$channelList[$name];
+        if(array_key_exists($name, Context::$channelList)) return Context::$channelList[$name];
         else return Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]];
     }
 
@@ -50,7 +50,7 @@ class Context {
     }
 
     public static function CreateChannel($channel) {
-        if(!Context::ChannelExists($channel->name) && $channel[0] != "@" && $channel[0] != "*") {
+        if(!Context::ChannelExists($channel->name) && $channel->name[0] != "@" && $channel->name[0] != "*") {
             Context::$channelList[$channel->name] = $channel;
             return true;
         } else return false;
@@ -72,9 +72,16 @@ class Context {
 
     public static function AllowUser($username, $sock) {
         foreach(Context::$onlineUsers as $user) {
-            if($user->username == $username || $sock == $user->sock)
-                return false;
+            if($user->username != $username) {
+                if($sock == $user->sock) {
+                    return 2;
+                }
+            } else return 1;
         }
+        return 0;
+    }
+
+    public static function CheckBan($id, $ip, $name) {
         return 0;
     }
 

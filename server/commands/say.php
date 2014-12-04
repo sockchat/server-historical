@@ -1,10 +1,11 @@
 <?php
 namespace sockchat\cmds;
 use sockchat\cmds\GenericCommand;
+use \sockchat\Message;
 
 class say implements GenericCommand {
-    public static function doCommand($chat, $user, $arr) {
+    public static function doCommand($user, $arr) {
         if($user->canModerate())
-            $chat->BroadcastMessage($chat->chatbot, $chat->FormatBotMessage(MSG_NORMAL, "say", [implode(" ", $arr)]));
+            Message::BroadcastBotMessage(MSG_NORMAL, "say", [implode(" ", $arr)]);
     }
 }

@@ -7,8 +7,6 @@ var Language = (function () {
         this.code = code;
 
         for (var file in json) {
-            console.log(json[file]);
-
             if (json[file].name != undefined) {
                 this.name = json[file].name;
                 this.dir = json[file].dir;

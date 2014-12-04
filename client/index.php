@@ -145,7 +145,6 @@ $packs = SoundPackHandler::getAllSoundPacks();
             <div class="botleft" id="userData">
                 <span id="tchan">Channel</span>:&nbsp;
                 <select id="channeldd">
-                    <option>Public</option>
                 </select>
                 &nbsp;<span id="tstyle">Style</span>:&nbsp;
                 <select id="styledd" onchange="UI.ChangeStyle();">

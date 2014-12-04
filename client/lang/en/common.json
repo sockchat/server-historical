@@ -8,7 +8,11 @@
         "Online Users",
         "Submit",
         "You have been kicked!",
-        "You have been banned until"
+        "You have been banned until",
+        "Could not join chat: Authorization data supplied was denied! Contact the system administrator if the problem persists.",
+        "Could not join chat: Username in use!",
+        "Could not join chat: A session already exists from this socket!",
+        "Could not join chat: You are banned until"
     ],
     "botText": {
         "join":     "{0} has joined the chat.",

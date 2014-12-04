@@ -15,7 +15,8 @@ class Backlog {
     public function GetAllLogStrings() {
         $retval = array();
         foreach($this->logs as $msg)
-            array_push($retval, join(Utils::$separator, array($msg[0], $msg[1]->id, $msg[1]->username, $msg[1]->color, $msg[1]->permissions, $msg[2], $msg[3])));
+            array_push($retval, join(Utils::$separator, array($msg[0], $msg[1], $msg[2], $msg[3])));
+        //$retval = array_reverse($retval);
         return $retval;
     }
 }

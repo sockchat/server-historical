@@ -1,7 +1,8 @@
 <?php
 namespace sockchat;
-use \sockchat\Context;
-use \sockchat\Utils;
+
+require_once("context.php");
+require_once("utils.php");
 
 class Message {
     public static $msgId = 0;
@@ -18,11 +19,23 @@ class Message {
     }
 
     protected static function SendToChannel($msg, $channel) {
+        if(is_string($channel)) {
+            if(Context::ChannelExists($channel)) {
+                $channel = Context::GetChannel($channel);
+            } else return;
+        }
+
         foreach($channel->users as $user)
             $user->sock->send($msg);
     }
 
     protected static function LogToChannel($user, $msg, $channel) {
+        if(is_string($channel)) {
+            if(Context::ChannelExists($channel)) {
+                $channel = Context::GetChannel($channel);
+            } else return;
+        }
+
         $channel->log->Log($user, $msg, Message::$msgId);
     }
 
@@ -75,11 +88,11 @@ class Message {
     }
 
     public static function HandleJoin($user) {
-        Message::SendToChannel(Utils::PackMessage(P_USER_JOIN, array(gmdate("U"), $user->id, $user->username, $user->color, $user->permissions, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
+        Message::SendToChannel(Utils::PackMessage(P_USER_JOIN, array(gmdate("U"), $user, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
 
-        $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user->id, $user->username, $user->color, $user->permissions, Utils::$chat["DEFAULT_CHANNEL"])));
+        $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user, Utils::$chat["DEFAULT_CHANNEL"])));
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "join", array($user->username)), Utils::$chat["DEFAULT_CHANNEL"]);
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->users), join(Utils::$separator, Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"]).GetAllUsers()))));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->users), Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
 
         $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
         foreach($msgs as $msg)
@@ -91,7 +104,7 @@ class Message {
     public static function HandleChannelSwitch($user, $to, $from) {
         Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("1", $user->id, Message::$msgId)), $from);
         Message::LogToChannel(Message::$bot, Utils::PackMessage(MSG_NORMAL, "lchan", array($user->username)), $from);
-        Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("0", $user->id, $user->username, $user->color, $user->permissions, Message::$msgId)), $to);
+        Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("0", $user, Message::$msgId)), $to);
         Message::LogToChannel(Message::$bot, Utils::PackMessage(MSG_NORMAL, "jchan", array($user->username)), $to);
         $user->sock->send(Utils::PackMessage(P_CTX_CLR, array(CLEAR_MSGNUSERS)));
         $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel($to)->users), join(Utils::$separator, Context::GetChannel($to)->GetAllUsers()), Message::$msgId)));

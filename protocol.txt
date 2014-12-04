@@ -18,6 +18,10 @@ as an integer. The packet identifiers are as follows.
     is the message.
                               
                               --- CLIENT ---
+                              
+0 - Keepalive ping response. Not actually handled, but the client does rec-
+    eive it. Maybe do something with this later, I dunno. First and only 
+    parameter is always the string 'pong'.
 
 1 - User joining message. Takes two different forms depending on the recip-
     ient.
@@ -39,6 +43,7 @@ as an integer. The packet identifiers are as follows.
         - USER COLOR
         - PERMISSION STRING
         - DEFAULT CHANNEL
+        - MAX MESSAGE LENGTH
     
     If 'n' (connection refused), the parameters are as follows:
         - REASON ENUMERATION

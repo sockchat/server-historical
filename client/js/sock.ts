@@ -34,6 +34,7 @@ class Socket {
     }
 
     static onMessageRecv(e) {
+        console.log(<string>e.data);
         var parts = (<string>e.data).split(Message.Separator);
         var msgid = +parts[0];
         parts = parts.slice(1);
@@ -56,9 +57,8 @@ class Socket {
                                 UI.AddUser(new User(+parts[6+4*i], parts[7+4*i], parts[8+4*i], parts[9+4*i]));
                             }
                         }*/
-                    } else {
-                        alert("Username is in use!");
-                    }
+                    } else
+                        alert(UI.langs[UI.currentLang].menuText[7 + +parts[0]] + (+parts[0] == 3 ? " "+ (new Date(+parts[1])).toDateString() +"!" : ""));
                 }
                 break;
             case 2:

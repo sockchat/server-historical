@@ -6,7 +6,8 @@ class Utils {
     public static $chat;
 
     public static function PackMessage($id, $params) {
-        return $id . Utils::$separator . join(Utils::$separator, $params);
+        $ret = $id . Utils::$separator . join(Utils::$separator, $params);
+        return $ret;
     }
 
     public static function FormatBotMessage($type, $id, $params) {

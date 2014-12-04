@@ -1,5 +1,6 @@
-* Chat Sounds
 * Channels
 * Templating Engine
-* Mobile Style
-* Log Style
+    * Mobile Style
+    * Log Style
+
+* Replace alerts with overlayed div

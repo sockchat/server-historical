@@ -3,8 +3,8 @@ namespace sockchat\cmds;
 use sockchat\cmds\GenericCommand;
 
 class kick implements GenericCommand {
-    public static function doCommand($chat, $user, $arr) {
-        $foundUser = null;
+    public static function doCommand($user, $args) {
+        /*$foundUser = null;
         foreach($chat->connectedUsers as $u) {
             if(strtolower($u) == strtolower($arr[0])) {
                 $foundUser = $u;
@@ -17,6 +17,6 @@ class kick implements GenericCommand {
         else {
 
         }
-        $chat->BroadcastMessage($chat->chatbot, "<a href='http://aroltd.com'>hello</a>");
+        $chat->BroadcastMessage($chat->chatbot, "<a href='http://aroltd.com'>hello</a>");*/
     }
 }

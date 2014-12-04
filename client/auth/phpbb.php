@@ -63,10 +63,10 @@ if($qdata["user_id"] == -1) {
         echo ($udata['user_colour']?"#".$udata['user_colour']:"inherit") ."\n";
 
         // permissions string
-        echo $ulevel ."\t".                                             // permission rank (higher rank implies more important)
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". // can globally moderate the chat
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". // can view the logs
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\t". // not sure what this is, TODO remember what this is
+        echo $ulevel ."\f".                                             // permission rank (higher rank implies more important)
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\f". // can globally moderate the chat
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\f". // can view the logs
+            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\f". // not sure what this is, TODO remember what this is
             ($auth->acl_get("m_")||$auth->acl_get("a_")?"2":"1");       // can create channels (2 - permanent, 1 - temporary, 0 - none)
 
         $user->session_kill();
