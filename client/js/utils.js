@@ -14,6 +14,14 @@ var Utils = (function () {
         if (typeof params === "undefined") { params = []; }
         return type + "\f" + id + "\f" + params.join("\f");
     };
+
+    Utils.GetOptionByValue = function (select, value) {
+        for (var option in select)
+            if (select[option].value == value)
+                return select[option];
+
+        return null;
+    };
     return Utils;
 })();
 //# sourceMappingURL=utils.js.map

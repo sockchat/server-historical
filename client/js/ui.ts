@@ -123,8 +123,9 @@ class UI {
         // TODO message reparsing
     }
 
-    static AddMessage(date: number, u: User, msg: string, strobe = true, playsound = true) {
+    static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true) {
         var msgDiv = document.createElement("div");
+        msgDiv.id = "sock_msg_"+ msgid;
         msgDiv.className = (this.rowEven[0])?"rowEven":"rowOdd";
 
         /*var timecorrection = (new Date()).getTimezoneOffset()*60000;
@@ -174,6 +175,7 @@ class UI {
     static AddUser(u: User, addToContext = true) {
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[1])?"rowEven":"rowOdd";
+        msgDiv.id = "sock_user_"+ u.id;
         msgDiv.innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
         document.getElementById("userList").appendChild(msgDiv);
         this.rowEven[1] = !this.rowEven[1];
@@ -181,6 +183,22 @@ class UI {
         if(addToContext) {
             UserContext.users[""+ u.id] = u;
         }
+    }
+
+    static ModifyUser(u: User) {
+        document.getElementById("sock_user_"+ u.id).innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
+    }
+
+    static AddChannel(name: string, istemp: boolean, ispwd: boolean) {
+
+    }
+
+    static ModifyChannel(oldname: string, newname: string, istemp: boolean, ispwd: boolean) {
+
+    }
+
+    static RemoveChannel(name: string) {
+
     }
 
     static RemoveUser(id: number) {

@@ -6,7 +6,9 @@
         "Style",
         "Language",
         "Online Users",
-        "Submit"
+        "Submit",
+        "You have been kicked!",
+        "You have been banned until"
     ],
     "botText": {
         "join":     "{0} has joined the chat.",

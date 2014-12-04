@@ -56,112 +56,53 @@ class Chat implements MessageComponentInterface {
         $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
         Utils::$chat = $GLOBALS["chat"];
         Message::$bot = new User("-1", "", "bot", "inherit", "", null);
-
-        Context::$chatbot = new User("-1", Utils::$chat["DEFAULT_CHANNEL"], "", "", "", null);
         Context::CreateChannel(new Channel(Utils::$chat["DEFAULT_CHANNEL"]));
 
         echo "Server started.\n";
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        $this->checkPings();
-    }
-
-    protected function checkPings() {
-        foreach($this->connectedUsers as $user) {
-            if(gmdate("U") - $user->ping > $this->chat["MAX_IDLE_TIME"]) {
-                $user->sock->close();
-                $this->Broadcast($this->PackMessage(3, array($user->id, $user->username, gmdate("U"))));
-                unset($this->connectedUsers[$user->id]);
-            }
-        }
-    }
-
-    protected function getHeader($sock, $name) {
-        try {
-            return (string)$sock->WebSocket->request->getHeader($name, true);
-        } catch(\Exception $e) {
-            return "";
-        }
-    }
-
-    protected function allowUser($username, $sock) {
-        foreach($this->connectedUsers as $user) {
-            if($user->username == $username || $sock == $user->sock)
-                return false;
-        }
-        return true;
-    }
-
-    public function PackMessage($id, $params) {
-        return $id . $this->separator . join($this->separator, $params);
-    }
-
-    public function Broadcast($msg) {
-        foreach($this->connectedUsers as $user) {
-            $user->sock->send($msg);
-        }
-    }
-
-    public function BroadcastMessage($user, $msg) {
-        Chat::Broadcast(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg, $this->msgid)));
-        $this->msgid++;
-    }
-
-    public function SendMessage($user, $to, $msg) {
-        $to->sock->send(Chat::PackMessage(2, array(gmdate("U"), $user->id, $msg, $this->msgid)));
-        $this->msgid++;
-    }
-
-    public function FormatBotMessage($type, $id, $params) {
-        return $type ."\f". $id ."\f". implode("\f", $params);
+        Context::CheckPings();
     }
 
     public function onMessage(ConnectionInterface $conn, $msg) {
-        $this->checkPings();
-        if(substr($this->getHeader($conn, "Origin"), -strlen($this->chat["HOST"])) == $this->chat["HOST"]) {
-            $this->PackMessage(1, array());
-
+        Context::CheckPings();
+        if(substr(Utils::GetHeader($conn, "Origin"), -strlen($this->chat["HOST"])) == $this->chat["HOST"]) {
             $parts = explode($this->separator, $msg);
             $id = $parts[0];
             $parts = array_slice($parts, 1);
 
             switch($id) {
                 case 0:
-                    if(array_key_exists($parts[0], $this->connectedUsers))
-                        $this->connectedUsers[$parts[0]]->ping = gmdate("U");
-                    $conn->send($this->PackMessage(0, array("pong")));
+                    if(($u = Context::GetUserByID($parts[0])) != null) {
+                        $u->ping = gmdate("U");
+                        $conn->send(Utils::PackMessage(0, array("pong")));
+                    }
                     break;
                 case 1:
-                    $arglist = "";
-                    for($i = 0; $i < count($parts); $i++)
-                        $arglist .= ($i==0?"?":"&") ."arg". ($i+1) ."=". urlencode($parts[$i]);
-                    $aparts = $this->GetFileContents($this->chat['CHATROOT'] ."auth/". $GLOBALS['auth_method'][$this->chat['AUTH_TYPE']] . $arglist);
+                    if(!Context::DoesSockExist($conn)) {
+                        $arglist = "";
+                        for($i = 0; $i < count($parts); $i++)
+                            $arglist .= ($i==0?"?":"&") ."arg". ($i+1) ."=". urlencode($parts[$i]);
+                        $aparts = file_get_contents($this->chat['CHATROOT'] ."/auth/". $GLOBALS['auth_method'][$this->chat['AUTH_TYPE']] . $arglist);
 
-                    if(substr($aparts, 0, 3) == "yes") {
-                        $aparts = explode("\n", substr($aparts, 3));
-                        if($this->allowUser($aparts[1], $conn)) {
-                            $id = 0;
-                            if($this->chat["AUTOID"]) {
-                                for($i = 1;; $i++) {
-                                    if(!array_key_exists("".$i, $this->connectedUsers)) {
-                                        $id = "".$i;
-                                        break;
+                        if(substr($aparts, 0, 3) == "yes") {
+                            $aparts = explode("\n", substr($aparts, 3));
+                            if(Context::AllowUser($aparts[1], $conn) == 0) {
+                                $id = 0;
+                                if($this->chat["AUTOID"]) {
+                                    for($i = 1;; $i++) {
+                                        if(!array_key_exists("".$i, $this->connectedUsers)) {
+                                            $id = "".$i;
+                                            break;
+                                        }
                                     }
-                                }
-                            } else $id = $aparts[0];
+                                } else $id = $aparts[0];
 
-                            $userstr = "". count($this->connectedUsers);
-                            foreach($this->connectedUsers as $user)
-                                $userstr .= $this->separator . join($this->separator, array($user->id, $user->username, $user->color));
-
-                            $this->Broadcast($this->PackMessage(1, array(gmdate("U"), $id, $this->Sanitize($aparts[1]), $aparts[2], $this->msgid)));
-                            $conn->send($this->PackMessage(1, array("y", gmdate("U"), $id, $aparts[1], $aparts[2], $userstr, $this->msgid)));
-                            $this->msgid++;
-
-                            $this->connectedUsers[$id] = new User($id, $this->Sanitize($aparts[1]), $aparts[2], $aparts[3], $conn);
-                        } else {
-                            $conn->send(1, array("n","Username in use!"));
+                                Context::Join(new User($id, Utils::$chat["DEFAULT_CHANNEL"], $this->Sanitize($aparts[1]), $aparts[2], $aparts[3], $conn));
+                            } else {
+                                $conn->send(1, array("n","Username in use!"));
+                            }
                         }
                     }
                     break;
@@ -209,11 +150,11 @@ class Chat implements MessageComponentInterface {
                 unset($this->connectedUsers[$user->id]);
             }
         }
-        $this->checkPings();
+        Context::CheckPings();
     }
 
     public function onError(ConnectionInterface $conn, \Exception $err) {
-        $this->checkPings();
+        Context::CheckPings();
         echo "Error on ". $conn->remoteAddress .": ". $err ."\n";
     }
 }

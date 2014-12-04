@@ -27,11 +27,13 @@ class Chat {
         var msg = (<HTMLInputElement>document.getElementById("message")).value;
         msg = msg.replace(/\t/g, " ");
 
-        if(msg.trim() != "") {
-            Socket.Send(Message.Pack(2, ""+ UserContext.self.id, msg));
-        }
+        Chat.SendMessageWrapper(msg);
 
         (<HTMLInputElement>document.getElementById("message")).value = "";
         (<HTMLInputElement>document.getElementById("message")).focus();
+    }
+
+    static SendMessageWrapper(msg: string) {
+        if(msg.trim() != "") Socket.Send(Message.Pack(2, ""+ UserContext.self.id, msg));
     }
 }

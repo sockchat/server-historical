@@ -113,10 +113,11 @@ var UI = (function () {
         // TODO message reparsing
     };
 
-    UI.AddMessage = function (date, u, msg, strobe, playsound) {
+    UI.AddMessage = function (msgid, date, u, msg, strobe, playsound) {
         if (typeof strobe === "undefined") { strobe = true; }
         if (typeof playsound === "undefined") { playsound = true; }
         var msgDiv = document.createElement("div");
+        msgDiv.id = "sock_msg_" + msgid;
         msgDiv.className = (this.rowEven[0]) ? "rowEven" : "rowOdd";
 
         /*var timecorrection = (new Date()).getTimezoneOffset()*60000;
@@ -167,6 +168,7 @@ var UI = (function () {
         if (typeof addToContext === "undefined") { addToContext = true; }
         var msgDiv = document.createElement("div");
         msgDiv.className = (this.rowEven[1]) ? "rowEven" : "rowOdd";
+        msgDiv.id = "sock_user_" + u.id;
         msgDiv.innerHTML = "<span style='color:" + u.color + ";'>" + u.username + "</span>";
         document.getElementById("userList").appendChild(msgDiv);
         this.rowEven[1] = !this.rowEven[1];
@@ -174,6 +176,19 @@ var UI = (function () {
         if (addToContext) {
             UserContext.users["" + u.id] = u;
         }
+    };
+
+    UI.ModifyUser = function (u) {
+        document.getElementById("sock_user_" + u.id).innerHTML = "<span style='color:" + u.color + ";'>" + u.username + "</span>";
+    };
+
+    UI.AddChannel = function (name, istemp, ispwd) {
+    };
+
+    UI.ModifyChannel = function (oldname, newname, istemp, ispwd) {
+    };
+
+    UI.RemoveChannel = function (name) {
     };
 
     UI.RemoveUser = function (id) {

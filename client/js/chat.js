@@ -28,12 +28,15 @@ var Chat = (function () {
         var msg = document.getElementById("message").value;
         msg = msg.replace(/\t/g, " ");
 
-        if (msg.trim() != "") {
-            Socket.Send(Message.Pack(2, "" + UserContext.self.id, msg));
-        }
+        Chat.SendMessageWrapper(msg);
 
         document.getElementById("message").value = "";
         document.getElementById("message").focus();
+    };
+
+    Chat.SendMessageWrapper = function (msg) {
+        if (msg.trim() != "")
+            Socket.Send(Message.Pack(2, "" + UserContext.self.id, msg));
     };
     return Chat;
 })();

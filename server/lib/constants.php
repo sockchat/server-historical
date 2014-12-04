@@ -19,6 +19,10 @@ define("CLEAR_CHANNELS", "2");
 define("CLEAR_MSGNUSERS", "3");
 define("CLEAR_ALL", "4");
 
+define("CTX_USER", "0");
+define("CTX_MSG", "1");
+define("CTX_CHANNEL", "2");
+
 define("P_USER_JOIN", 1);
 define("P_SEND_MESSAGE", 2);
 define("P_USER_LEAVE", 3);
@@ -28,3 +32,4 @@ define("P_MSG_DEL", 6);
 define("P_CTX_DATA", 7);
 define("P_CTX_CLR", 8);
 define("P_BAKA", 9);
+define("P_USER_CHANGE", 10);

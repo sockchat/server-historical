@@ -17,4 +17,11 @@ class Utils {
     static formatBotMessage(type: string, id: string, params: string[] = []): string {
         return type +"\f"+ id +"\f"+ params.join("\f");
     }
+
+    static GetOptionByValue(select: HTMLSelectElement, value: string) {
+        for(var option in select)
+            if(select[option].value == value) return select[option];
+
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ class User {
     public id: number;
     public color: string;
     public perms: string;
+    public channel: string;
 
     public constructor(id: number, u: string, c: string, p: string) {
         this.username = u;

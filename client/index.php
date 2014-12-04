@@ -203,7 +203,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
         </div>
         <div class="botright" id="options" style="padding: 3px;">
             <?php
-            $btns = ["help", "settings", "users", "audio", "autoscroll"];
+            $btns = ["help", "settings", "users", "audio", "clear", "autoscroll"];
             foreach($btns as $btn)
                 echo '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
             ?>

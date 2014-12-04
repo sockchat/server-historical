@@ -3,13 +3,71 @@
     Messages sent between the client and server are a series of concatenat-
 ed strings delimited by the vertical tab character, represented in most la-
 nguages by the escape sequence \t and defined as the ASCII character 0x09. 
-The first string in this concatenation must be the 
+The first string in this concatenation must be the packet identifier, sent
+as an integer. The packet identifiers are as follows.
 
-                               --- SERVER ---                                
+                              --- SERVER ---                                
 
-                               --- CLIENT ---
+0 - User keepalive ping. Done to prevent the client from closin the session
+    due to socket inactivity. The only parameter is the user id.
+    
+1 - User join request. Takes a variable number of parameters that are fed
+    into the authentication script associated with the chat.
+    
+2 - User message. The first parameter is the user id, the second parameter
+    is the message.
+                              
+                              --- CLIENT ---
 
-1 - User joining message.
+1 - User joining message. Takes two different forms depending on the recip-
+    ient.
+    
+    If the recipient is not the joining user, the arguments are as follows:
+        - TIMESTAMP
+        - USER ID
+        - USER NAME
+        - USER COLOR
+        - PERMISSION STRING
+        - MESSAGE ID
+        
+    If the recipient is the joining user, the arguments depend on the first
+    parameter of the message.
+    
+    If 'y' (connection accepted), the parameters are as follows:
+        - USER ID
+        - USER NAME
+        - USER COLOR
+        - PERMISSION STRING
+        - DEFAULT CHANNEL
+    
+    If 'n' (connection refused), the parameters are as follows:
+        - REASON ENUMERATION
+            - 0: AUTH DATA IS WRONG
+            - 1: USERNAME IN USE
+            - 2: SOCKET SESSION ALREADY STARTED
+            - 3: BANNED
+                - followed by unban timestamp
+                
+2 - Chat message to be parsed. Takes a general form but has a special case
+    for bot messages.
+    
+    - TIMESTAMP
+    - USER ID
+    - MESSAGE (SANITIZED)
+    - MESSAGE ID
+    
+    If the message is sent by the chat bot, the USER ID will be set to -1,
+    and the MESSAGE will be a series of strings concatenated by the form
+    feed operator, ASCII character 0x0C represented by the escape sequence
+    \f. The strings will take the following form:
+        - MESSAGE TYPE ENUMERATION
+            - 0 if normal message
+            - 1 if error message
+        - LANG FILE ID STRING
+        - PARAMETERS
+            - the additional parameters as fed into the lang string
+            
+3 - User disconnect notification.
 
 4 - Channel creation/deletion/update notification to clients. First parame-
     ter is either a 0, a 1 or a 2, 0 indicating creation, 1 indicating del-
@@ -24,7 +82,10 @@ The first string in this concatenation must be the
         - CHANNEL NAME
         
     If 2, the parameters are as follows:
-        
+        - OLD CHANNEL NAME
+        - NEW CHANNEL NAME
+        - IS PASSWORD PROTECTED (bool, 1 or 0)
+        - IS TEMPORARY (bool, 1 or 0)
     
 5 - User changing channel information for clients. First parameter is 0 or 
     1 to indicate whether the user is joining or leaving, the following pa-
@@ -71,9 +132,12 @@ The first string in this concatenation must be the
             - MESSAGE ID
             
         If 2, the parameters are as follows:
-            - CHANNEL NAME
-            - IS PASSWORD PROTECTED (bool, 1 or 0)
-            - IS TEMPORARY (bool, 1 or 0)
+            - A COUNT OF CHANNELS SENT IN PACKET (represented as N)
+            - N REPETITIONS OF
+                - CHANNEL NAME
+                - IS PASSWORD PROTECTED (bool, 1 or 0)
+                - IS TEMPORARY (bool, 1 or 0)
+              WHICH EACH REPRESENT A SINGLE CHANNEL
               
 8 - Forces the client to clear a specific portion of the context. First pa-
     rameter is an integer from 0 to 4 to indicate what should be cleared.
@@ -89,4 +153,15 @@ The first string in this concatenation must be the
     
     First argument is a 0, representing a kick, or a 1, representing a ban.
     If the first argument is 1, then the following argument is a length sp-
-    ecifier for the ban duration in seconds.
+    ecifier for the ban duration in unix epoch time.
+    
+10- Informs clients (usually in same channel) that data on a specific user 
+    has been changed. Used for things like changing nicknames or temporary
+    privilege elevation.
+    
+    The first argument is the user ID of the affected user (which can never
+    change). Following are the details of the user:
+    
+        - USER NAME
+        - USER COLOR
+        - PERMISSION STRING

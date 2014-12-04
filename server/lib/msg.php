@@ -39,7 +39,7 @@ class Message {
 
     // NOTE: DOES NOT SANITIZE INPUT MESSAGE !! DO THIS ELSEWHERE
     public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL) {
-        $out = Utils::PackMessage(2, array(gmdate("U"), $user->id, $msg, Message::$msgId));
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId));
 
         if($channel == ALL_CHANNELS) {
             Message::SendToAll($out);
@@ -63,7 +63,7 @@ class Message {
     }
 
     public static function PrivateUserMessage($user, $to, $msg) {
-        $out = Utils::PackMessage(2, array(gmdate("U"), $user->id, $msg, Message::$msgId));
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId));
         $to->sock->send($out);
         Message::$msgId++;
     }
@@ -75,36 +75,36 @@ class Message {
     }
 
     public static function HandleJoin($user) {
-        Message::SendToChannel(Utils::PackMessage(1, array(gmdate("U"), $user->id, $user->username, $user->color, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
+        Message::SendToChannel(Utils::PackMessage(P_USER_JOIN, array(gmdate("U"), $user->id, $user->username, $user->color, $user->permissions, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
 
-        $user->sock->send(Utils::PackMessage(1, array("y", gmdate("U"), $user->id, $user->username, $user->color)));
+        $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user->id, $user->username, $user->color, $user->permissions, Utils::$chat["DEFAULT_CHANNEL"])));
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "join", array($user->username)), Utils::$chat["DEFAULT_CHANNEL"]);
-        $user->sock->send(Utils::PackMessage(7, array("0", count(Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->users), join(Utils::$separator, Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"]).GetAllUsers()))));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->users), join(Utils::$separator, Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"]).GetAllUsers()))));
 
         $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
         foreach($msgs as $msg)
-            $user->sock->send(Utils::PackMessage(7, array("1", $msg)));
+            $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("1", $msg)));
 
         Message::$msgId++;
     }
 
     public static function HandleChannelSwitch($user, $to, $from) {
-        Message::SendToChannel(Utils::PackMessage(5, array("1", $user->id, Message::$msgId)), $from);
+        Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("1", $user->id, Message::$msgId)), $from);
         Message::LogToChannel(Message::$bot, Utils::PackMessage(MSG_NORMAL, "lchan", array($user->username)), $from);
-        Message::SendToChannel(Utils::PackMessage(5, array("0", $user->id, $user->username, $user->color, $user->permissions, Message::$msgId)), $to);
+        Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("0", $user->id, $user->username, $user->color, $user->permissions, Message::$msgId)), $to);
         Message::LogToChannel(Message::$bot, Utils::PackMessage(MSG_NORMAL, "jchan", array($user->username)), $to);
-        $user->sock->send(Utils::PackMessage(8, array("2")));
-        $user->sock->send(Utils::PackMessage(7, array("0", count(Context::GetChannel($to)->users), join(Utils::$separator, Context::GetChannel($to)->GetAllUsers()), Message::$msgId)));
+        $user->sock->send(Utils::PackMessage(P_CTX_CLR, array(CLEAR_MSGNUSERS)));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel($to)->users), join(Utils::$separator, Context::GetChannel($to)->GetAllUsers()), Message::$msgId)));
 
         $msgs = Context::GetChannel($to)->log->GetAllLogStrings();
         foreach($msgs as $msg)
-            $user->sock->send(Utils::PackMessage(7, array("1", $msg)));
+            $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("1", $msg)));
 
         Message::$msgId++;
     }
 
     public static function HandleLeave($user) {
-        Message::SendToChannel(Utils::PackMessage(3, array($user->id, $user->username, gmdate("U"), Message::$msgId)), $user->channel);
+        Message::SendToChannel(Utils::PackMessage(P_USER_LEAVE, array($user->id, $user->username, gmdate("U"), Message::$msgId)), $user->channel);
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "leave", array($user->username)), $user->channel);
         Message::$msgId++;
     }
