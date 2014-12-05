@@ -2,19 +2,19 @@
     "emotes": [
         {
             "img" : "smile.png",
-            "syn" : [":)","(:"]
+            "syn" : [":)"]
         },
         {
             "img" : "sad.png",
-            "syn" : [":(","):"]
+            "syn" : [":("]
         },
         {
             "img" : "wink.png",
-            "syn" : [";)","(;"]
+            "syn" : [";)"]
         },
         {
             "img" : "razz.png",
-            "syn" : [":P",":p","d:"]
+            "syn" : [":P",":p"]
         },
         {
             "img" : "grin.png",
@@ -38,11 +38,11 @@
         },
         {
             "img" : "eek.png",
-            "syn" : ["8O","8o"]
+            "syn" : ["8O"]
         },
         {
             "img" : "cool.png",
-            "syn" : [":-)","(-:"]
+            "syn" : [":-)"]
         },
         {
             "img" : "smile-big.png",
@@ -50,11 +50,11 @@
         },
         {
             "img" : "crying.png",
-            "syn" : [";(",");",":-(",")-:"]
+            "syn" : [";(",":-("]
         },
         {
             "img" : "kiss.png",
-            "syn" : [":*",":-*","*:","*-:"]
+            "syn" : [":*",":-*"]
         },
         {
             "img" : "angel.png",

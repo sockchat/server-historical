@@ -4,8 +4,8 @@ use sockchat\cmds\GenericCommand;
 use \sockchat\Message;
 
 class say implements GenericCommand {
-    public static function doCommand($user, $arr) {
-        if($user->canModerate())
-            Message::BroadcastBotMessage(MSG_NORMAL, "say", [implode(" ", $arr)]);
+    public static function doCommand($user, $args) {
+        if($user->canModerate()) Message::BroadcastBotMessage(MSG_NORMAL, "say", [implode(" ", $args)]);
+        else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/say"], $user);
     }
 }

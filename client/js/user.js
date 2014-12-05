@@ -3,8 +3,20 @@ var User = (function () {
         this.username = u;
         this.id = id;
         this.color = c;
-        this.perms = p;
+        this.permstr = p;
+        this.perms = p.split("\f");
     }
+    User.prototype.EvaluatePermString = function () {
+        this.perms = this.permstr.split("\f");
+    };
+
+    User.prototype.getRank = function () {
+        return +this.perms[0];
+    };
+
+    User.prototype.canModerate = function () {
+        return this.perms[1] == "1";
+    };
     return User;
 })();
 

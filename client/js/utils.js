@@ -22,6 +22,18 @@ var Utils = (function () {
 
         return null;
     };
+
+    Utils.GetOptionIndexByValue = function (select, value) {
+        for (var option in select)
+            if (select[option].value == value)
+                return option;
+
+        return -1;
+    };
+
+    Utils.UnixNow = function () {
+        return Math.round((new Date()).getTime() / 1000);
+    };
     return Utils;
 })();
 //# sourceMappingURL=utils.js.map

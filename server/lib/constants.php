@@ -33,3 +33,6 @@ define("P_CTX_DATA", 7);
 define("P_CTX_CLR", 8);
 define("P_BAKA", 9);
 define("P_USER_CHANGE", 10);
+
+define("LEAVE_NORMAL", 0);
+define("LEAVE_KICK", 1);

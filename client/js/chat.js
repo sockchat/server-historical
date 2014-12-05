@@ -38,6 +38,25 @@ var Chat = (function () {
         if (msg.trim() != "")
             Socket.Send(Message.Pack(2, "" + UserContext.self.id, msg));
     };
+
+    Chat.ChangeChannel = function () {
+        var dd = document.getElementById("channeldd");
+
+        if (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate()) {
+            document.getElementById("chname").innerHTML = dd.value;
+            document.getElementById("chpwd").value = "";
+            document.getElementById("pwdPrompt").style.display = "block";
+        } else
+            Chat.SendMessageWrapper("/join " + dd.value);
+
+        dd.value = UserContext.self.channel;
+    };
+
+    Chat.ChangeChannelWithPassword = function () {
+        document.getElementById("pwdPrompt").style.display = "none";
+        Chat.SendMessageWrapper("/join " + document.getElementById("chname").innerHTML + " " + document.getElementById("chpwd").value);
+        document.getElementById("channeldd").value = UserContext.self.channel;
+    };
     return Chat;
 })();
 //# sourceMappingURL=chat.js.map

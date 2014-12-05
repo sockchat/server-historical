@@ -7,13 +7,14 @@ $chat["CHATROOT"] = "http://www.aroltd.com/chat/";
 $chat["HOST"] = "aroltd.com";
 $chat["PORT"] = 12120;
 
+$chat["MAX_NAME_LEN"] = 25;
 $chat["MAX_MSG_LEN"] = 2000;
 
 $chat["AUTH_TYPE"] = AUTH_PHPBB;
 $chat["CAUTH_FILE"] = "authfile.php";
 $chat["AUTOID"] = false;
 
-$chat["MAX_IDLE_TIME"] = 90;
+$chat["MAX_IDLE_TIME"] = 180;
 
 $chat["BACKLOG_LENGTH"] = 9;
 

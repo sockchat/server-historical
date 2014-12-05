@@ -45,6 +45,7 @@ class UI {
     static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
+    static maxMsgLen = 2000;
     static ChatBot = new User(-1, "ChatBot", "inherit", "");
 
     static bbcode = Array();
@@ -164,12 +165,12 @@ class UI {
         outmsg = tmp.join(" ");
 
         var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
-        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>: "+ outmsg +"";
+        msgDiv.innerHTML = "<span style='vertical-align: top;'><span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>:</span> "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
 
-        if(strobe) Title.Strobe(u.username);
+        if(strobe && u.id != UserContext.self.id) Title.Strobe(u.username);
     }
 
     static AddUser(u: User, addToContext = true) {
@@ -189,16 +190,22 @@ class UI {
         document.getElementById("sock_user_"+ u.id).innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
     }
 
-    static AddChannel(name: string, istemp: boolean, ispwd: boolean) {
-
+    static AddChannel(name: string, ispwd: boolean, istemp: boolean) {
+        var opt = document.createElement("option");
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + name + (istemp ? "]" : "");
+        opt.value = name;
+        (<HTMLSelectElement>document.getElementById("channeldd")).add(opt);
     }
 
-    static ModifyChannel(oldname: string, newname: string, istemp: boolean, ispwd: boolean) {
-
+    static ModifyChannel(oldname: string, newname: string, ispwd: boolean, istemp: boolean) {
+        var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
+        opt.value = newname;
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");
     }
 
     static RemoveChannel(name: string) {
-
+        var cdd = <HTMLSelectElement>document.getElementById("channeldd");
+        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));
     }
 
     static RemoveUser(id: number) {

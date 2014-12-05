@@ -34,7 +34,7 @@ class Channel {
 
     public $log;
 
-    public function __construct($name, $permissionLevel = 0, $password = "", $channelOwner = "", $channelType = CHANNEL_PERM) {
+    public function __construct($name, $password = "", $permissionLevel = 0, $channelOwner = "", $channelType = CHANNEL_PERM) {
         $this->name = $name;
         $this->permissionLevel = $permissionLevel;
         $this->password = $password;
@@ -45,5 +45,9 @@ class Channel {
 
     public function GetAllUsers() {
         return join(Utils::$separator, $this->users);
+    }
+
+    public function __toString() {
+        return join(Utils::$separator, [$this->name, $this->password != "", $this->channelType == CHANNEL_TEMP]);
     }
 }

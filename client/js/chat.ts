@@ -36,4 +36,22 @@ class Chat {
     static SendMessageWrapper(msg: string) {
         if(msg.trim() != "") Socket.Send(Message.Pack(2, ""+ UserContext.self.id, msg));
     }
+
+    static ChangeChannel() {
+        var dd = <HTMLSelectElement>document.getElementById("channeldd");
+
+        if(dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate()) {
+            document.getElementById("chname").innerHTML = dd.value;
+            (<HTMLInputElement>document.getElementById("chpwd")).value = "";
+            document.getElementById("pwdPrompt").style.display = "block";
+        } else Chat.SendMessageWrapper("/join "+ dd.value);
+
+        dd.value = UserContext.self.channel;
+    }
+
+    static ChangeChannelWithPassword() {
+        document.getElementById("pwdPrompt").style.display = "none";
+        Chat.SendMessageWrapper("/join "+ document.getElementById("chname").innerHTML +" "+ (<HTMLInputElement>document.getElementById("chpwd")).value);
+        (<HTMLSelectElement>document.getElementById("channeldd")).value = UserContext.self.channel;
+    }
 }

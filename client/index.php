@@ -139,12 +139,18 @@ $packs = SoundPackHandler::getAllSoundPacks();
     Connection closed !
 </div>
 <div id="chat" style="display: none;">
+    <div class="alert" id="pwdPrompt" style="display: none;">
+        Enter the password for <span id="chname">Chinky_Palace</span>: <br /><br />
+        <form method="post" action="" onsubmit="Chat.ChangeChannelWithPassword();return false;">
+            <input type="password" id="chpwd" style="width: calc(100% - 45px);" /> <input type="submit" value="Go" style="width: 33px;" />
+        </form>
+    </div>
     <div id="header">
         <div>
             <div class="topleft" id="chatTitle"><?php echo $chat["CHAT_TITLE"]; ?></div>
             <div class="botleft" id="userData">
                 <span id="tchan">Channel</span>:&nbsp;
-                <select id="channeldd">
+                <select id="channeldd" onchange="Chat.ChangeChannel();">
                 </select>
                 &nbsp;<span id="tstyle">Style</span>:&nbsp;
                 <select id="styledd" onchange="UI.ChangeStyle();">
@@ -190,7 +196,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
         </div>
     </div>
     <div id="footer">
-        <textarea type="text" cols="2" id="message" style="width: 100%;" onkeypress="handleMessage(event);"></textarea>
+        <textarea cols="2" id="message" style="width: 100%;" onkeypress="handleMessage(event);"></textarea>
         <div class="botleft" style="padding: 3px;">
             <span id="emotes"></span>
             <div style="margin-top: 8px;">

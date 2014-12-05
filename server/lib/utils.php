@@ -18,6 +18,10 @@ class Utils {
         return str_replace("\n", " <br/>", str_replace("\\","&#92;",htmlspecialchars($str, ENT_QUOTES)));
     }
 
+    public static function SanitizeName($name) {
+        return str_replace(" ", "_", str_replace("\\","&#92;",htmlspecialchars($name, ENT_QUOTES)));
+    }
+
     public static function GetHeader($sock, $name) {
         try {
             return (string)$sock->WebSocket->request->getHeader($name, true);

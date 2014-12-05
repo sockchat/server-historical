@@ -1,22 +1,18 @@
 <?php
 namespace sockchat\cmds;
 use sockchat\cmds\GenericCommand;
+use sockchat\Context;
+use sockchat\Message;
 
 class kick implements GenericCommand {
     public static function doCommand($user, $args) {
-        /*$foundUser = null;
-        foreach($chat->connectedUsers as $u) {
-            if(strtolower($u) == strtolower($arr[0])) {
-                $foundUser = $u;
-                break;
-            }
-        }
-
-        if($foundUser == null)
-            $chat->SendMessage($chat->chatbot, $user, "<i><span style='color: red;'>Error: User ". $arr[0] ." not found.</span></i>");
-        else {
-
-        }
-        $chat->BroadcastMessage($chat->chatbot, "<a href='http://aroltd.com'>hello</a>");*/
+        if($user->canModerate()) {
+            if(($target = Context::GetUserByName($args[0])) != null) {
+                if($target->getRank() <= $user->getRank()) {
+                    $length = (!isset($args[1]) || !is_numeric($args[1])) ? 0 : $args[1];
+                    Context::KickUser($target, $length);
+                } else Message::PrivateBotMessage(MSG_ERROR, "kickna", [$args[0]], $user);
+            } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
+        } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/kick"], $user);
     }
 }

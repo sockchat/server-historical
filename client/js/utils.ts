@@ -24,4 +24,15 @@ class Utils {
 
         return null;
     }
+
+    static GetOptionIndexByValue(select: HTMLSelectElement, value: string) {
+        for(var option in select)
+            if(select[option].value == value) return option;
+
+        return -1;
+    }
+
+    static UnixNow(): number {
+        return Math.round((new Date()).getTime()/1000);
+    }
 }

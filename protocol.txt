@@ -110,6 +110,10 @@ as an integer. The packet identifiers are as follows.
             - USER ID
         And indicates a user leaving a channel.
         
+        If 2, the parameters are as follows:
+            - CHANNEL NAME
+        And indicates the current channel a user has joined.
+        
 6 - Indicates forceful message deletion. The first parameter is the message
     ID as it is represented in Message::$msgid.
     

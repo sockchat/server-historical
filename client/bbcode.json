@@ -80,6 +80,11 @@ with this property differently:
                 "tag": "url",
                 "arg": true,
                 "swap": "<a href='$1' onclick='window.open(this.href);return false;'>$2</a>"
+            },
+            {
+                "tag": "video",
+                "arg": false,
+                "swap": "<iframe width='192' height='144' src='//www.youtube.com/embed/$1?rel=0&showinfo=0&disablekb=1' frameborder='0' allowfullscreen></iframe>"
             }
         ]
 }

@@ -14,15 +14,23 @@ class Context {
     public static $channelList = [];
     public static $bannedUsers = [];
 
-    public static function SwitchChannel($user, $to) {
+    public static function ForceChannelSwitch($user, $to) {
+        if(Context::ChannelExists($to)) {
+            Message::HandleChannelSwitch($user, $to, $user->channel);
+            unset(Context::GetChannel($user->channel)->users[$user->id]);
+            Context::GetChannel($to)->users[$user->id] = Context::$onlineUsers[$user->id];
+            Context::$onlineUsers[$user->id]->channel = $to;
+        }
+    }
+
+    public static function SwitchChannel($user, $to, $pwd = "") {
         if($user->channel != $to) {
             if(Context::ChannelExists($to)) {
-                if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
-                    Message::HandleChannelSwitch($user, $to, $user->channel);
-                    unset(Context::GetChannel($user->channel)->users[$user->id]);
-                    Context::GetChannel($to)->users[$user->id] = Context::$onlineUsers[$user->id];
-                    Context::$onlineUsers[$user->id]->channel = $to;
-                } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
+                if($pwd == Context::GetChannel($to)->password || $user->canModerate()) {
+                    if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
+                        Context::ForceChannelSwitch($user, $to);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
+                } else Message::PrivateBotMessage(MSG_ERROR, "ipwchan", array($to), $user);
             } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($to), $user);
         } else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user);
     }
@@ -38,6 +46,10 @@ class Context {
         }
 
         return null;
+    }
+
+    public static function GetAllChannels() {
+        return join(Utils::$separator, Context::$channelList);
     }
 
     public static function GetChannel($name) {
@@ -85,6 +97,18 @@ class Context {
         return 0;
     }
 
+    public static function ModifyUser($newuser) {
+        $u = Context::GetUserByID($newuser->id);
+        $u->Copy($newuser);
+        Message::HandleUserModification($u);
+    }
+
+    public static function KickUser($user, $time = 0) {
+        Message::HandleKick($user, $time);
+        $user->sock->close();
+        Context::Leave($user, LEAVE_KICK);
+    }
+
     public static function CheckPings() {
         foreach(Context::$onlineUsers as $user) {
             if(gmdate("U") - $user->ping > Utils::$chat["MAX_IDLE_TIME"]) {
@@ -102,8 +126,8 @@ class Context {
         return false;
     }
 
-    public static function Leave($user) {
-        Message::HandleLeave($user);
+    public static function Leave($user, $type = LEAVE_NORMAL) {
+        Message::HandleLeave($user, $type);
         unset(Context::GetChannel($user->channel)->users[$user->id]);
         unset(Context::$onlineUsers[$user->id]);
     }

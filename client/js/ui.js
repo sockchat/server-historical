@@ -155,12 +155,12 @@ var UI = (function () {
         outmsg = tmp.join(" ");
 
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
-        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span style='font-weight:bold;color:" + u.color + ";'>" + name + "</span>: " + outmsg + "";
+        msgDiv.innerHTML = "<span style='vertical-align: top;'><span class='date'>(" + datestr + ")</span> <span style='font-weight:bold;color:" + u.color + ";'>" + name + "</span>:</span> " + outmsg + "";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
 
-        if (strobe)
+        if (strobe && u.id != UserContext.self.id)
             Title.Strobe(u.username);
     };
 
@@ -182,13 +182,22 @@ var UI = (function () {
         document.getElementById("sock_user_" + u.id).innerHTML = "<span style='color:" + u.color + ";'>" + u.username + "</span>";
     };
 
-    UI.AddChannel = function (name, istemp, ispwd) {
+    UI.AddChannel = function (name, ispwd, istemp) {
+        var opt = document.createElement("option");
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + name + (istemp ? "]" : "");
+        opt.value = name;
+        document.getElementById("channeldd").add(opt);
     };
 
-    UI.ModifyChannel = function (oldname, newname, istemp, ispwd) {
+    UI.ModifyChannel = function (oldname, newname, ispwd, istemp) {
+        var opt = Utils.GetOptionByValue(document.getElementById("channeldd"), oldname);
+        opt.value = newname;
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");
     };
 
     UI.RemoveChannel = function (name) {
+        var cdd = document.getElementById("channeldd");
+        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));
     };
 
     UI.RemoveUser = function (id) {
@@ -208,6 +217,7 @@ var UI = (function () {
     UI.displayDivs = ["connmsg", "connclose", "chat", "connerr", "attemptlogin"];
     UI.rowEven = [true, false];
     UI.currentView = 0;
+    UI.maxMsgLen = 2000;
     UI.ChatBot = new User(-1, "ChatBot", "inherit", "");
 
     UI.bbcode = Array();

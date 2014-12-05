@@ -85,6 +85,23 @@ body {
     word-wrap: break-word;
 }
 
+.alert {
+    position: absolute;
+    top: 15px;
+    margin: 0 auto;
+    z-index: 999;
+    left: 0;
+    right: 0;
+    width: 25%;
+    min-width: 300px;
+    max-width: 500px;
+    text-align: center;
+    color: black;
+    background-color: white;
+    border: 3px double black;
+    padding: 15px;
+}
+
 #chat #footer {
     position: absolute;
     bottom: 25px;
