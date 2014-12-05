@@ -64,10 +64,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sock.ts" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="sock.ts" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/sock.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="162" column="0" selection-start="7259" selection-end="7259" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3247">
+            <state line="143" column="52" selection-start="6340" selection-end="6340" vertical-scroll-proportion="0.73913044" vertical-offset="1989" max-vertical-offset="3247">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -107,16 +107,16 @@
       <file leaf-file-name="common.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lang/en/common.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="51" selection-start="1617" selection-end="1617" vertical-scroll-proportion="-18.576923" vertical-offset="129" max-vertical-offset="748">
+            <state line="30" column="62" selection-start="1220" selection-end="1220" vertical-scroll-proportion="-11.384615" vertical-offset="214" max-vertical-offset="816">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="chat.ts" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="chat.ts" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/chat.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="89" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.44353518" vertical-offset="358" max-vertical-offset="969">
+            <state line="42" column="89" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.0" vertical-offset="358" max-vertical-offset="969">
               <folding />
             </state>
           </provider>
@@ -174,7 +174,6 @@
         <option value="$PROJECT_DIR$/js/utils.ts" />
         <option value="$PROJECT_DIR$/emotes.json" />
         <option value="$PROJECT_DIR$/auth/phpbb.php" />
-        <option value="$PROJECT_DIR$/lang/en/common.json" />
         <option value="$PROJECT_DIR$/bbcode.json" />
         <option value="$PROJECT_DIR$/styles/_global.css" />
         <option value="$PROJECT_DIR$/js/ui.ts" />
@@ -182,6 +181,7 @@
         <option value="$PROJECT_DIR$/js/user.ts" />
         <option value="$PROJECT_DIR$/js/sock.ts" />
         <option value="$PROJECT_DIR$/js/chat.ts" />
+        <option value="$PROJECT_DIR$/lang/en/common.json" />
       </list>
     </option>
   </component>
@@ -358,6 +358,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../server" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="SearchEverywhereHistory" value="" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -416,7 +417,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.10047096" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -430,7 +431,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13836017" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="0" y="0" width="201" height="860" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13836017" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="0" y="0" width="201" height="860" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23704867" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -817,23 +818,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/utils.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="54" selection-start="1344" selection-end="1344" vertical-scroll-proportion="0.0" vertical-offset="133" max-vertical-offset="731">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/lang.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="31" selection-start="317" selection-end="317" vertical-scroll-proportion="0.0" vertical-offset="121" max-vertical-offset="1156">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="51" selection-start="1617" selection-end="1617" vertical-scroll-proportion="-18.576923" vertical-offset="129" max-vertical-offset="748">
           <folding />
         </state>
       </provider>
@@ -861,15 +848,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sock.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="162" column="0" selection-start="7259" selection-end="7259" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3247">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/user.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="46" selection-start="468" selection-end="468" vertical-scroll-proportion="0.4729951" vertical-offset="0" max-vertical-offset="646">
@@ -879,8 +857,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/chat.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="89" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.44353518" vertical-offset="358" max-vertical-offset="969">
+        <state line="42" column="89" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.0" vertical-offset="358" max-vertical-offset="969">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="62" selection-start="1220" selection-end="1220" vertical-scroll-proportion="-11.384615" vertical-offset="214" max-vertical-offset="816">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="54" selection-start="1344" selection-end="1344" vertical-scroll-proportion="0.0" vertical-offset="133" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/sock.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="143" column="52" selection-start="6340" selection-end="6340" vertical-scroll-proportion="0.73913044" vertical-offset="1989" max-vertical-offset="3247">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

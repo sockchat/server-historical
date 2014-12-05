@@ -1,9 +1,6 @@
 <?php
 namespace sockchat;
 
-require_once("context.php");
-require_once("utils.php");
-
 class Message {
     public static $msgId = 0;
     public static $bot;
@@ -125,6 +122,19 @@ class Message {
         Message::SendAllChannelsToUser($user);
 
         Message::$msgId++;
+    }
+
+    public static function HandleChannelCreation($channel) {
+        foreach(Context::$onlineUsers as $user)
+            Message::SendChannelToUser($user, $channel);
+    }
+
+    public static function HandleChannelDeletion($channel) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+
+        foreach(Context::$onlineUsers as $user) {
+            if($user->getRank() >= $channel->permissionLevel) $user->sock->send(Utils::PackMessage(4, ["1", $channel->name]));
+        }
     }
 
     public static function HandleChannelSwitch($user, $to, $from) {

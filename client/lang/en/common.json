@@ -21,12 +21,14 @@
         "jchan"     : "{0} entered the channel.",
         "lchan"     : "{0} left the channel.",
         "kick"      : "{0} has been kicked.",
-        "nick"      : "{0} is now known as {1}."
+        "nick"      : "{0} is now known as {1}.",
+        "crchan"    : "{0} has been created."
     },
     "botErrText": {
         "nolang"    : "Error: Chatbot sent {1} id '{0}' with no definition in this language!",
         "nocmd"     : "Error: Command {0} not found!",
         "cmdna"     : "Error: Not allowed to use {0}!",
+        "cmderr"    : "Error: Command formatted incorrectly!",
         "usernf"    : "Error: User {0} not found!",
         "kickna"    : "Error: Not allowed to kick {0}!",
         "samechan"  : "Error: You are already in {0}!",
@@ -34,6 +36,8 @@
         "ipchan"    : "Error: You are not allowed to join {0}!",
         "nopwchan"  : "Error: Channel {0} is password-protected! Use '/join {0} [password]'.",
         "ipwchan"   : "Error: Password to channel {0} is incorrect!",
+        "inchan"    : "Error: Channel name cannot start with a @ or *!",
+        "nischan"   : "Error: Channel {0} already exists!",
         "nameinuse" : "Error: Username {0} in use!"
     }
 }

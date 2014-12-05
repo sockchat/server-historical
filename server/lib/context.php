@@ -16,10 +16,15 @@ class Context {
 
     public static function ForceChannelSwitch($user, $to) {
         if(Context::ChannelExists($to)) {
+            $oldchan = $user->channel;
+
             Message::HandleChannelSwitch($user, $to, $user->channel);
             unset(Context::GetChannel($user->channel)->users[$user->id]);
             Context::GetChannel($to)->users[$user->id] = Context::$onlineUsers[$user->id];
             Context::$onlineUsers[$user->id]->channel = $to;
+
+            if(Context::GetChannel($oldchan)->channelType == CHANNEL_TEMP && Context::GetChannel($oldchan)->channelOwner->id == $user->id)
+                Context::DeleteChannel($oldchan);
         }
     }
 
@@ -62,18 +67,26 @@ class Context {
     }
 
     public static function CreateChannel($channel) {
-        if(!Context::ChannelExists($channel->name) && $channel->name[0] != "@" && $channel->name[0] != "*") {
-            Context::$channelList[$channel->name] = $channel;
-            return true;
-        } else return false;
+        if(is_string($channel)) $channel = new Channel($channel);
+
+        if(!Context::ChannelExists($channel->name)) {
+            if($channel->name[0] != "@" && $channel->name[0] != "*") {
+                Context::$channelList[$channel->name] = $channel;
+                Message::HandleChannelCreation($channel);
+                return "OK";
+            } else return Utils::FormatBotMessage(MSG_ERROR, "inchan", []);
+        } else return Utils::FormatBotMessage(MSG_ERROR, "nischan", [$channel->name]);
     }
 
-    public static function ModifyChannel() {
+    public static function ModifyChannel($oldchannel, $update) {
 
     }
 
-    public static function DeleteChannel($name) {
-
+    public static function DeleteChannel($channel) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        foreach($channel->users as $user) Context::SwitchChannel($user, Utils::$chat["DEFAULT_CHANNEL"]);
+        Message::HandleChannelDeletion($channel);
+        unset(Context::$channelList[$channel->name]);
     }
 
     public static function Join($user) {
@@ -127,6 +140,9 @@ class Context {
     }
 
     public static function Leave($user, $type = LEAVE_NORMAL) {
+        if(Context::GetChannel($user->channel)->channelType == CHANNEL_TEMP && Context::GetChannel($user->channel)->channelOwner->id == $user->id)
+            Context::DeleteChannel($user->channel);
+
         Message::HandleLeave($user, $type);
         unset(Context::GetChannel($user->channel)->users[$user->id]);
         unset(Context::$onlineUsers[$user->id]);
