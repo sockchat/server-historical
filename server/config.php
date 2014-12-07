@@ -7,7 +7,8 @@ $chat["CHATROOT"] = "http://www.aroltd.com/chat/";
 $chat["HOST"] = "aroltd.com";
 $chat["PORT"] = 12120;
 
-$chat["MAX_NAME_LEN"] = 25;
+$chat["MAX_CHANNEL_NAME_LEN"] = 30;
+$chat["MAX_USERNAME_LEN"] = 30;
 $chat["MAX_MSG_LEN"] = 2000;
 
 $chat["AUTH_TYPE"] = AUTH_PHPBB;

@@ -32,6 +32,15 @@ class Utils {
         return -1;
     }
 
+    static FetchPage(url: string) {
+        var req = new XMLHttpRequest();
+        req.open("GET", url, false);
+        req.send(null);
+
+        if(req.status === 200) return req.responseText;
+        else return "";
+    }
+
     static UnixNow(): number {
         return Math.round((new Date()).getTime()/1000);
     }

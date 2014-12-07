@@ -29,4 +29,12 @@ class Utils {
             return "";
         }
     }
+
+    public static function DoesModExist($name) {
+        return file_exists("./mods/". $name);
+    }
+
+    public static function DoesCommandExist($name) {
+        return file_exists("./commands/". $name .".php");
+    }
 }

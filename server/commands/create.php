@@ -9,6 +9,8 @@ class create implements GenericCommand {
     public static function doCommand($user, $args) {
         if($user->channelCreationPermission() != "0") {
             if(isset($args[0]) && $args[0] != "") {
+
+                /*
                 $channel = new Channel(str_replace(" ", "_", $args[0]));
                 if($user->channelCreationPermission() == 1) {
                     $channel->channelType = CHANNEL_TEMP;
@@ -21,6 +23,7 @@ class create implements GenericCommand {
                     Message::PrivateBotMessage(MSG_NORMAL, "crchan", [$channel->name], $user);
                 } else
                     Message::PrivateUserMessage(Message::$bot, $user, $ret);
+                */
             } else Message::PrivateBotMessage(MSG_ERROR, "cmderr", [], $user);
         } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/create"], $user);
     }

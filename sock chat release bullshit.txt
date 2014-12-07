@@ -1,0 +1,20 @@
+         === BASIC SHIT THAT NEEDS TO BE IN SOCK CHAT RELEASE 1.0 ===
+~~ that is not yet done because i wasted all of saturday doing fucking nothing ~~
+
+* mod support
+* all channel commands
+	* /pwd, /priv, /delete and fix /create
+* actually implement banning you fucking idipt
+* afk command/mod duo
+* implement option buttons
+* improve authentication script methodology
+	* use xmlhttprequest to fetch the vars instead of an inline drop
+* database shit
+* templating (low priority)
+* friendly autoreconnect on socket disconnect while in UI view 2
+
+--- STUFF TO WORK ON IF YOU FINISH ALL THE ABOVE (which you won't you lazy fucking nigger) ---
+
+* standalone client (maybe this should come with the 1.0 release?)
+* improve alert box style
+* mobile style (focus on responsive design)

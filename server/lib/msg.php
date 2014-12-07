@@ -133,7 +133,7 @@ class Message {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
 
         foreach(Context::$onlineUsers as $user) {
-            if($user->getRank() >= $channel->permissionLevel) $user->sock->send(Utils::PackMessage(4, ["1", $channel->name]));
+            if($user->getRank() >= $channel->permissionLevel) $user->sock->send(Utils::PackMessage(4, ["2", $channel->name]));
         }
     }
 

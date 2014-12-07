@@ -37,7 +37,7 @@ class Context {
                     } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "ipwchan", array($to), $user);
             } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($to), $user);
-        } else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user);
+        } // else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user); // kind of extraneous
     }
 
     public static function GetUserByID($id) {

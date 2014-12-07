@@ -11,6 +11,7 @@ class User {
     public $permstr;
     public $sock;
     public $ping;
+    protected $customParams = [];
 
     public function __construct($id, $channel, $username, $color, $permissions, $sock) {
         $this->id = $id;
@@ -22,6 +23,15 @@ class User {
         $this->permissions = explode("\f", $permissions);
         $this->sock = $sock;
         $this->ping = gmdate("U");
+    }
+
+    public function SetParameter($key, $value) {
+        $this->customParams[$key] = $value;
+    }
+
+    public function GetParameter($key) {
+        if(array_key_exists($key, $this->customParams)) return $this->customParams[$key];
+        else return null;
     }
 
     public function GetOriginalUsername() {

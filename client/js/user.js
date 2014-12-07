@@ -9,17 +9,14 @@ var User = (function () {
     User.prototype.EvaluatePermString = function () {
         this.perms = this.permstr.split("\f");
     };
-
     User.prototype.getRank = function () {
         return +this.perms[0];
     };
-
     User.prototype.canModerate = function () {
         return this.perms[1] == "1";
     };
     return User;
 })();
-
 var UserContext = (function () {
     function UserContext() {
     }
