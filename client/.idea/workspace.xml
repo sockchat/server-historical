@@ -25,21 +25,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8354531" vertical-offset="1618" max-vertical-offset="3859">
-              <caret line="157" column="53" selection-start-line="157" selection-start-column="53" selection-end-line="157" selection-end-column="53" />
+            <state vertical-scroll-proportion="-24.846153" vertical-offset="663" max-vertical-offset="3876">
+              <caret line="77" column="31" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sound.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/sound.ts">
+      <file leaf-file-name="_global.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/styles/_global.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="595">
-              <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="233" max-vertical-offset="3162">
+              <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -58,22 +58,12 @@
       <file leaf-file-name="phpbb.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.6538463" vertical-offset="193" max-vertical-offset="1343">
-              <caret line="22" column="15" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
+            <state vertical-scroll-proportion="-24.192308" vertical-offset="0" max-vertical-offset="1343">
+              <caret line="39" column="52" selection-start-line="39" selection-start-column="52" selection-end-line="39" selection-end-column="52" />
               <folding>
                 <marker date="1417824908192" expanded="true" signature="967:1014" placeholder="SELECT COUNT..." />
                 <marker date="1417824908192" expanded="true" signature="1128:1168" placeholder="SELECT * FRO..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="todo.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/todo.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="221">
-              <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -88,15 +78,24 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="bbcode.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bbcode.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="816">
+              <caret line="71" column="29" selection-start-line="71" selection-start-column="29" selection-end-line="71" selection-end-column="29" />
+              <folding>
+                <marker date="1418011151807" expanded="true" signature="1919:1928" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="common.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lang/en/common.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="714" max-vertical-offset="816">
-              <caret line="42" column="1" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
-              <folding>
-                <marker date="1417824908260" expanded="true" signature="1401:1611" placeholder="{&quot;join&quot;: &quot;{0} has joined the chat.&quot;...}" />
-                <marker date="1417824908260" expanded="true" signature="1694:1866" placeholder="{&quot;nolang&quot;: &quot;Error: Chatbot sent {1} id '{0}' with no definition in this language!&quot;...}" />
-              </folding>
+            <state vertical-scroll-proportion="-13.076923" vertical-offset="0" max-vertical-offset="867">
+              <caret line="20" column="49" selection-start-line="20" selection-start-column="49" selection-end-line="20" selection-end-column="49" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -105,20 +104,20 @@
         <entry file="file://$PROJECT_DIR$/js/chat.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
-              <caret line="56" column="1" selection-start-line="56" selection-start-column="1" selection-end-line="56" selection-end-column="1" />
+              <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ui.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ui.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/ui.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="3825">
-              <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.4813084" vertical-offset="2051" max-vertical-offset="4318">
+              <caret line="161" column="36" selection-start-line="161" selection-start-column="36" selection-end-line="161" selection-end-column="36" />
               <folding>
-                <marker date="1417845520085" expanded="false" signature="6035:6055" placeholder="..." />
-                <marker date="1417845520085" expanded="false" signature="6112:6135" placeholder="..." />
+                <marker date="1418023094155" expanded="false" signature="7723:7743" placeholder="..." />
+                <marker date="1418023094155" expanded="false" signature="7800:7823" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -175,16 +174,16 @@
         <option value="$PROJECT_DIR$/js/lang.ts" />
         <option value="$PROJECT_DIR$/emotes.json" />
         <option value="$PROJECT_DIR$/auth/phpbb.php" />
-        <option value="$PROJECT_DIR$/bbcode.json" />
-        <option value="$PROJECT_DIR$/styles/_global.css" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/js/user.ts" />
-        <option value="$PROJECT_DIR$/js/chat.ts" />
-        <option value="$PROJECT_DIR$/lang/en/common.json" />
         <option value="$PROJECT_DIR$/js/sock.ts" />
         <option value="$PROJECT_DIR$/todo.txt" />
-        <option value="$PROJECT_DIR$/js/ui.ts" />
         <option value="$PROJECT_DIR$/js/utils.ts" />
+        <option value="$PROJECT_DIR$/js/chat.ts" />
+        <option value="$PROJECT_DIR$/styles/_global.css" />
+        <option value="$PROJECT_DIR$/lang/en/common.json" />
+        <option value="$PROJECT_DIR$/bbcode.json" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/js/ui.ts" />
       </list>
     </option>
   </component>
@@ -764,14 +763,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/styles/_global.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1955" max-vertical-offset="3162">
-          <caret line="115" column="16" selection-start-line="115" selection-start-column="16" selection-end-line="115" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/lang.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="1156">
@@ -780,16 +771,6 @@
             <marker date="1417824908223" expanded="true" signature="-1:-1" placeholder="..." />
             <marker date="1417824908223" expanded="true" signature="-1:-1" placeholder="{...}" />
             <marker date="1417824908223" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bbcode.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="697" max-vertical-offset="799">
-          <caret line="89" column="1" selection-start-line="89" selection-start-column="1" selection-end-line="89" selection-end-column="1" />
-          <folding>
-            <marker date="1417824908194" expanded="true" signature="-1:-1" placeholder="[...]" />
           </folding>
         </state>
       </provider>
@@ -810,33 +791,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="714" max-vertical-offset="816">
-          <caret line="42" column="1" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
-          <folding>
-            <marker date="1417824908260" expanded="true" signature="1401:1611" placeholder="{&quot;join&quot;: &quot;{0} has joined the chat.&quot;...}" />
-            <marker date="1417824908260" expanded="true" signature="1694:1866" placeholder="{&quot;nolang&quot;: &quot;Error: Chatbot sent {1} id '{0}' with no definition in this language!&quot;...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/todo.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="221">
           <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.6538463" vertical-offset="193" max-vertical-offset="1343">
-          <caret line="22" column="15" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
-          <folding>
-            <marker date="1417824908192" expanded="true" signature="967:1014" placeholder="SELECT COUNT..." />
-            <marker date="1417824908192" expanded="true" signature="1128:1168" placeholder="SELECT * FRO..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -848,33 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/utils.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
-          <caret line="21" column="33" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/chat.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="884" max-vertical-offset="986">
-          <caret line="56" column="1" selection-start-line="56" selection-start-column="1" selection-end-line="56" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/ui.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="3825">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding>
-            <marker date="1417845520085" expanded="false" signature="6035:6055" placeholder="..." />
-            <marker date="1417845520085" expanded="false" signature="6112:6135" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-23.538462" vertical-offset="0" max-vertical-offset="1547">
@@ -883,11 +815,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/styles/_global.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="233" max-vertical-offset="3162">
+          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.192308" vertical-offset="0" max-vertical-offset="1343">
+          <caret line="39" column="52" selection-start-line="39" selection-start-column="52" selection-end-line="39" selection-end-column="52" />
+          <folding>
+            <marker date="1417824908192" expanded="true" signature="967:1014" placeholder="SELECT COUNT..." />
+            <marker date="1417824908192" expanded="true" signature="1128:1168" placeholder="SELECT * FRO..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+          <caret line="21" column="33" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.076923" vertical-offset="0" max-vertical-offset="867">
+          <caret line="20" column="49" selection-start-line="20" selection-start-column="49" selection-end-line="20" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/chat.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
+          <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8354531" vertical-offset="1618" max-vertical-offset="3859">
-          <caret line="157" column="53" selection-start-line="157" selection-start-column="53" selection-end-line="157" selection-end-column="53" />
+        <state vertical-scroll-proportion="-24.846153" vertical-offset="663" max-vertical-offset="3876">
+          <caret line="77" column="31" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="31" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bbcode.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="816">
+          <caret line="71" column="29" selection-start-line="71" selection-start-column="29" selection-end-line="71" selection-end-column="29" />
+          <folding>
+            <marker date="1418011151807" expanded="true" signature="1919:1928" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/ui.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4813084" vertical-offset="2051" max-vertical-offset="4318">
+          <caret line="161" column="36" selection-start-line="161" selection-start-column="36" selection-end-line="161" selection-end-column="36" />
+          <folding>
+            <marker date="1418023094155" expanded="false" signature="7723:7743" placeholder="..." />
+            <marker date="1418023094155" expanded="false" signature="7800:7823" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

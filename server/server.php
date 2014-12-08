@@ -29,7 +29,7 @@ class Chat implements MessageComponentInterface {
         Utils::$chat = $GLOBALS["chat"];
         Message::$bot = new User("-1", "", "bot", "inherit", "", null);
         Context::CreateChannel(new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"])));
-        Context::CreateChannel(new Channel("Chinky_Palace", "test"));
+        Context::CreateChannel(new Channel("Chinky_Palace", Utils::Hash("test test")));
 
         echo "Server started.\n";
     }
@@ -92,7 +92,7 @@ class Chat implements MessageComponentInterface {
                                         $cmd = str_replace(".","",$cmdparts[0]);
                                         $cmdparts = array_slice($cmdparts, 1);
                                         for($i = 0; $i < count($cmdparts); $i++)
-                                            $cmdparts[$i] = Utils::Sanitize($cmdparts[$i]);
+                                            $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
 
                                         if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php")) {
                                             try {

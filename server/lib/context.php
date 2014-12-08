@@ -78,8 +78,18 @@ class Context {
         } else return Utils::FormatBotMessage(MSG_ERROR, "nischan", [$channel->name]);
     }
 
-    public static function ModifyChannel($oldchannel, $update) {
+    public static function RenameChannel($oldname, $newname) {
+        if(Context::ChannelExists($oldname) && !Context::ChannelExists($newname)) {
+            Context::$channelList[$newname] = clone Context::GetChannel($oldname);
+            Context::$channelList[$newname]->name = $newname;
+            Message::HandleChannelModification($newname, $oldname);
+            return true;
+        } else return false;
+    }
 
+    public static function ChangeChannelPassword($channel, $pwd) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        $channel->
     }
 
     public static function DeleteChannel($channel) {

@@ -43,7 +43,7 @@ class Chat {
         if(dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate()) {
             document.getElementById("chname").innerHTML = dd.value;
             (<HTMLInputElement>document.getElementById("chpwd")).value = "";
-            document.getElementById("pwdPrompt").style.display = "block";
+            document.getElementById("pwdPrompt").style.display = "table-cell";
         } else Chat.SendMessageWrapper("/join "+ dd.value);
 
         dd.value = UserContext.self.channel;

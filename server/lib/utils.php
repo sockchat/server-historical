@@ -37,4 +37,8 @@ class Utils {
     public static function DoesCommandExist($name) {
         return file_exists("./commands/". $name .".php");
     }
+
+    public static function Hash($in) {
+        return hash("sha256", $in);
+    }
 }

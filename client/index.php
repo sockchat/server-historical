@@ -71,10 +71,11 @@ $packs = SoundPackHandler::getAllSoundPacks();
             tmp = JSON.parse(tmp);
 
             tmp.bbcode.forEach(function(elt, i, arr) {
-                if(elt.arg)
+                /*if(elt.arg)
                     UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"=([^\\s\\]]+)\\s*\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));
                 else
-                    UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));
+                    UI.bbcode.push(Array(new RegExp("\\["+ elt.tag +"\\](.*(?=\\[\\/"+ elt.tag +"\\]))\\[\\/"+ elt.tag +"\\]"), elt.swap));*/
+                UI.bbcode.push(elt);
             });
 
             tmp = "<?php echo getFileContents("emotes.json"); ?>";

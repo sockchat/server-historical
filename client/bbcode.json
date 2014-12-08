@@ -69,6 +69,7 @@ with this property differently:
             {
                 "tag": "color",
                 "arg": true,
+                "rmarg": ";",
                 "swap": "<span style='color:$1;'>$2</span>"
             },
             {

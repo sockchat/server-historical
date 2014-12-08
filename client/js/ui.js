@@ -122,8 +122,40 @@ var UI = (function () {
                 outmsg = Utils.replaceAll(outmsg, Utils.Sanitize(elt), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
             });
         });
-        for (var i = 0; i < UI.bbcode.length; i++)
-            outmsg = outmsg.replace(UI.bbcode[i][0], UI.bbcode[i][1]);
+        for (var i = 0; i < UI.bbcode.length; i++) {
+            if (!UI.bbcode[i]["arg"]) {
+                var at = 0;
+                while ((at = outmsg.indexOf("[" + UI.bbcode[i]['tag'] + "]", at)) != -1) {
+                    var end;
+                    if ((end = outmsg.indexOf("[/" + UI.bbcode[i]['tag'] + "]", at)) != -1) {
+                        var inner = outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "]").length, end);
+                        // TODO sanitize inner string
+                        outmsg = outmsg.substring(0, at) + UI.bbcode[i]['swap'].replace("{0}", inner) + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
+                    }
+                    else
+                        break;
+                }
+            }
+            else {
+                var at = 0;
+                while ((at = outmsg.indexOf("[" + UI.bbcode[i]['tag'] + "=", at)) != -1) {
+                    var start, end;
+                    if ((start = outmsg.indexOf("]", at)) != -1) {
+                        if ((end = outmsg.indexOf("[/" + UI.bbcode[i]['tag'] + "]", start)) != -1) {
+                            var arg = outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "=").length, start);
+                            var inner = outmsg.substring(start + 1, end);
+                            // TODO sanitize inner and arg string
+                            outmsg = outmsg.substring(0, at) + UI.bbcode[i]['swap'].replace("{1}", inner).replace("{0}", arg);
+                            +outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
+                        }
+                        else
+                            break;
+                    }
+                    else
+                        break;
+                }
+            }
+        }
         var tmp = outmsg.split(' ');
         for (var i = 0; i < tmp.length; i++) {
             if (tmp[i].substr(0, 7) == "http://" || tmp[i].substr(0, 8) == "https://" || tmp[i].substr(0, 6) == "ftp://")

@@ -137,6 +137,16 @@ class Message {
         }
     }
 
+    public static function HandleChannelModification($channel, $oldname = "") {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        foreach(Context::$onlineUsers as $user) {
+            if($user->getRank() >= $channel->permissionLevel) {
+                $user->sock->send(Utils::PackMessage(4, ["2", $oldname == "" ? $channel->name : $oldname, $channel]));
+                if($user->channel == $oldname && $oldname != "") $user->sock->send(Utils::PackMessage(5, ["2", $channel->name]));
+            }
+        }
+    }
+
     public static function HandleChannelSwitch($user, $to, $from) {
         Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("1", $user->id, Message::$msgId)), $from);
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "lchan", array($user->username)), $from);

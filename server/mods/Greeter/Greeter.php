@@ -11,7 +11,7 @@
 
 // the filename containing the main class must have the same name as the folder
 
-namespace sockchat\mods\sample; // the third portion of the namespace must be the same as the folder name
+namespace sockchat\mods\Greeter; // the third portion of the namespace must be the same as the folder name
 use \sockchat\mods\GenericMod; // necessary for the implementation (detailed below)
 
 // some common static classes you may deal with
@@ -20,8 +20,8 @@ use \sockchat\Utils;
 use \sockchat\Message;
 use \sockchat\Database;
 
-// the main class must have the same name as the folder and must implement \sockchat\mods\GenericMod.
-class Greeter implements GenericMod {
+// the main class must be called Main and must implement \sockchat\mods\GenericMod.
+class Main implements GenericMod {
     // you technically need to implement all of the handles, but you don't actually need to do anything with them.
     public static function Init() {}
     public static function OnUserLeave($user) {}
