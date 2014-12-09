@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="Aroltd">
+  <component name="PublishConfigData" autoUpload="Always" serverName="AROLTD">
     <serverData>
-      <paths name="Aroltd">
+      <paths name="AROLTD">
         <serverdata>
           <mappings>
             <mapping deploy="/chat" local="$PROJECT_DIR$" web="/chat" />

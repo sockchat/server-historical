@@ -142,7 +142,10 @@ class Message {
         foreach(Context::$onlineUsers as $user) {
             if($user->getRank() >= $channel->permissionLevel) {
                 $user->sock->send(Utils::PackMessage(4, ["2", $oldname == "" ? $channel->name : $oldname, $channel]));
-                if($user->channel == $oldname && $oldname != "") $user->sock->send(Utils::PackMessage(5, ["2", $channel->name]));
+                if($user->channel == $oldname && $oldname != "") {
+                    $user->sock->send(Utils::PackMessage(5, ["2", $channel->name]));
+                    $user->channel = $channel->name;
+                }
             }
         }
     }

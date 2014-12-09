@@ -9,7 +9,7 @@ class delete implements GenericCommand {
         if(isset($args[0]) && $args[0] != "") {
             $name = implode($args, "_");
             if(($channel = Context::GetChannel($name)) != null) {
-                if($user->canModerate() || $channel->channelOwner->id == $user->id) {
+                if($user->canModerate() || $channel->GetOwner()->id == $user->id) {
                     Context::DeleteChannel($channel);
                     Message::PrivateBotMessage(MSG_NORMAL, "delchan", [$name], $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "ndchan", [$name], $user);

@@ -4,14 +4,10 @@ class Utils {
     }
 
     static Sanitize(str: string): string {
-        return  Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str,
-            "&", "&amp;"),
+        return  Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str,
             ">", "&gt;"),
             "<", "&lt;"),
-            "'", "&apos;"),
-            "\"", "&quot;"),
-            "\\", "&#92;"),
-            "\n", "<br />");
+            "\n", " <br />");
     }
 
     static formatBotMessage(type: string, id: string, params: string[] = []): string {
@@ -43,5 +39,12 @@ class Utils {
 
     static UnixNow(): number {
         return Math.round((new Date()).getTime()/1000);
+    }
+
+    static StripCharacters(str: string, chars: string) {
+        if(chars != "") {
+            for(var i = 0; i < chars.length; i++) str = Utils.replaceAll(str, chars[i], "");
+        }
+        return str;
     }
 }

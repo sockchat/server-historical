@@ -40,7 +40,7 @@ class Chat implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $conn, $msg) {
         Context::CheckPings();
-        if(substr(Utils::GetHeader($conn, "Origin"), -strlen(Utils::$chat["HOST"])) == Utils::$chat["HOST"]) {
+        if(mb_substr(Utils::GetHeader($conn, "Origin"), -strlen(Utils::$chat["HOST"])) == Utils::$chat["HOST"]) {
             $parts = explode(Utils::$separator, $msg);
             $id = $parts[0];
             $parts = array_slice($parts, 1);
@@ -60,7 +60,7 @@ class Chat implements MessageComponentInterface {
                         $aparts = file_get_contents(Utils::$chat['CHATROOT'] ."/auth/". $GLOBALS['auth_method'][Utils::$chat['AUTH_TYPE']] . $arglist);
 
                         if(substr($aparts, 0, 3) == "yes") {
-                            $aparts = explode("\n", substr($aparts, 3));
+                            $aparts = explode("\n", mb_substr($aparts, 3));
                             if(($reason = Context::AllowUser($aparts[1], $conn)) == 0) {
                                 if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) == 0) {
                                     $id = 0;
@@ -87,7 +87,7 @@ class Chat implements MessageComponentInterface {
                                     if(trim($parts[1])[0] != "/") {
                                         Message::BroadcastUserMessage($user, Utils::Sanitize($parts[1]));
                                     } else {
-                                        $parts[1] = substr(trim($parts[1]), 1);
+                                        $parts[1] = mb_substr(trim($parts[1]), 1);
                                         $cmdparts = explode(" ", $parts[1]);
                                         $cmd = str_replace(".","",$cmdparts[0]);
                                         $cmdparts = array_slice($cmdparts, 1);

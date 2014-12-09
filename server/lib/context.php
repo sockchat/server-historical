@@ -23,7 +23,7 @@ class Context {
             Context::GetChannel($to)->users[$user->id] = Context::$onlineUsers[$user->id];
             Context::$onlineUsers[$user->id]->channel = $to;
 
-            if(Context::GetChannel($oldchan)->channelType == CHANNEL_TEMP && Context::GetChannel($oldchan)->channelOwner->id == $user->id)
+            if(Context::GetChannel($oldchan)->channelType == CHANNEL_TEMP && Context::GetChannel($oldchan)->GetOwner()->id == $user->id)
                 Context::DeleteChannel($oldchan);
         }
     }
@@ -31,7 +31,7 @@ class Context {
     public static function SwitchChannel($user, $to, $pwd = "") {
         if($user->channel != $to) {
             if(Context::ChannelExists($to)) {
-                if($pwd == Context::GetChannel($to)->password || $user->canModerate()) {
+                if($pwd == Context::GetChannel($to)->password || $user->canModerate() || Context::GetChannel($to)->GetOwner()->id == $user->id) {
                     if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
                         Context::ForceChannelSwitch($user, $to);
                     } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
@@ -89,7 +89,14 @@ class Context {
 
     public static function ChangeChannelPassword($channel, $pwd) {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
-        $channel->
+        $channel->password = $pwd;
+        Message::HandleChannelModification($channel);
+    }
+
+    public static function ChangeChannelPermission($channel, $perm) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        $channel->permissionLevel = $perm;
+        Message::HandleChannelModification($channel);
     }
 
     public static function DeleteChannel($channel) {
@@ -150,7 +157,7 @@ class Context {
     }
 
     public static function Leave($user, $type = LEAVE_NORMAL) {
-        if(Context::GetChannel($user->channel)->channelType == CHANNEL_TEMP && Context::GetChannel($user->channel)->channelOwner->id == $user->id)
+        if(Context::GetChannel($user->channel)->channelType == CHANNEL_TEMP && Context::GetChannel($user->channel)->GetOwner()->id == $user->id)
             Context::DeleteChannel($user->channel);
 
         Message::HandleLeave($user, $type);

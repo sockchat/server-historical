@@ -13,8 +13,6 @@ $phpbb["PHPBB_DIR"] =  $_SERVER["DOCUMENT_ROOT"] ."/phpBB3/";
  * ~~~ !! DO NOT EDIT ANYTHING BELOW THIS !! ~~~
  */
 
-error_reporting(E_ALL);
-
 define('IN_PHPBB', true);
 $phpbb_root_path = $phpbb["PHPBB_DIR"];
 $phpEx = substr(strrchr(__FILE__, '.'), 1);

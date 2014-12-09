@@ -5,21 +5,25 @@ class Sounds {
     static currentSoundPack = "";
 
     static Play(id: Sound) {
-        var sound = <HTMLAudioElement>document.getElementById(Sounds.currentSoundPack +"."+ Sounds.SoundList[id]);
-        sound.pause();
-        sound.currentTime = 0;
-        sound.play();
+        try {
+            var sound = <HTMLAudioElement>document.getElementById(Sounds.currentSoundPack +"."+ Sounds.SoundList[id]);
+            sound.pause();
+            sound.currentTime = 0;
+            sound.play();
+        } catch(e) {}
     }
 
     static ChangeVolume(vol: number) {
-        if(vol > 1 || vol < 0) alert("WHAT THE FUCK ARE YOU DOING");
-        else {
-            var audioFiles = document.getElementsByTagName("audio");
+        try {
+            if(vol > 1 || vol < 0) alert("WHAT THE FUCK ARE YOU DOING");
+            else {
+                var audioFiles = document.getElementsByTagName("audio");
 
-            for(var file in audioFiles) {
-                (<HTMLAudioElement>audioFiles[file]).volume = vol;
+                for(var file in audioFiles) {
+                    (<HTMLAudioElement>audioFiles[file]).volume = vol;
+                }
             }
-        }
+        } catch(e) {}
     }
 
     static ChangePack(pack: string) {

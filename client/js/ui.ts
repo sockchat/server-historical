@@ -158,10 +158,9 @@ class UI {
                 while((at = outmsg.indexOf("["+ UI.bbcode[i]['tag'] +"]", at)) != -1) {
                     var end;
                     if((end = outmsg.indexOf("[/"+ UI.bbcode[i]['tag'] +"]", at)) != -1) {
-                        var inner = outmsg.substring(at + ("["+UI.bbcode[i]['tag']+"]").length, end);
-                        // TODO sanitize inner string
+                        var inner = Utils.StripCharacters(outmsg.substring(at + ("["+UI.bbcode[i]['tag']+"]").length, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
                         outmsg = outmsg.substring(0, at) +
-                                 UI.bbcode[i]['swap'].replace("{0}",inner) +
+                                 Utils.replaceAll(UI.bbcode[i]['swap'], "{0}", inner) +
                                  outmsg.substring(end + ("[/"+ UI.bbcode[i]['tag'] +"]").length);
                     } else break;
                 }
@@ -171,11 +170,10 @@ class UI {
                     var start, end;
                     if((start = outmsg.indexOf("]", at)) != -1) {
                         if((end = outmsg.indexOf("[/"+ UI.bbcode[i]['tag'] +"]", start)) != -1) {
-                            var arg = outmsg.substring(at + ("["+ UI.bbcode[i]['tag'] +"=").length, start);
-                            var inner = outmsg.substring(start+1, end);
-                            // TODO sanitize inner and arg string
+                            var arg = Utils.StripCharacters(outmsg.substring(at + ("["+ UI.bbcode[i]['tag'] +"=").length, start), "[]" + (UI.bbcode[i]["rmarg"] == undefined ? "" : UI.bbcode[i]["rmarg"]));
+                            var inner = Utils.StripCharacters(outmsg.substring(start+1, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
                             outmsg = outmsg.substring(0, at) +
-                                     UI.bbcode[i]['swap'].replace("{1}", inner).replace("{0}", arg); +
+                                     Utils.replaceAll(Utils.replaceAll(UI.bbcode[i]['swap'], "{1}", inner), "{0}", arg) +
                                      outmsg.substring(end + ("[/"+ UI.bbcode[i]['tag'] +"]").length);
                         } else break;
                     } else break;

@@ -56,7 +56,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
 
                                 $files = glob($langs[$i] ."/*.json");
                                 for($j = 0; $j < count($files); $j++)
-                                    echo ($i==0?"":",") ."JSON.parse(\"". getFileContents($files[$j]) ."\")";
+                                    echo ($i==0?"":",") ."JSON.parse(Utils.FetchPage(\"". $files[$j] ."\"))";
                                 echo "])";
                             }
                         }
@@ -67,7 +67,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
         Cookies.defaultVals = ["<?php echo $chat["DEFAULT_SPACK"]; ?>", "<?php echo $chat["DEFAULT_LANG"]; ?>", "<?php echo $chat["DEFAULT_STYLE"]; ?>", ""];
 
         function loadChatData() {
-            var tmp = "<?php echo getFileContents("bbcode.json"); ?>";
+            var tmp = Utils.FetchPage("bbcode.json");//"<?php echo getFileContents("bbcode.json"); ?>";
             tmp = JSON.parse(tmp);
 
             tmp.bbcode.forEach(function(elt, i, arr) {
@@ -78,7 +78,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
                 UI.bbcode.push(elt);
             });
 
-            tmp = "<?php echo getFileContents("emotes.json"); ?>";
+            tmp = Utils.FetchPage("emotes.json");//"<?php echo getFileContents("emotes.json"); ?>";
             tmp = JSON.parse(tmp);
 
             tmp.emotes.forEach(function(elt, i, arr) {

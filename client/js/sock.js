@@ -10,6 +10,7 @@ var Socket = (function () {
     Socket.Send = function (msg) {
         this.sock.send(msg);
     };
+
     Socket.Init = function (addr) {
         this.sock = new WebSocket(addr);
         this.sock.onopen = this.onConnOpen;
@@ -17,35 +18,42 @@ var Socket = (function () {
         this.sock.onerror = this.onConnError;
         this.sock.onclose = this.onConnClose;
     };
+
     Socket.ping = function () {
         this.sock.send(Message.Pack(0, "" + UserContext.self.id));
     };
+
     Socket.onConnOpen = function (e) {
         UI.ChangeDisplay(4);
         setInterval("Socket.ping();", Socket.pingTime * 1000);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
+
     Socket.onMessageRecv = function (e) {
         console.log(e.data);
         var parts = e.data.split(Message.Separator);
         var msgid = +parts[0];
         parts = parts.slice(1);
+
         switch (msgid) {
             case 1:
                 if (UI.currentView == 2) {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3], parts[4]));
                     UI.AddMessage(parts[5], +parts[0], UI.ChatBot, Utils.formatBotMessage("0", "join", [parts[2]]), true, false);
                     Sounds.Play(2 /* Join */);
-                }
-                else {
+                } else {
                     if (parts[0] == "y") {
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
                         UserContext.self.channel = parts[5];
                         UI.maxMsgLen = +parts[6];
                         UI.ChangeDisplay(2);
                         UI.AddUser(UserContext.self, false);
-                    }
-                    else
+                        /*if(+parts[5] != 0) {
+                        for(var i = 0; i < +parts[5]; i++) {
+                        UI.AddUser(new User(+parts[6+4*i], parts[7+4*i], parts[8+4*i], parts[9+4*i]));
+                        }
+                        }*/
+                    } else
                         alert(UI.langs[UI.currentLang].menuText[7 + +parts[0]] + (+parts[0] == 3 ? " " + (new Date(+parts[1])).toDateString() + "!" : ""));
                 }
                 break;
@@ -55,8 +63,7 @@ var Socket = (function () {
                         UI.AddMessage(parts[3], +parts[0], UserContext.users[+parts[1]], parts[2]);
                     else
                         UI.AddMessage(parts[3], +parts[0], UI.ChatBot, parts[2]);
-                }
-                else
+                } else
                     UI.AddMessage(parts[3], +parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
@@ -99,11 +106,10 @@ var Socket = (function () {
                 }
                 break;
             case 6:
-                try {
+                try  {
                     var msg = document.getElementById("sock_msg_" + parts[0]);
                     msg.parentElement.removeChild(msg);
-                }
-                catch (e) {
+                } catch (e) {
                 }
                 break;
             case 7:
@@ -150,21 +156,24 @@ var Socket = (function () {
                     UserContext.self.color = parts[2];
                     UserContext.self.permstr = parts[3];
                     UserContext.self.EvaluatePermString();
+
                     UI.ModifyUser(UserContext.self);
-                }
-                else {
+                } else {
                     UserContext.users[parts[0]].username = parts[1];
                     UserContext.users[parts[0]].color = parts[2];
                     UserContext.users[parts[0]].permstr = parts[3];
                     UserContext.users[parts[0]].EvaluatePermString();
+
                     UI.ModifyUser(UserContext.users[parts[0]]);
                 }
                 break;
         }
     };
+
     Socket.onConnError = function (e) {
         //alert("errored! error is "+ e.get);
     };
+
     Socket.onConnClose = function (e) {
         //alert("closed because"+ e.reason);
         UI.ChangeDisplay(3);

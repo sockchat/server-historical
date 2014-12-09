@@ -1,2 +1,9 @@
 <?php
-// TODO write basic templating engine
+
+namespace sockchat;
+
+class Template {
+    private $varList = [];
+
+
+}

@@ -23,7 +23,8 @@
         "kick"      : "{0} has been kicked.",
         "nick"      : "{0} is now known as {1}.",
         "crchan"    : "{0} has been created.",
-        "delchan"   : "{0} has been deleted."
+        "delchan"   : "{0} has been deleted.",
+        "cpwdchan"  : "Password changed successfully."
     },
     "botErrText": {
         "nolang"    : "Error: Chatbot sent {1} id '{0}' with no definition in this language!",

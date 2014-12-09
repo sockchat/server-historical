@@ -29,18 +29,23 @@ class Channel {
     public $users = [];
     public $channelMods = []; // id list
 
-    public $channelOwner = "";
+    public $channelOwner = null;
     public $channelType = CHANNEL_PERM;
 
     public $log;
 
-    public function __construct($name, $password = "", $permissionLevel = 0, $channelOwner = "", $channelType = CHANNEL_PERM) {
+    public function __construct($name, $password = "", $permissionLevel = 0, $channelOwner = null, $channelType = CHANNEL_PERM) {
         $this->name = $name;
         $this->permissionLevel = $permissionLevel;
         $this->password = $password;
         $this->channelOwner = $channelOwner;
         $this->channelType = $channelType;
         $this->log = new Backlog();
+    }
+
+    public function GetOwner() {
+        if($this->channelOwner != null) return $this->channelOwner;
+        else return new User(-1, "", "", "", "", null);
     }
 
     public function GetAllUsers() {
