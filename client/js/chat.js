@@ -4,12 +4,15 @@
 /// <reference path="sock.ts" />
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
+/// <reference path="utils.js" />
 var Chat = (function () {
     function Chat() {
     }
     Chat.Main = function (addr) {
         UserContext.users = {};
         Cookies.Prepare();
+        Chat.LoadJSONFiles();
+        Socket.args = Utils.FetchPage("./index.php?view=auth").split("\f");
 
         document.getElementById("styledd").value = Cookies.Get(2 /* Style */);
         UI.ChangeStyle();
@@ -22,6 +25,29 @@ var Chat = (function () {
 
         UI.RenderEmotes();
         Socket.Init(addr);
+    };
+
+    Chat.HandleMessage = function (e) {
+        var key = ('which' in e) ? e.which : e.keyCode;
+
+        if (key == 13 && !e.shiftKey) {
+            Chat.SendMessage();
+            e.preventDefault();
+            return false;
+        } else
+            return true;
+    };
+
+    Chat.LoadJSONFiles = function () {
+        var tmp = JSON.parse(Utils.FetchPage("bbcode.json"));
+        tmp.bbcode.forEach(function (elt, i, arr) {
+            UI.bbcode.push(elt);
+        });
+
+        tmp = JSON.parse(Utils.FetchPage("emotes.json"));
+        tmp.emotes.forEach(function (elt, i, arr) {
+            UI.emotes.push(Array(elt["img"], elt["syn"]));
+        });
     };
 
     Chat.SendMessage = function () {

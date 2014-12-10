@@ -23,11 +23,6 @@ class Auth {
     protected $user = [];
     protected $perms = [[],[]];
     protected $accept = true;
-    static protected $keylen = 10;
-
-    public function __construct() {
-
-    }
 
     public function GetPageType() {
         return isset($_GET["arg1"]) ? AUTH_CONFIRM : AUTH_FETCH;
@@ -59,17 +54,11 @@ class Auth {
     }
 
     public function Serve() {
+        header("Access-Control-Allow-Origin: localhost");
         if($this->GetPageType() == AUTH_FETCH)
-            die($this->accept ? "yes\f". implode("\f", $this->args) : "no");
+            echo $this->accept ? "yes\f". implode("\f", $this->args) : "no";
         else {
-            die($this->accept ? "yes" . implode("\n", $this->user) . "\n" . implode("\t", $this->perms[0]) . ($this->perms[1] == [] ? "" : "\t". implode("\t", $this->perms[1])) : "no");
-        }
-    }
-
-    public static function GetAuthKey($dir = "./auth/keys") {
-        $keys = glob($dir ."/*");
-        foreach($keys as $key) {
-            if(!strstr())
+            echo $this->accept ? "yes" . implode("\n", $this->user) . "\n" . implode("\t", $this->perms[0]) . ($this->perms[1] == [] ? "" : "\t". implode("\t", $this->perms[1])) : "no";
         }
     }
 }

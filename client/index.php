@@ -8,14 +8,9 @@ include("auth/". $inthref[$chat['INTEGRATION']]);
 $packs = SoundPackHandler::getAllSoundPacks();
 ?>
 <!DOCTYPE html>
-<html>
+<html manifest="./lib/cache.php">
 <head>
-    <meta http-equiv="Content-Type" content="charset=UTF-8" />
-    <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="expires" content="Tue, 11 Sep 2001 09:11:00 GMT" />
-    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><?php echo $chat["CHAT_TITLE"]; ?></title>
     <?php
     echo "<link href='./styles/". $chat["DEFAULT_STYLE"] .".css' rel='stylesheet' type='text/css' />\n";
@@ -142,7 +137,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
 <div id="chat" style="display: none;">
     <div class="alert" id="pwdPrompt" style="display: none;">
         Enter the password for <span id="chname">Chinky_Palace</span>: <br /><br />
-        <form method="post" action="" onsubmit="Chat.ChangeChannelWithPassword();return false;">
+        <form method="post" action="./" onsubmit="Chat.ChangeChannelWithPassword();return false;">
             <input type="password" id="chpwd" style="width: calc(100% - 45px);" /> <input type="submit" value="Go" style="width: 33px;" />
         </form>
     </div>
@@ -211,7 +206,7 @@ $packs = SoundPackHandler::getAllSoundPacks();
             <?php
             $btns = ["help", "settings", "users", "audio", "clear", "autoscroll"];
             foreach($btns as $btn)
-                echo '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
+                echo '<img src="img/pixel.png" alt="'. $btn .'" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
             ?>
         </div>
     </div>

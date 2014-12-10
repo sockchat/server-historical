@@ -24,19 +24,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="template.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/template.php">
+      <file leaf-file-name="chat.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tpl/chat.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="19" selection-start="26" selection-end="26" vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="238">
+            <state line="127" column="106" selection-start="5226" selection-end="5226" vertical-scroll-proportion="-3.1538463" vertical-offset="2077" max-vertical-offset="2584">
+              <folding>
+                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#form#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chat.ts" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/chat.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="27" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1479">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cache.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/cache.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="1" selection-start="127" selection-end="127" vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="272">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_global.css" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/styles/_global.css">
+      <file leaf-file-name="template.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/template.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3162">
+            <state line="2" column="19" selection-start="26" selection-end="26" vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="238">
               <folding />
             </state>
           </provider>
@@ -51,10 +84,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="phpbb_alt.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="phpbb_alt.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/auth/phpbb_alt.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="61" selection-start="117" selection-end="117" vertical-scroll-proportion="11.5" vertical-offset="418" max-vertical-offset="1258">
+            <state line="7" column="61" selection-start="117" selection-end="117" vertical-scroll-proportion="-1.1903846" vertical-offset="738" max-vertical-offset="1258">
               <folding>
                 <element signature="e#6#35#0" expanded="true" />
               </folding>
@@ -62,28 +95,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auth/keys/index.html">
+      <file leaf-file-name="utils.ts" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/utils.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="19" selection-start="49" selection-end="49" vertical-scroll-proportion="-1.9615384" vertical-offset="0" max-vertical-offset="238">
+            <state line="29" column="0" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0" vertical-offset="337" max-vertical-offset="935">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="auth.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="auth.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/auth.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="23" selection-start="1928" selection-end="1928" vertical-scroll-proportion="0.7325175" vertical-offset="788" max-vertical-offset="1360">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sound.ts" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/sound.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="38" selection-start="500" selection-end="500" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
+            <state line="56" column="54" selection-start="1409" selection-end="1409" vertical-scroll-proportion="-11.0" vertical-offset="666" max-vertical-offset="1173">
               <folding />
             </state>
           </provider>
@@ -105,15 +129,6 @@
               <folding>
                 <marker date="1418079807518" expanded="true" signature="544:554" placeholder="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="common.json" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lang/en/common.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="54" selection-start="1027" selection-end="1027" vertical-scroll-proportion="-6.1538463" vertical-offset="282" max-vertical-offset="884">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -143,7 +158,6 @@
         <option value="$PROJECT_DIR$/style.css" />
         <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/tpl/main.tpl" />
-        <option value="$PROJECT_DIR$/tpl/chat.html" />
         <option value="$PROJECT_DIR$/tpl/logs.html" />
         <option value="$PROJECT_DIR$/tpl/mobile.html" />
         <option value="$PROJECT_DIR$/system.php" />
@@ -158,13 +172,11 @@
         <option value="$PROJECT_DIR$/js/user.ts" />
         <option value="$PROJECT_DIR$/js/sock.ts" />
         <option value="$PROJECT_DIR$/todo.txt" />
-        <option value="$PROJECT_DIR$/js/chat.ts" />
         <option value="$PROJECT_DIR$/styles/_global.css" />
         <option value="$PROJECT_DIR$/js/ui.ts" />
         <option value="$PROJECT_DIR$/js/utils.ts" />
         <option value="$PROJECT_DIR$/bbcode.json.readme" />
         <option value="$PROJECT_DIR$/bbcode.json" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/js/sound.ts" />
         <option value="$PROJECT_DIR$/lang/en/common.json" />
         <option value="$PROJECT_DIR$/lib/template.php" />
@@ -173,6 +185,10 @@
         <option value="$PROJECT_DIR$/emotes.json" />
         <option value="$PROJECT_DIR$/auth/keys/index.html" />
         <option value="$PROJECT_DIR$/lib/auth.php" />
+        <option value="$PROJECT_DIR$/lib/cache.php" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/js/chat.ts" />
+        <option value="$PROJECT_DIR$/tpl/chat.html" />
       </list>
     </option>
   </component>
@@ -421,7 +437,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967034" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.10204082" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10204082" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -452,13 +468,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/chat.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/cookies.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
@@ -712,20 +721,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="105" selection-start="2796" selection-end="2796" vertical-scroll-proportion="50.346153" vertical-offset="2295" max-vertical-offset="3876">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="54" selection-start="1027" selection-end="1027" vertical-scroll-proportion="-6.1538463" vertical-offset="282" max-vertical-offset="884">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bbcode.json.readme">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="24" selection-start="1271" selection-end="1271" vertical-scroll-proportion="1.1129296" vertical-offset="0" max-vertical-offset="850">
@@ -740,6 +735,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/sound.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="38" selection-start="500" selection-end="500" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="54" selection-start="1027" selection-end="1027" vertical-scroll-proportion="-6.1538463" vertical-offset="282" max-vertical-offset="884">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="200" selection-end="357" vertical-scroll-proportion="-8.5" vertical-offset="0" max-vertical-offset="1292">
@@ -747,16 +756,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+    <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="71" selection-start="748" selection-end="748" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="935">
+        <state line="18" column="22" selection-start="580" selection-end="580" vertical-scroll-proportion="13.730769" vertical-offset="663" max-vertical-offset="3791">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sound.ts">
+    <entry file="file://$PROJECT_DIR$/lib/auth.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="38" selection-start="500" selection-end="500" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
+        <state line="56" column="54" selection-start="1409" selection-end="1409" vertical-scroll-proportion="-11.0" vertical-offset="666" max-vertical-offset="1173">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/cache.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="1" selection-start="127" selection-end="127" vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="272">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/template.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="19" selection-start="26" selection-end="26" vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="238">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="0" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0" vertical-offset="337" max-vertical-offset="935">
           <folding />
         </state>
       </provider>
@@ -777,40 +807,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/template.php">
+    <entry file="file://$PROJECT_DIR$/js/chat.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="19" selection-start="26" selection-end="26" vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="238">
-          <folding />
+        <state line="35" column="27" selection-start="1105" selection-end="1105" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1479">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/chat.ts">
+    <entry file="file://$PROJECT_DIR$/tpl/chat.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
+        <state line="127" column="106" selection-start="5226" selection-end="5226" vertical-scroll-proportion="-3.1538463" vertical-offset="2077" max-vertical-offset="2584">
+          <folding>
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#form#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#3;n#div#4;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/auth/phpbb_alt.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="61" selection-start="117" selection-end="117" vertical-scroll-proportion="11.5" vertical-offset="418" max-vertical-offset="1258">
+        <state line="7" column="61" selection-start="117" selection-end="117" vertical-scroll-proportion="-1.1903846" vertical-offset="738" max-vertical-offset="1258">
           <folding>
             <element signature="e#6#35#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth/keys/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="19" selection-start="49" selection-end="49" vertical-scroll-proportion="-1.9615384" vertical-offset="0" max-vertical-offset="238">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/auth.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="23" selection-start="1928" selection-end="1928" vertical-scroll-proportion="0.7325175" vertical-offset="788" max-vertical-offset="1360">
-          <folding />
         </state>
       </provider>
     </entry>
