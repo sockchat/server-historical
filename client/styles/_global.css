@@ -4,6 +4,31 @@ body {
     padding: 0;
 }
 
+#connmsg {
+    text-align: center;
+}
+
+#info {
+    padding: 10px 20px;
+    margin: 20px;
+    background-color: white;
+    color: black;
+    border: 3px double black;
+    display: inline-block;
+    max-width: 400px;
+}
+
+#info #indicator {
+    display: block;
+    margin: 15px auto 0 auto;
+}
+
+#info #indicator img {
+    width: 32px;
+    height: 32px;
+    background: url(../img/load.gif);
+}
+
 #chat #header {
     position: absolute;
     top: 20px;

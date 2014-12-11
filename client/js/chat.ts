@@ -4,26 +4,37 @@
 /// <reference path="sock.ts" />
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
-/// <reference path="utils.js" />
+/// <reference path="lang.ts" />
+/// <reference path="utils.ts" />
 
 class Chat {
     static Main(addr: string) {
-        UserContext.users = {};
-        Cookies.Prepare();
         Chat.LoadJSONFiles();
-        Socket.args = Utils.FetchPage("./index.php?view=auth").split("\f");
-
-        (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookie.Style);
-        UI.ChangeStyle();
 
         UI.RedrawDropDowns();
         (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
         UI.RenderLanguage();
 
-        Sounds.ChangePack(Cookies.Get(Cookie.Soundpack));
+        UI.ChangeDisplay(false, 11);
+        Socket.args = Utils.FetchPage("./index.php?view=auth").split("\f");
+        if(Socket.args[0] == "yes") {
+            UserContext.users = {};
+            Cookies.Prepare();
 
-        UI.RenderEmotes();
-        Socket.Init(addr);
+            Socket.args = Socket.args.slice(1);
+
+            (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookie.Style);
+            UI.ChangeStyle();
+
+            UI.RedrawDropDowns();
+            (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
+            UI.RenderLanguage();
+
+            Sounds.ChangePack(Cookies.Get(Cookie.Soundpack));
+
+            UI.RenderEmotes();
+            Socket.Init(addr);
+        } else window.location.href = Socket.redirectUrl;
     }
 
     static HandleMessage(e) : boolean {
@@ -45,6 +56,12 @@ class Chat {
         tmp = JSON.parse(Utils.FetchPage("emotes.json"));
         tmp.emotes.forEach(function(elt, i, arr) {
             UI.emotes.push(Array(elt["img"], elt["syn"]));
+        });
+
+        tmp = UI.langs;
+        UI.langs = [];
+        tmp.forEach(function(elt, i, arr) {
+            UI.langs.push(new Language(<string[]>elt));
         });
     }
 

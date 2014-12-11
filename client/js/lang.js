@@ -1,10 +1,16 @@
 /// <reference path="utils.ts" />
 var Language = (function () {
-    function Language(code, json) {
+    function Language(blob) {
         this.menuText = [];
         this.botText = [];
         this.botErrText = [];
-        this.code = code;
+        var json = [];
+        for (var str in blob) {
+            if (str == 0)
+                this.code = blob[str];
+            else
+                json.push(JSON.parse(Utils.FetchPage(blob[str])));
+        }
 
         for (var file in json) {
             if (json[file].name != undefined) {

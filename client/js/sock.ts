@@ -10,12 +10,15 @@ class Socket {
     static args: string[];
     static pingTime: number;
     static redirectUrl: string;
+    static addr: string;
+    static kicked: boolean = false;
 
     static Send(msg: string) {
         this.sock.send(msg);
     }
 
     static Init(addr: string) {
+        this.addr = addr;
         this.sock = new WebSocket(addr);
         this.sock.onopen = this.onConnOpen;
         this.sock.onmessage = this.onMessageRecv;
@@ -28,7 +31,7 @@ class Socket {
     }
 
     static onConnOpen(e) {
-        UI.ChangeDisplay(4);
+        if(document.getElementById("chat").style.display == "none") UI.ChangeDisplay(false, 12);
         setInterval("Socket.ping();", Socket.pingTime*1000);
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
@@ -41,23 +44,22 @@ class Socket {
 
         switch (msgid) {
             case 1:
-                if(UI.currentView == 2) {
+                if(parts[0] != "y" && parts[0] != "n") {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3], parts[4]));
                     UI.AddMessage(parts[5], +parts[0], UI.ChatBot, Utils.formatBotMessage("0","join",[parts[2]]), true, false);
                     Sounds.Play(Sound.Join);
                 } else {
                     if(parts[0] == "y") {
+                        UserContext.users = {};
+                        document.getElementById("chatList").innerHTML = "";
+                        UI.rowEven[0] = true;
+
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
                         UserContext.self.channel = parts[5];
                         UI.maxMsgLen = +parts[6];
-                        UI.ChangeDisplay(2);
+                        UI.ChangeDisplay(true);
                         UI.AddUser(UserContext.self, false);
-
-                        /*if(+parts[5] != 0) {
-                            for(var i = 0; i < +parts[5]; i++) {
-                                UI.AddUser(new User(+parts[6+4*i], parts[7+4*i], parts[8+4*i], parts[9+4*i]));
-                            }
-                        }*/
+                        UI.RedrawUserList();
                     } else
                         alert(UI.langs[UI.currentLang].menuText[7 + +parts[0]] + (+parts[0] == 3 ? " "+ (new Date(+parts[1])).toDateString() +"!" : ""));
                 }
@@ -151,6 +153,7 @@ class Socket {
                 }
                 break;
             case 9:
+                Socket.kicked = true;
                 alert(+parts[0] == 0 ? UI.langs[UI.currentLang].menuText[5] : UI.langs[UI.currentLang].menuText[6] +" "+ (new Date(+parts[1]*1000)).toDateString() +"!");
                 window.location.href = Socket.redirectUrl;
                 break;
@@ -179,8 +182,9 @@ class Socket {
     }
 
     static onConnClose(e) {
-        //alert("closed because"+ e.reason);
-        UI.ChangeDisplay(3);
-        //window.location.href = Socket.redirectUrl;
+        if(document.getElementById("chat").style.display != "none") {
+            UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
+            Socket.Init(Socket.addr);
+        } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code "+ e.code);
     }
 }

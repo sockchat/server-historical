@@ -9,8 +9,12 @@ class Language {
     public botText = [];
     public botErrText = [];
 
-    public constructor(code: string, json: any[]) {
-        this.code = code;
+    public constructor(blob: string[]) {
+        var json = [];
+        for(var str in blob) {
+            if(str == 0) this.code = blob[str];
+            else json.push(JSON.parse(Utils.FetchPage(blob[str])));
+        }
 
         for(var file in json) {
             if(json[file].name != undefined) {

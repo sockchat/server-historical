@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html manifest="./lib/cache.php">
+<html manifest="./lib/cache.manifest.php">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>{{{ CHAT_TITLE }}}</title>
-    <link href='./styles/{{{ DEFAULT_STYLE }}}.css' rel='stylesheet' type='text/css' />\n";
+    <link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="js/sound.js"></script>
     <script type="text/javascript" src="js/lang.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
@@ -53,30 +53,16 @@
             message.style.width = (window.innerWidth-42-divSizes[2]-10) +"px";
             user.style.width = divSizes[2] +"px";
         }
-
-        function handleMessage(e) {
-            var key = ('which' in e) ? e.which : e.keyCode;
-
-            if(key == 13 && !e.shiftKey) {
-                Chat.SendMessage();
-                e.preventDefault();
-                return false;
-            }
-        }
     </script>
 </head>
 <body onload="handleResize();Chat.Main('ws://{{{ SERVER_ADDR }}}');" onresize="handleResize();">
 <div id="connmsg">
-    Connecting to chat server ...
-</div>
-<div id="attemptlogin" style="display: none;">
-    Logging into chat ...
-</div>
-<div id="connerr" style="display: none;">
-    Connection interrupted !
-</div>
-<div id="connclose" style="display: none;">
-    Connection closed !
+    <span id="info">
+        <span id="conntxt">Connecting to chat server ...</span>
+        <span id="indicator">
+            <img src="img/pixel.png" alt="loading" />
+        </span>
+    </span>
 </div>
 <div id="chat" style="display: none;">
     <div class="alert" id="pwdPrompt" style="display: none;">

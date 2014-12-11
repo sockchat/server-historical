@@ -42,7 +42,6 @@ class Options {
 
 class UI {
     static chatTitle = "";
-    static displayDivs = ["connmsg","connclose","chat","connerr","attemptlogin"];
     static rowEven = [true, false];
     static currentView = 0;
     static maxMsgLen = 2000;
@@ -101,11 +100,16 @@ class UI {
         document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     }
 
-    static ChangeDisplay(id: number) {
-        for(var i = 0; i < this.displayDivs.length; i++)
-            document.getElementById(this.displayDivs[i]).style.display = "none";
-        document.getElementById(this.displayDivs[id]).style.display = "block";
-        this.currentView = id;
+    static ChangeDisplay(chat: boolean, msgid: number = 0, indicator: boolean = true, err: string = "") {
+        if(chat) {
+            document.getElementById("connmsg").style.display = "none";
+            document.getElementById("chat").style.display = "block";
+        } else {
+            document.getElementById("chat").style.display = "none";
+            document.getElementById("connmsg").style.display = "block";
+            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err;
+            document.getElementById("indicator").style.display = indicator ? "block" : "none";
+        }
     }
 
     static RenderLanguage() {
@@ -179,7 +183,6 @@ class UI {
                     } else break;
                 }
             }
-            /*outmsg = outmsg.replace(UI.bbcode[i][0], UI.bbcode[i][1]);*/
         }
 
         var tmp = outmsg.split(' ');

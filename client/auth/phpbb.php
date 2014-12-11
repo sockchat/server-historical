@@ -18,26 +18,25 @@ $phpbb_root_path = $phpbb["PHPBB_DIR"];
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 
-$out = array();
+use sockchat\Auth;
+$sauth = new Auth();
 
-$qdata = array(
-    "user_id" => request_var("arg1", -1),
-    "user_password" => request_var("arg2", "e")
-);
-
-if($qdata["user_id"] == -1) {
+if($sauth->GetPageType() == AUTH_FETCH) {
     $user->session_begin();
     $auth->acl($user->data);
     $user->setup();
 
-    if($user->data["user_id"] == ANONYMOUS)
-        header("Location: ". $chat["REDIRECT_ADDR"]);
-
-    $out["ARGS"] = array($user->data["user_id"], $user->data["user_password"]);
-
-    $out["TIMEZONE"] = $user->data["user_timezone"];
-    $out["DST"] = ($user->data["user_dst"] == 1)?"true":"false";
+    if($user->data["user_id"] != ANONYMOUS) {
+        $sauth->AppendArguments([$user->data["user_id"], $user->data["user_password"]]);
+        $sauth->Accept();
+    } else
+        $sauth->Deny();
 } else {
+    $qdata = array(
+        "user_id" => request_var("arg1", -1),
+        "user_password" => request_var("arg2", "e")
+    );
+
     if($db->sql_fetchrow($db->sql_query("SELECT COUNT(*) FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)))["COUNT(*)"] > 0) {
         $udata = $db->sql_fetchrow($db->sql_query("SELECT * FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)));
 
@@ -46,28 +45,24 @@ if($qdata["user_id"] == -1) {
         $auth->_fill_acl($udata["user_permissions"]);
         $user->setup();
 
-        $ulevel = $auth->acl_get("a_")?2:($auth->acl_get("m_")?1:0);
+        $sauth->SetUserData(
+            $udata['user_id'],
+            $udata['username'],
+            $udata['user_colour'] ? "#".$udata['user_colour'] : "inherit"
+        );
 
-        // must print a 'yes' indicating a positive match
-        echo 'yes';
+        $sauth->SetCommonPermissions(
+            $auth->acl_get("a_") ? 2 : ($auth->acl_get("m_") ? 1 : 0),
+            $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
+            $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
+            $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "1",
+            $auth->acl_get("m_") || $auth->acl_get("a_") ? "2" : "1"
+        );
 
-        // must print the user's id or -1 for chat server auto id numbering (NOT RECOMMENDED !!)
-        echo $udata['user_id'] ."\n";
-
-        // must print the user's proper name as seen in the chat
-        echo $udata['username'] ."\n";
-
-        // must print the user's name color (use inherit for the default text color)
-        echo ($udata['user_colour']?"#".$udata['user_colour']:"inherit") ."\n";
-
-        // permissions string
-        echo $ulevel ."\f".                                             // permission rank (higher rank implies more important)
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\f". // can globally moderate the chat
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"0") ."\f". // can view the logs
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"1":"1") ."\f". // can change nickname
-            ($auth->acl_get("m_")||$auth->acl_get("a_")?"2":"1");       // can create channels (2 - permanent, 1 - temporary, 0 - none)
+        $sauth->Accept();
 
         $user->session_kill();
-    } else
-        echo "cheeki breeki"; // echo anything that does not start with yes to indicate a negative match
+    } else $sauth->Deny();
 }
+
+$sauth->Serve();

@@ -58,7 +58,7 @@ class Auth {
         if($this->GetPageType() == AUTH_FETCH)
             echo $this->accept ? "yes\f". implode("\f", $this->args) : "no";
         else {
-            echo $this->accept ? "yes" . implode("\n", $this->user) . "\n" . implode("\t", $this->perms[0]) . ($this->perms[1] == [] ? "" : "\t". implode("\t", $this->perms[1])) : "no";
+            echo $this->accept ? "yes" . implode("\n", $this->user) . "\n" . implode("\f", $this->perms[0]) . ($this->perms[1] == [] ? "" : "\f". implode("\f", $this->perms[1])) : "no";
         }
     }
 }

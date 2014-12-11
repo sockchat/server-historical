@@ -56,8 +56,8 @@ class Chat implements MessageComponentInterface {
                     if(!Context::DoesSockExist($conn)) {
                         $arglist = "";
                         for($i = 0; $i < count($parts); $i++)
-                            $arglist .= ($i==0?"?":"&") ."arg". ($i+1) ."=". urlencode($parts[$i]);
-                        $aparts = file_get_contents(Utils::$chat['CHATROOT'] ."/auth/". $GLOBALS['auth_method'][Utils::$chat['AUTH_TYPE']] . $arglist);
+                            $arglist .= "&arg". ($i+1) ."=". urlencode($parts[$i]);
+                        $aparts = file_get_contents(Utils::$chat['CHATROOT'] ."/?view=auth". $arglist);
 
                         if(substr($aparts, 0, 3) == "yes") {
                             $aparts = explode("\n", mb_substr($aparts, 3));

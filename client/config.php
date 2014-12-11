@@ -1,5 +1,4 @@
 <?php
-include("constants.php");
 
 $chat = array();
 
@@ -13,18 +12,14 @@ $chat["CHAT_TITLE"] = "Shock Cat Beta";
 /* INTEGRATION TYPE parameter
  *
  * Determines how the chat will integrate itself into existing architectures.
- * Behaves like an enumeration; takes an integer.
- *
- * Values:
- *  - 0: use custom integration system (see CUSTOM INTEGRATION FILE parameter)
- *  - 1: use phpbb integration
+ * Takes an integer represented by the INT_* defines.
  */
-$chat["INTEGRATION"] = 1;
+$chat["INTEGRATION"] = INT_PHPBB;
 
 /* CUSTOM INTEGRATION FILE parameter
  *
  * Determines the custom header file used when doing integration. This will
- * only be referenced if the INTEGRATION TYPE parameter is set to 1.
+ * only be referenced if the INTEGRATION TYPE parameter is set to INT_CUSTOM.
  * Takes a string that represents a file in the ./auth directory.
  */
 $chat["CINT_FILE"] = "";
