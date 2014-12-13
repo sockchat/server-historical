@@ -24,10 +24,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="auth.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/auth.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="60" column="157" selection-start="1709" selection-end="1709" vertical-scroll-proportion="-17.653847" vertical-offset="561" max-vertical-offset="1173">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="_global.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/styles/_global.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="28" selection-start="347" selection-end="347" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="3587">
+            <state line="88" column="13" selection-start="1319" selection-end="1319" vertical-scroll-proportion="0.0" vertical-offset="1156" max-vertical-offset="3825">
               <folding />
             </state>
           </provider>
@@ -36,25 +45,7 @@
       <file leaf-file-name="common.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lang/en/common.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="48" column="77" selection-start="2318" selection-end="2318" vertical-scroll-proportion="-17.26923" vertical-offset="367" max-vertical-offset="952">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sock.ts" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/sock.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="58" selection-start="927" selection-end="927" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="3230">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sock.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/js/sock.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="0" selection-start="96" selection-end="96" vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="3332">
+            <state line="51" column="81" selection-start="2522" selection-end="2522" vertical-scroll-proportion="-17.26923" vertical-offset="418" max-vertical-offset="1003">
               <folding />
             </state>
           </provider>
@@ -63,7 +54,7 @@
       <file leaf-file-name="chat.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tpl/chat.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="68" selection-start="2604" selection-end="2604" vertical-scroll-proportion="-12.192307" vertical-offset="652" max-vertical-offset="2346">
+            <state line="61" column="44" selection-start="2804" selection-end="2804" vertical-scroll-proportion="4.8076925" vertical-offset="1162" max-vertical-offset="2363">
               <folding>
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -79,19 +70,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="phpbb.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
+      <file leaf-file-name="bbcode.json" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bbcode.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="358" selection-end="358" vertical-scroll-proportion="-3.2692308" vertical-offset="204" max-vertical-offset="1207">
-              <folding />
+            <state line="40" column="246" selection-start="1371" selection-end="1371" vertical-scroll-proportion="-12.192307" vertical-offset="363" max-vertical-offset="935">
+              <folding>
+                <marker date="1418455976933" expanded="false" signature="544:554" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="auth.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/auth.php">
+      <file leaf-file-name="phpbb.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="157" selection-start="1709" selection-end="1709" vertical-scroll-proportion="-25.923077" vertical-offset="346" max-vertical-offset="1173">
+            <state line="19" column="0" selection-start="358" selection-end="358" vertical-scroll-proportion="12.807693" vertical-offset="622" max-vertical-offset="1207">
               <folding />
             </state>
           </provider>
@@ -100,7 +93,7 @@
       <file leaf-file-name="utils.ts" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/utils.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="0" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="935">
+            <state line="62" column="26" selection-start="2417" selection-end="2417" vertical-scroll-proportion="0.0" vertical-offset="643" max-vertical-offset="1258">
               <folding />
             </state>
           </provider>
@@ -109,7 +102,16 @@
       <file leaf-file-name="emotes.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/emotes.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="22" selection-start="739" selection-end="739" vertical-scroll-proportion="12.769231" vertical-offset="944" max-vertical-offset="1649">
+            <state line="71" column="4" selection-start="1458" selection-end="1458" vertical-scroll-proportion="-5.5" vertical-offset="1064" max-vertical-offset="1649">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="31" selection-start="335" selection-end="335" vertical-scroll-proportion="-0.5811966" vertical-offset="612" max-vertical-offset="1581">
               <folding />
             </state>
           </provider>
@@ -151,7 +153,6 @@
         <option value="$PROJECT_DIR$/tpl/logs.html" />
         <option value="$PROJECT_DIR$/tpl/mobile.html" />
         <option value="$PROJECT_DIR$/system.php" />
-        <option value="$PROJECT_DIR$/js/cookies.ts" />
         <option value="$PROJECT_DIR$/styles/black.css" />
         <option value="$PROJECT_DIR$/styles/white.css" />
         <option value="$PROJECT_DIR$/styles/blue.css" />
@@ -160,9 +161,7 @@
         <option value="$PROJECT_DIR$/install.php" />
         <option value="$PROJECT_DIR$/js/user.ts" />
         <option value="$PROJECT_DIR$/todo.txt" />
-        <option value="$PROJECT_DIR$/js/utils.ts" />
         <option value="$PROJECT_DIR$/bbcode.json.readme" />
-        <option value="$PROJECT_DIR$/bbcode.json" />
         <option value="$PROJECT_DIR$/js/sound.ts" />
         <option value="$PROJECT_DIR$/emotes.json" />
         <option value="$PROJECT_DIR$/auth/keys/index.html" />
@@ -170,17 +169,21 @@
         <option value="$PROJECT_DIR$/auth/phpbb_alt.php" />
         <option value="$PROJECT_DIR$/auth/phpbb.php" />
         <option value="$PROJECT_DIR$/lib/template.php" />
-        <option value="$PROJECT_DIR$/config.php" />
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/js/lang.ts" />
         <option value="$PROJECT_DIR$/lib/system.php" />
-        <option value="$PROJECT_DIR$/js/ui.ts" />
-        <option value="$PROJECT_DIR$/styles/_global.css" />
-        <option value="$PROJECT_DIR$/js/chat.ts" />
         <option value="$PROJECT_DIR$/lib/auth.php" />
-        <option value="$PROJECT_DIR$/lang/en/common.json" />
-        <option value="$PROJECT_DIR$/tpl/chat.html" />
+        <option value="$PROJECT_DIR$/lang/en/superfood.json" />
         <option value="$PROJECT_DIR$/js/sock.ts" />
+        <option value="$PROJECT_DIR$/js/cookies.ts" />
+        <option value="$PROJECT_DIR$/tpl/chat.html" />
+        <option value="$PROJECT_DIR$/js/chat.ts" />
+        <option value="$PROJECT_DIR$/js/ui.ts" />
+        <option value="$PROJECT_DIR$/bbcode.json" />
+        <option value="$PROJECT_DIR$/js/utils.ts" />
+        <option value="$PROJECT_DIR$/styles/_global.css" />
+        <option value="$PROJECT_DIR$/lang/en/common.json" />
+        <option value="$PROJECT_DIR$/config.php" />
       </list>
     </option>
   </component>
@@ -315,44 +318,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lang" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="en" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sock.ts" />
-              <option name="myItemType" value="com.intellij.plugins.watcher.projectView.NestingTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -468,7 +435,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13762811" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="0" y="0" width="201" height="860" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15070644" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15384616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -497,25 +464,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/js/ui.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding>
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/system.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/sock.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
@@ -534,10 +482,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding>
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -567,10 +514,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding>
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -608,10 +554,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding>
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -650,13 +595,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/msg.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/chat.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
@@ -690,13 +628,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bbcode.json.readme">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="24" selection-start="1271" selection-end="1271" vertical-scroll-proportion="1.1129296" vertical-offset="0" max-vertical-offset="850">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/sound.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="38" selection-start="500" selection-end="500" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="663">
@@ -707,36 +638,6 @@
     <entry file="file://$PROJECT_DIR$/lib/cache.manifest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="1" selection-start="127" selection-end="127" vertical-scroll-proportion="0.32692307" vertical-offset="0" max-vertical-offset="520">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bbcode.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="9.384615" vertical-offset="244" max-vertical-offset="816">
-          <folding>
-            <marker date="1418079807518" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="33" selection-start="386" selection-end="386" vertical-scroll-proportion="-10.461538" vertical-offset="0" max-vertical-offset="1462">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="69" selection-start="750" selection-end="750" vertical-scroll-proportion="-11.115385" vertical-offset="136" max-vertical-offset="816">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/system.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="16" selection-start="579" selection-end="579" vertical-scroll-proportion="-9.153846" vertical-offset="153" max-vertical-offset="1717">
           <folding />
         </state>
       </provider>
@@ -755,13 +656,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/cookies.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="520">
@@ -769,12 +663,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/chat.ts">
+    <entry file="file://$PROJECT_DIR$/js/sock.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="30" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.7790507" vertical-offset="102" max-vertical-offset="1768">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state line="3" column="0" selection-start="96" selection-end="96" vertical-scroll-proportion="-0.4264214" vertical-offset="306" max-vertical-offset="3332">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bbcode.json.readme">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="24" selection-start="1271" selection-end="1271" vertical-scroll-proportion="1.1604096" vertical-offset="0" max-vertical-offset="850">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/install.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="611">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/system.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="16" selection-start="579" selection-end="579" vertical-scroll-proportion="0.4940171" vertical-offset="102" max-vertical-offset="1717">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -785,70 +701,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/styles/_global.css">
+    <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="28" selection-start="347" selection-end="347" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="3587">
+        <state line="25" column="69" selection-start="750" selection-end="750" vertical-scroll-proportion="-8.461538" vertical-offset="205" max-vertical-offset="816">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
+    <entry file="file://$PROJECT_DIR$/js/sock.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="358" selection-end="358" vertical-scroll-proportion="-3.2692308" vertical-offset="204" max-vertical-offset="1207">
+        <state line="54" column="56" selection-start="1903" selection-end="1903" vertical-scroll-proportion="0.0" vertical-offset="714" max-vertical-offset="3247">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/auth.php">
+    <entry file="file://$PROJECT_DIR$/js/cookies.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="157" selection-start="1709" selection-end="1709" vertical-scroll-proportion="-25.923077" vertical-offset="346" max-vertical-offset="1173">
+        <state line="17" column="5" selection-start="609" selection-end="609" vertical-scroll-proportion="0.27659574" vertical-offset="120" max-vertical-offset="731">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+    <entry file="file://$PROJECT_DIR$/js/utils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="1079" selection-end="1079" vertical-scroll-proportion="0.0" vertical-offset="337" max-vertical-offset="935">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/ui.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="83" selection-start="3566" selection-end="3566" vertical-scroll-proportion="-0.3361204" vertical-offset="2003" max-vertical-offset="4335">
-          <folding>
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1418291858267" expanded="false" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="77" selection-start="2318" selection-end="2318" vertical-scroll-proportion="-17.26923" vertical-offset="367" max-vertical-offset="952">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/lang.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="31" selection-start="460" selection-end="460" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1224">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/emotes.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="22" selection-start="739" selection-end="739" vertical-scroll-proportion="12.769231" vertical-offset="944" max-vertical-offset="1649">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.0468228" vertical-offset="626" max-vertical-offset="1224">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tpl/chat.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="68" selection-start="2604" selection-end="2604" vertical-scroll-proportion="-12.192307" vertical-offset="652" max-vertical-offset="2346">
+        <state line="61" column="44" selection-start="2804" selection-end="2804" vertical-scroll-proportion="4.8076925" vertical-offset="1162" max-vertical-offset="2363">
           <folding>
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -863,16 +746,94 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sock.ts">
+    <entry file="file://$PROJECT_DIR$/js/chat.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="58" selection-start="927" selection-end="927" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="3230">
+        <state line="25" column="8" selection-start="752" selection-end="752" vertical-scroll-proportion="0.0" vertical-offset="1089" max-vertical-offset="1700">
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/msg.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/sock.js">
+    <entry file="file://$PROJECT_DIR$/lib/auth.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="96" selection-end="96" vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="3332">
+        <state line="60" column="157" selection-start="1709" selection-end="1709" vertical-scroll-proportion="-17.653847" vertical-offset="561" max-vertical-offset="1173">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/lang.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="31" selection-start="460" selection-end="460" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1224">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/emotes.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="4" selection-start="1458" selection-end="1458" vertical-scroll-proportion="-5.5" vertical-offset="1064" max-vertical-offset="1649">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auth/phpbb.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="358" selection-end="358" vertical-scroll-proportion="12.807693" vertical-offset="622" max-vertical-offset="1207">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/utils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="26" selection-start="2417" selection-end="2417" vertical-scroll-proportion="0.0" vertical-offset="643" max-vertical-offset="1258">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bbcode.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="246" selection-start="1371" selection-end="1371" vertical-scroll-proportion="-12.192307" vertical-offset="363" max-vertical-offset="935">
+          <folding>
+            <marker date="1418455976933" expanded="false" signature="544:554" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/styles/_global.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="13" selection-start="1319" selection-end="1319" vertical-scroll-proportion="0.0" vertical-offset="1156" max-vertical-offset="3825">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/ui.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="197" column="140" selection-start="8191" selection-end="8191" vertical-scroll-proportion="0.0" vertical-offset="3431" max-vertical-offset="4335">
+          <folding>
+            <marker date="1418454978710" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
+            <marker date="1418454978710" expanded="false" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lang/en/common.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="81" selection-start="2522" selection-end="2522" vertical-scroll-proportion="-17.26923" vertical-offset="418" max-vertical-offset="1003">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="31" selection-start="335" selection-end="335" vertical-scroll-proportion="-0.5811966" vertical-offset="612" max-vertical-offset="1581">
           <folding />
         </state>
       </provider>

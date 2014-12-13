@@ -15,7 +15,7 @@ class Utils {
     }
 
     public static function Sanitize($str) {
-        return str_replace(["\n", "<", ">"], [" <br/>", "&lt;", "&gt;"], $str);
+        return str_replace(["<", ">", "\n"], ["&lt;", "&gt;", " <br/> "], $str);
     }
 
     public static function SanitizeName($name) {

@@ -80,6 +80,20 @@ body {
     overflow-y: auto;
 }
 
+#chat #messageDiv #chatList .insertImage {
+    max-width: 1080px;
+    max-height: 180px;
+    vertical-align: top;
+    overflow: auto;
+    margin: 5px;
+    border: 0;
+}
+
+#chat #messageDiv #chatList iframe {
+    vertical-align: top;
+    overflow: auto;
+}
+
 #chat #messageDiv #chatList .botError,
 #chat #messageDiv #chatList .botMessage,
 #chat #messageDiv #chatList .botName {

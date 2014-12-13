@@ -47,6 +47,7 @@ var Socket = (function () {
                     if (parts[0] == "y") {
                         UserContext.users = {};
                         document.getElementById("chatList").innerHTML = "";
+                        document.getElementById("channeldd").innerHTML = "";
                         UI.rowEven[0] = true;
 
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
@@ -178,7 +179,7 @@ var Socket = (function () {
     };
 
     Socket.onConnClose = function (e) {
-        if (document.getElementById("chat").style.display != "none") {
+        if (document.getElementById("chat").style.display != "none" && !Socket.kicked) {
             UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
             Socket.Init(Socket.addr);
         } else

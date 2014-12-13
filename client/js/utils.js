@@ -7,7 +7,7 @@ var Utils = (function () {
     };
 
     Utils.Sanitize = function (str) {
-        return Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str, ">", "&gt;"), "<", "&lt;"), "\n", " <br />");
+        return Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str, ">", "&gt;"), "<", "&lt;"), "\n", " <br /> ");
     };
 
     Utils.formatBotMessage = function (type, id, params) {
@@ -52,6 +52,25 @@ var Utils = (function () {
                 str = Utils.replaceAll(str, chars[i], "");
         }
         return str;
+    };
+
+    Utils.EmbedVideo = function (link) {
+        var id = link.parentElement.title;
+        var holder = link.parentElement.getElementsByTagName("span")[0];
+
+        holder.innerHTML = holder.title == "link" ? "<iframe width='560' height='315' src='//www.youtube.com/embed/" + id + "' frameborder='0' allowfullscreen></iframe>" : "<a href='https://www.youtube.com/watch?v=" + id + "' onclick='window.open(this.href);return false;'>https://www.youtube.com/watch?v=" + id + "</a>";
+        link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
+        holder.title = holder.title == "link" ? "video" : "link";
+    };
+
+    Utils.EmbedImage = function (link) {
+        var id = link.parentElement.title;
+        var holder = link.parentElement.getElementsByTagName("span")[0];
+        var imglink = holder.getElementsByTagName("a")[0];
+
+        imglink.innerHTML = holder.title == "link" ? "<img src='" + id + "' alt='userimg' class='insertImage' />" : id;
+        link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
+        holder.title = holder.title == "link" ? "image" : "link";
     };
     return Utils;
 })();

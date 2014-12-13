@@ -7,7 +7,7 @@ class Utils {
         return  Utils.replaceAll(Utils.replaceAll(Utils.replaceAll(str,
             ">", "&gt;"),
             "<", "&lt;"),
-            "\n", " <br />");
+            "\n", " <br /> ");
     }
 
     static formatBotMessage(type: string, id: string, params: string[] = []): string {
@@ -46,5 +46,24 @@ class Utils {
             for(var i = 0; i < chars.length; i++) str = Utils.replaceAll(str, chars[i], "");
         }
         return str;
+    }
+
+    static EmbedVideo(link: HTMLElement) {
+        var id = link.parentElement.title;
+        var holder = link.parentElement.getElementsByTagName("span")[0];
+
+        holder.innerHTML = holder.title == "link" ? "<iframe width='560' height='315' src='//www.youtube.com/embed/"+ id +"' frameborder='0' allowfullscreen></iframe>" : "<a href='https://www.youtube.com/watch?v="+ id +"' onclick='window.open(this.href);return false;'>https://www.youtube.com/watch?v="+ id +"</a>";
+        link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
+        holder.title = holder.title == "link" ? "video" : "link";
+    }
+
+    static EmbedImage(link: HTMLElement) {
+        var id = link.parentElement.title;
+        var holder = link.parentElement.getElementsByTagName("span")[0];
+        var imglink = holder.getElementsByTagName("a")[0];
+
+        imglink.innerHTML = holder.title == "link" ? "<img src='"+ id +"' alt='userimg' class='insertImage' />" : id;
+        link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
+        holder.title = holder.title == "link" ? "image" : "link";
     }
 }

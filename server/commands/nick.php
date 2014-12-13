@@ -8,7 +8,7 @@ use sockchat\Utils;
 class nick implements GenericCommand {
     public static function doCommand($user, $args) {
         if($user->canChangeNick()) {
-            $name = "~". trim(Utils::SanitizeName(substr(join("_", $args), 0, Utils::$chat["MAX_USERNAME_LEN"]-1)));
+            $name = "~". trim(Utils::SanitizeName(mb_substr(join("_", $args), 0, Utils::$chat["MAX_USERNAME_LEN"]-1)));
             if(!isset($args[0])) $name = $user->GetOriginalUsername();
             if(Context::GetUserByName($name) == null) {
                 Message::BroadcastBotMessage(MSG_NORMAL, "nick", [$user->username, $name]);

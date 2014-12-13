@@ -188,7 +188,7 @@ var UI = (function () {
         outmsg = tmp.join(" ");
 
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
-        msgDiv.innerHTML = "<span style='vertical-align: top;'><span class='date'>(" + datestr + ")</span> <span style='font-weight:bold;color:" + u.color + ";'>" + name + "</span>:</span> " + outmsg + "";
+        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span style='font-weight:bold;color:" + u.color + ";'>" + name + "</span>: " + outmsg + "";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;

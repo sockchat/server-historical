@@ -7,7 +7,14 @@ $chat = array();
  * Sets the title of the chat as it appears above the message list.
  * Takes a string.
  */
-$chat["CHAT_TITLE"] = "Shock Cat Beta";
+$chat["CHAT_TITLE"] = "Some kind of ошибка";
+
+/* CHAT BOT NAME parameter
+ *
+ * Sets the name of the chat bot user as seen by the clients.
+ * Takes a string.
+ */
+$chat["CHATBOT_NAME"] = "ошибка";
 
 /* INTEGRATION TYPE parameter
  *

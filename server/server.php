@@ -10,6 +10,11 @@ use \SQLite3;
 
 require_once("lib/constants.php");
 require_once("config.php");
+
+/* TODO: GET RID OF THIS ON RELEASE !!! */
+require_once("dbinfo.php");
+/* TODO: GET RID OF THIS ON RELEASE !!! */
+
 require_once("lib/utils.php");
 require_once("lib/db.php");
 require_once("lib/user.php");
@@ -25,9 +30,8 @@ foreach(glob("commands/*.php") as $fn) {
 
 class Chat implements MessageComponentInterface {
     public function __construct() {
-        $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
         Utils::$chat = $GLOBALS["chat"];
-        Message::$bot = new User("-1", "", "bot", "inherit", "", null);
+        Message::$bot = new User("-1", "", "ChatBot", "inherit", "", null);
         Context::CreateChannel(new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"])));
         Context::CreateChannel(new Channel("Chinky_Palace", Utils::Hash("test test")));
 

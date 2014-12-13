@@ -11,29 +11,25 @@ var Chat = (function () {
     }
     Chat.Main = function (addr) {
         Chat.LoadJSONFiles();
+        Cookies.Prepare();
+
+        document.getElementById("styledd").value = Cookies.Get(2 /* Style */);
+        UI.ChangeStyle();
 
         UI.RedrawDropDowns();
         document.getElementById("langdd").value = Cookies.Get(1 /* Language */);
         UI.RenderLanguage();
 
+        Sounds.ChangePack(Cookies.Get(0 /* Soundpack */));
+
+        UI.RenderEmotes();
+
         UI.ChangeDisplay(false, 11);
+
         Socket.args = Utils.FetchPage("./index.php?view=auth").split("\f");
         if (Socket.args[0] == "yes") {
             UserContext.users = {};
-            Cookies.Prepare();
-
             Socket.args = Socket.args.slice(1);
-
-            document.getElementById("styledd").value = Cookies.Get(2 /* Style */);
-            UI.ChangeStyle();
-
-            UI.RedrawDropDowns();
-            document.getElementById("langdd").value = Cookies.Get(1 /* Language */);
-            UI.RenderLanguage();
-
-            Sounds.ChangePack(Cookies.Get(0 /* Soundpack */));
-
-            UI.RenderEmotes();
             Socket.Init(addr);
         } else
             window.location.href = Socket.redirectUrl;
