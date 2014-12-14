@@ -7,6 +7,18 @@ class Ban {
     public $id;
     public $ip;
     public $username;
+
+    public function __construct($id, $ip, $username) {
+        $this->id = $id;
+        $this->ip = $ip;
+        $this->username = $username;
+    }
+
+    public function Check($id, $ip, $username) {
+        return (($id == null) ? false : $id == $this->id) ||
+               (($ip == null) ? false : $ip == $this->ip) ||
+               (($username == null) ? false : $username == $this->username);
+    }
 }
 
 class Context {

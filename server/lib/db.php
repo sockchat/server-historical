@@ -2,49 +2,151 @@
 namespace sockchat;
 use \PDO;
 
-class Database {
-    protected $conn = null;
-    protected $statements;
+class FFDB {
+    public static function Init() {
+        if(!file_exists("./ffdb")) mkdir("./ffdb");
+        if(!file_exists("./ffdb/chans")) mkdir("./ffdb/chans");
+        if(!file_exists("./ffdb/bans")) mkdir("./ffdb/bans");
+    }
 
-    public function Init($persist = true) {
+    public static function Log($str) {
+        file_put_contents("./ffdb/logs.txt", "{$str}\n", FILE_APPEND);
+    }
+
+    public static function Ban($type, $value) {
+        while(file_exists($fname = "./ffdb/bans/". md5(time() + rand(0, 100))));
+        file_put_contents($fname, implode("\f", [$type, $value]));
+    }
+
+    public static function Unban($type, $value) {
+        $files = glob("./ffdb/bans/*");
+        foreach($files as $file) {
+            $data = explode("\f", file_get_contents($file));
+            if($data[0] == $type && $data[1] == $value) {
+                unlink($file);
+                break;
+            }
+        }
+    }
+
+    public static function GetAllBans() {
+        $bans = [];
+
+        $files = glob("./ffdb/bans/*");
+        foreach($files as $file) {
+            $data = explode("\f", file_get_contents($file));
+            array_push($bans, new Ban($data[0] == "0" ? $data[1] : null, $data[0] == "1" ? $data[1] : null, $data[0] == "2" ? $data[1] : null));
+        }
+
+        return $bans;
+    }
+
+    public static function CreateChannel($name, $pwd, $priv) {
+        while(file_exists($fname = "./ffdb/chans/". md5(time() + rand(0, 100))));
+        file_put_contents($fname, implode("\f", [$name, $pwd, $priv]));
+    }
+
+    public static function ModifyChannel($oldname, $newname, $pwd, $priv) {
+        $files = glob("./ffdb/chans/*");
+        foreach($files as $file) {
+            $data = explode("\f", file_get_contents($file));
+            if($data[0] == $oldname) {
+                file_put_contents($file, implode("\f", [$newname, $pwd, $priv]));
+                break;
+            }
+        }
+    }
+
+    public static function RemoveChannel($name) {
+        $files = glob("./ffdb/chans/*");
+        foreach($files as $file) {
+            $data = explode("\f", file_get_contents($file));
+            if($data[0] == $name) {
+                unlink($file);
+                break;
+            }
+        }
+    }
+
+    public static function GetAllChannels() {
+        $chans = [];
+
+        $files = glob("./ffdb/chans/*");
+        foreach($files as $file) {
+            $data = explode("\f", file_get_contents($file));
+            array_push($chans, new Channel($data[0], $data[1], $data[2]));
+        }
+
+        return $chans;
+    }
+}
+
+class Database {
+    protected static $conn = null;
+    protected static $statements;
+    protected static $useFlatFile;
+
+    public static function Init($persist = true) {
         $chat = $GLOBALS["chat"];
+        Database::$useFlatFile = $chat["DB_ENABLE"];
         if($chat["DB_ENABLE"]) {
             try {
-                $this->conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], $persist ? [PDO::ATTR_PERSISTENT => true] : []);
+                Database::$conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], $persist ? [PDO::ATTR_PERSISTENT => true] : []);
                 $pre = $chat["DB_TABLE_PREFIX"];
 
-                $this->statements = [
+                Database::$statements = [
                     "logstore" => [
-                        "query" => $this->conn->prepare("INSERT INTO {$pre}_logs (userid, username, color, channel, chrank, message) VALUES (:uid, :uname, :color, :chan, :chrank, :msg)"),
-                        "uid" => "", "uname" => "", "color" => "", "chan" => "", "chrank" => "", "msg" => ""
+                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_logs (epoch, userid, username, color, channel, chrank, message) VALUES (:epoch, :uid, :uname, :color, :chan, :chrank, :msg)"),
+                        "epoch" => "","uid" => "", "uname" => "", "color" => "", "chan" => "", "chrank" => "", "msg" => ""
                     ],
                     "logfetch" => [
-                        "query" => $this->conn->prepare("SELECT * FROM {$pre}_logs WHERE channel = :chan, datetime >= :lb, datetime <= :ub, chrank <= :uperm"),
+                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_logs WHERE channel = :chan AND datetime >= :lb AND datetime <= :ub AND chrank <= :uperm"),
                         "chan" => "", "lb" => "", "ub" => "", "uperm" => ""
                     ],
                     "logfetchall" => [
-                        "query" => $this->conn->prepare("SELECT * FROM {$pre}_logs WHERE datetime >= :lb, datetime <= :ub, chrank <= :uperm"),
+                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_logs WHERE datetime >= :lb AND datetime <= :ub AND chrank <= :uperm"),
                         "lb" => "", "ub" => "", "uperm" => ""
                     ],
                     "login" => [
-                        "query" => $this->conn->prepare("INSERT INTO {$pre}_online_users (userid, username, color, perms) VALUES (:uid, :uname, :col, :perms)"),
+                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_online_users (userid, username, color, perms) VALUES (:uid, :uname, :col, :perms)"),
                         "uid" => "", "uname" => "", "col" => "", "perms" => ""
                     ],
                     "logout" => [
-                        "query" => $this->conn->prepare("DELETE FROM {$pre}_online_users WHERE userid = :uid"),
+                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_online_users WHERE userid = :uid"),
                         "uid" => ""
                     ],
+                    "clrusers" => [
+                        "query" => Database::$conn->prepare("TRUNCATE TABLE {$pre}_online_users")
+                    ],
                     "crchan" => [
-                        "query" => $this->conn->prepare("INSERT INTO {$pre}_channels (chname, pwd) VALUES (:chn, :pwd)"),
-                        "chn" => "", "pwd" => ""
+                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_channels (chname, pwd, priv) VALUES (:chn, :pwd, :priv)"),
+                        "chn" => "", "pwd" => "", "priv" => ""
+                    ],
+                    "modchan" => [
+                        "query" => Database::$conn->prepare("UPDATE {$pre}_channels SET chname = :chn, pwd = :pwd, priv = :priv WHERE chname = :chon"),
+                        "chn" => "", "pwd" => "", "priv" => "", "chon" => ""
                     ],
                     "delchan" => [
-                        "query" => $this->conn->prepare("DELETE FROM {$pre}_channels WHERE chname = :chn"),
+                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_channels WHERE chname = :chn"),
                         "chn" => ""
+                    ],
+                    "fetchchan" => [
+                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_channels")
+                    ],
+                    "banuser" => [
+                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_banned_users (bantype, banvalue, expiration) VALUES (:type, :val, :exp)"),
+                        "type" => "", "val" => "", "exp" => ""
+                    ],
+                    "unbanuser" => [
+                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_banned_users WHERE bantype = :type AND banvalue = :val"),
+                        "type" => "", "val" => ""
+                    ],
+                    "fetchbans" => [
+                        "query" => Database::$conn->prepate("SELECT * FROM {$pre}_banned_users")
                     ]
                 ];
 
-                foreach($this->statements as $stmt) {
+                foreach(Database::$statements as $stmt) {
                     foreach($stmt as $param => $value) {
                         if($param != "query") $stmt["query"]->bindParam(":{$param}", $stmt[$param]);
                     }
@@ -53,6 +155,42 @@ class Database {
                 echo "Could not connect to the database! Details: ". $err->getMessage() ."\n";
                 return;
             }
+        } else FFDB::Init();
+    }
+
+    public static function TruncateUserList() {
+        if(!Database::$useFlatFile) Database::$statements["clrusers"]["query"]->execute();
+    }
+
+    public static function Login($user) {
+        if(!Database::$useFlatFile) {
+            Database::$statements["login"]["uid"] = $user->id;
+            Database::$statements["login"]["uname"] = $user->username;
+            Database::$statements["login"]["col"] = $user->color;
+            Database::$statements["login"]["perms"] = $user->permstr;
+            Database::$statements["login"]["query"]->execute();
+        }
+    }
+
+    public static function Logout($user) {
+        if(!Database::$useFlatFile) {
+            Database::$statements["logout"]["uid"] = $user->id;
+            Database::$statements["logout"]["query"]->execute();
+        }
+    }
+
+    public static function Log($time, $user, $msg) {
+        if(Database::$useFlatFile)
+            FFDB::Log("(". date("m/d/Y H:i:s") . ") ". $user->username .": ". $msg);
+        else {
+            Database::$statements["logstore"]["epoch"] = $time;
+            Database::$statements["logstore"]["uid"] = $user->id;
+            Database::$statements["logstore"]["uname"] = $user->username;
+            Database::$statements["logstore"]["color"] = $user->color;
+            Database::$statements["logstore"]["chan"] = $user->channel;
+            Database::$statements["logstore"]["chrank"] = Context::GetChannel($user->channel)->permissionLevel;
+            Database::$statements["logstore"]["msg"] = $msg;
+            Database::$statements["logstore"]["query"]->execute();
         }
     }
 }

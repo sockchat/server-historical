@@ -6,7 +6,6 @@ use \Ratchet\ConnectionInterface;
 use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
-use \SQLite3;
 
 require_once("lib/constants.php");
 require_once("config.php");
@@ -31,6 +30,7 @@ foreach(glob("commands/*.php") as $fn) {
 class Chat implements MessageComponentInterface {
     public function __construct() {
         Utils::$chat = $GLOBALS["chat"];
+        Database::Init();
         Message::$bot = new User("-1", "", "ChatBot", "inherit", "", null);
         Context::CreateChannel(new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"])));
         Context::CreateChannel(new Channel("Chinky_Palace", Utils::Hash("test test")));
