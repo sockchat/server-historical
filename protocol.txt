@@ -132,13 +132,16 @@ as an integer. The packet identifiers are as follows.
               WHICH EACH REPRESENT A SINGLE USER
             
         If 1, the parameters are as follows:
-            - TIMESTAMP
-            - USER ID
-            - USER NAME
-            - USER COLOR
-            - PERMISSION STRING
-            - MESSAGE
-            - MESSAGE ID
+            - A COUNT OF MESSAGES SENT IN PACKET (represented as N)
+            - N REPETITIONS OF
+                - TIMESTAMP
+                - USER ID
+                - USER NAME
+                - USER COLOR
+                - PERMISSION STRING
+                - MESSAGE
+                - MESSAGE ID
+              WHICH EACH REPRESENT A SINGLE MESSAGE
             
         If 2, the parameters are as follows:
             - A COUNT OF CHANNELS SENT IN PACKET (represented as N)

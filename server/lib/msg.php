@@ -1,6 +1,8 @@
 <?php
 namespace sockchat;
 
+use React\Stream\Util;
+
 class Message {
     public static $msgId = 0;
     public static $bot;
@@ -34,6 +36,19 @@ class Message {
         }
 
         $channel->log->Log($user, $msg, Message::$msgId);
+    }
+
+    public static function BroadcastSilentMessage($time, $user, $msg, $msgid = null, $channel = ALL_CHANNELS) {
+        $msgid = $msgid == null ? Message::$msgId : $msgid;
+        if($channel == ALL_CHANNELS)
+            Message::SendToAll(Utils::PackMessage(7, [$time, $user, $msg, $msgid]));
+        else
+            Message::SendToChannel(Utils::PackMessage(7, [$time, $user, $msg, $msgid]), $channel);
+    }
+
+    public static function PrivateSilentMessage($time, $user, $msg, $to, $msgid = null) {
+        $msgid = $msgid == null ? Message::$msgId : $msgid;
+        $to->sock->send(Utils::PackMessage(7, [$time, $user, $msg, $msgid]));
     }
 
     public static function ClearUserContext($user, $type = CLEAR_ALL) {

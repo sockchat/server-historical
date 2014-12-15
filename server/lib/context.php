@@ -4,20 +4,25 @@ use \sockchat\User;
 use \sockchat\Channel;
 
 class Ban {
-    public $id;
-    public $ip;
-    public $username;
+    public $id = null;
+    public $ip = null;
+    public $username = null;
+    public $expire;
 
-    public function __construct($id, $ip, $username) {
-        $this->id = $id;
-        $this->ip = $ip;
-        $this->username = $username;
+    public function __construct($type, $value, $expire) {
+        $value = explode("\t", $value);
+
+        $this->id = $type == BAN_ID ? $value[0] : ($type == BAN_IP_ID ? $value[1] : null);
+        $this->ip = $type == BAN_IP || $type == BAN_IP_ID || $type == BAN_IP_USERNAME ? $value[0] : null;
+        $this->username = $type == BAN_USERNAME ? $value[0] : ($type == BAN_IP_USERNAME ? $value[1] : null);
+        $this->expire = $expire;
     }
 
     public function Check($id, $ip, $username) {
-        return (($id == null) ? false : $id == $this->id) ||
-               (($ip == null) ? false : $ip == $this->ip) ||
-               (($username == null) ? false : $username == $this->username);
+        return ((($id == null || $this->id == null) ? false : $id == $this->id) ||
+                (($ip == null || $this->ip == null) ? false : $ip == $this->ip) ||
+                (($username == null || $this->username == null) ? false : $username == $this->username)) &&
+               ($this->expire > time() || $this->expire == -1);
     }
 }
 
@@ -136,7 +141,11 @@ class Context {
     }
 
     public static function CheckBan($id, $ip, $name) {
-        return 0;
+        foreach(Context::$bannedUsers as $ban) {
+            if($ban->Check($id, $ip, $name)) return true;
+        }
+
+        return false;
     }
 
     public static function ModifyUser($newuser) {

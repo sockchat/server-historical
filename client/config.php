@@ -86,3 +86,24 @@ $chat["DEFAULT_STYLE"] = "black";
  * ./lang directory.
  */
 $chat["DEFAULT_LANG"] = "en";
+
+/* DATABASE CONFIGURATION parameters
+ *
+ * Information pertaining to establishing a connection to the database containing
+ * the sock chat tables and information. Used only for logs on the client side.
+ *
+ * DB_ENABLE determines whether a database is connected; if false, indicates the
+ * server is using the flat file database implementation and therefore the following
+ * parameters are not used.
+ *
+ * DB_DSN is the "data source name" for the database. For more info on how to set
+ * this, see http://php.net/manual/en/pdo.construct.php#refsect1-pdo.construct-parameters
+ *
+ * DB_TABLE_PREFIX is the string prefixed onto the the table names. This is set in the
+ * installation file when the database is configured
+ */
+$chat["DB_ENABLE"]              = true;
+$chat["DB_DSN"]                 = "mysql:host=localhost;dbname=sockchat";
+$chat["DB_TABLE_PREFIX"]        = "sock";
+$chat["DB_USER"]                = "username";
+$chat["DB_PASS"]                = "password";

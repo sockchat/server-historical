@@ -3,6 +3,10 @@ namespace sockchat;
 use \PDO;
 
 class FFDB {
+    protected static function CreateFile($dir) {
+
+    }
+
     public static function Init() {
         if(!file_exists("./ffdb")) mkdir("./ffdb");
         if(!file_exists("./ffdb/chans")) mkdir("./ffdb/chans");
@@ -13,9 +17,9 @@ class FFDB {
         file_put_contents("./ffdb/logs.txt", "{$str}\n", FILE_APPEND);
     }
 
-    public static function Ban($type, $value) {
+    public static function Ban($type, $value, $expire) {
         while(file_exists($fname = "./ffdb/bans/". md5(time() + rand(0, 100))));
-        file_put_contents($fname, implode("\f", [$type, $value]));
+        file_put_contents($fname, implode("\f", [$type, $value, $expire]));
     }
 
     public static function Unban($type, $value) {
@@ -35,7 +39,12 @@ class FFDB {
         $files = glob("./ffdb/bans/*");
         foreach($files as $file) {
             $data = explode("\f", file_get_contents($file));
-            array_push($bans, new Ban($data[0] == "0" ? $data[1] : null, $data[0] == "1" ? $data[1] : null, $data[0] == "2" ? $data[1] : null));
+            if($data[2] <= time() && $data[2] != "-1") {
+                unlink($file);
+                continue;
+            }
+
+            array_push($bans, new Ban($data[0], $data[1], $data[2]));
         }
 
         return $bans;
@@ -142,7 +151,11 @@ class Database {
                         "type" => "", "val" => ""
                     ],
                     "fetchbans" => [
-                        "query" => Database::$conn->prepate("SELECT * FROM {$pre}_banned_users")
+                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_banned_users")
+                    ],
+                    "updatebans" => [
+                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_banned_users WHERE expiration <= :epoch AND expiration != -1"),
+                        "epoch" => ""
                     ]
                 ];
 
@@ -191,6 +204,92 @@ class Database {
             Database::$statements["logstore"]["chrank"] = Context::GetChannel($user->channel)->permissionLevel;
             Database::$statements["logstore"]["msg"] = $msg;
             Database::$statements["logstore"]["query"]->execute();
+        }
+    }
+
+    public static function Ban($type, $value, $expire) {
+        if(Database::$useFlatFile)
+            FFDB::Ban($type, $value, $expire);
+        else {
+            Database::$statements["banuser"]["type"] = $type;
+            Database::$statements["banuser"]["val"] = $value;
+            Database::$statements["banuser"]["exp"] = $expire;
+            Database::$statements["banuser"]["query"]->execute();
+        }
+    }
+
+    // you've got no bans
+    // you've got no drans
+    public static function GetAllBans() {
+        if(Database::$useFlatFile)
+            return FFDB::GetAllBans();
+        else {
+            $time = time();
+            Database::$statements["updatebans"]["epoch"] = $time;
+            Database::$statements["updatebans"]["query"]->execute();
+
+            $blist = [];
+            $bans = Database::$statements["fetchbans"]["query"]->execute()->fetchAll(PDO::FETCH_BOTH);
+            foreach($bans as $ban) {
+                if($ban["expiration"] > $time) array_push($blist, new Ban($ban["bantype"], $ban["banvalue"], $ban["expiration"]));
+            }
+            return $blist;
+        }
+    }
+
+    // you want some
+    // i'll give it ya
+    public static function Unban($type, $value) {
+        if(Database::$useFlatFile)
+            FFDB::Unban($type, $value);
+        else {
+            Database::$statements["unbanuser"]["type"] = $type;
+            Database::$statements["unbanuser"]["val"] = $value;
+            Database::$statements["unbanuser"]["query"]->execute();
+        }
+    }
+
+    public static function CreateChannel($name, $pwd, $priv = 0) {
+        if(Database::$useFlatFile)
+            FFDB::CreateChannel($name, $pwd, $priv);
+        else {
+            Database::$statements["crchan"]["chn"] = $name;
+            Database::$statements["crchan"]["pwd"] = $pwd;
+            Database::$statements["crchan"]["priv"] = $priv;
+            Database::$statements["crchan"]["query"]->execute();
+        }
+    }
+
+    public static function RemoveChannel($name) {
+        if(Database::$useFlatFile)
+            FFDB::RemoveChannel($name);
+        else {
+            Database::$statements["delchan"]["chn"] = $name;
+            Database::$statements["delchan"]["query"]->execute();
+        }
+    }
+
+    public static function ModifyChannel($oldname, $newname, $pwd, $priv) {
+        if(Database::$useFlatFile)
+            FFDB::ModifyChannel($oldname, $newname, $pwd, $priv);
+        else {
+            Database::$statements["modchan"]["chon"] = $oldname;
+            Database::$statements["modchan"]["chn"] = $newname;
+            Database::$statements["modchan"]["pwd"] = $pwd;
+            Database::$statements["modchan"]["priv"] = $priv;
+            Database::$statements["modchan"]["query"]->execute();
+        }
+    }
+
+    public static function GetAllChannels() {
+        if(Database::$useFlatFile)
+            return FFDB::GetAllChannels();
+        else {
+            $clist = [];
+            $chans = Database::$statements["fetchchan"]["query"]->execute()->fetchAll(PDO::FETCH_BOTH);
+            foreach($chans as $chan)
+                array_push($clist, new Channel($chan["chname"], $chan["pwd"], $chan["priv"]));
+            return $clist;
         }
     }
 }
