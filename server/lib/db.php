@@ -4,32 +4,37 @@ use \PDO;
 
 class FFDB {
     protected static function CreateFile($dir) {
-
+        try {
+            while(file_exists($fname = "$dir/". md5(microtime())));
+        } catch(\Exception $e) {
+            while(file_exists($fname = "$dir/". md5(time() + rand(0, 100))));
+        }
+        return $fname;
     }
 
     public static function Init() {
         if(!file_exists("./ffdb")) mkdir("./ffdb");
         if(!file_exists("./ffdb/chans")) mkdir("./ffdb/chans");
         if(!file_exists("./ffdb/bans")) mkdir("./ffdb/bans");
+        if(!file_exists("./ffdb/logs.txt")) file_put_contents("./ffdb/logs.txt", "");
     }
 
     public static function Log($str) {
         file_put_contents("./ffdb/logs.txt", "{$str}\n", FILE_APPEND);
     }
 
-    public static function Ban($type, $value, $expire) {
-        while(file_exists($fname = "./ffdb/bans/". md5(time() + rand(0, 100))));
-        file_put_contents($fname, implode("\f", [$type, $value, $expire]));
+    public static function Ban($ip, $id, $username, $expire) {
+        $fname = FFDB::CreateFile("./ffdb/bans");
+        file_put_contents($fname, implode("\f", [$ip, $id, $username, $expire]));
+        echo $fname ."\n";
     }
 
-    public static function Unban($type, $value) {
+    public static function Unban($ip, $id, $username) {
         $files = glob("./ffdb/bans/*");
         foreach($files as $file) {
             $data = explode("\f", file_get_contents($file));
-            if($data[0] == $type && $data[1] == $value) {
+            if(($data[0] == $ip && $data[0] != null) || ($data[1] == $id && $data[1] != null) || ($data[2] == $username && $data[2] != null))
                 unlink($file);
-                break;
-            }
         }
     }
 
@@ -39,19 +44,20 @@ class FFDB {
         $files = glob("./ffdb/bans/*");
         foreach($files as $file) {
             $data = explode("\f", file_get_contents($file));
-            if($data[2] <= time() && $data[2] != "-1") {
+            if($data[3] <= time() && $data[3] != "-1") {
                 unlink($file);
                 continue;
             }
 
-            array_push($bans, new Ban($data[0], $data[1], $data[2]));
+            array_push($bans, new Ban($data[0], $data[1], $data[2], $data[3]));
         }
 
         return $bans;
     }
 
     public static function CreateChannel($name, $pwd, $priv) {
-        while(file_exists($fname = "./ffdb/chans/". md5(time() + rand(0, 100))));
+        $fname = FFDB::CreateFile("./ffdb/chans");
+        echo $fname ."\n";
         file_put_contents($fname, implode("\f", [$name, $pwd, $priv]));
     }
 
@@ -83,7 +89,7 @@ class FFDB {
         $files = glob("./ffdb/chans/*");
         foreach($files as $file) {
             $data = explode("\f", file_get_contents($file));
-            array_push($chans, new Channel($data[0], $data[1], $data[2]));
+            $chans[$data[0]] = new Channel($data[0], $data[1], $data[2]);
         }
 
         return $chans;
@@ -95,9 +101,19 @@ class Database {
     protected static $statements;
     protected static $useFlatFile;
 
+    protected static function Execute($stmt, $fetch = false) {
+        $tmp = Database::$conn->prepare(Database::$statements[$stmt]["query"]);
+        foreach(Database::$statements[$stmt] as $param => $value) {
+            if($param != "query") $tmp->bindValue(":{$param}", $value);
+        }
+        $tmp->execute();
+        if ($fetch) return $tmp->fetchAll(PDO::FETCH_BOTH);
+        else return [];
+    }
+
     public static function Init($persist = true) {
         $chat = $GLOBALS["chat"];
-        Database::$useFlatFile = $chat["DB_ENABLE"];
+        Database::$useFlatFile = !$chat["DB_ENABLE"];
         if($chat["DB_ENABLE"]) {
             try {
                 Database::$conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], $persist ? [PDO::ATTR_PERSISTENT => true] : []);
@@ -105,65 +121,55 @@ class Database {
 
                 Database::$statements = [
                     "logstore" => [
-                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_logs (epoch, userid, username, color, channel, chrank, message) VALUES (:epoch, :uid, :uname, :color, :chan, :chrank, :msg)"),
+                        "query" => "INSERT INTO {$pre}_logs (epoch, userid, username, color, channel, chrank, message) VALUES (:epoch, :uid, :uname, :color, :chan, :chrank, :msg)",
                         "epoch" => "","uid" => "", "uname" => "", "color" => "", "chan" => "", "chrank" => "", "msg" => ""
                     ],
-                    "logfetch" => [
-                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_logs WHERE channel = :chan AND datetime >= :lb AND datetime <= :ub AND chrank <= :uperm"),
-                        "chan" => "", "lb" => "", "ub" => "", "uperm" => ""
-                    ],
-                    "logfetchall" => [
-                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_logs WHERE datetime >= :lb AND datetime <= :ub AND chrank <= :uperm"),
-                        "lb" => "", "ub" => "", "uperm" => ""
+                    "fetchbacklog" => [
+                        "query" => "SELECT * FROM {$pre}_logs WHERE channel = :chan OR channel = '@all' ORDER BY epoch DESC LIMIT 0, ". Backlog::$loglen,
+                        "chan" => ""
                     ],
                     "login" => [
-                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_online_users (userid, username, color, perms) VALUES (:uid, :uname, :col, :perms)"),
+                        "query" => "INSERT INTO {$pre}_online_users (userid, username, color, perms) VALUES (:uid, :uname, :col, :perms)",
                         "uid" => "", "uname" => "", "col" => "", "perms" => ""
                     ],
                     "logout" => [
-                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_online_users WHERE userid = :uid"),
+                        "query" => "DELETE FROM {$pre}_online_users WHERE userid = :uid",
                         "uid" => ""
                     ],
                     "clrusers" => [
-                        "query" => Database::$conn->prepare("TRUNCATE TABLE {$pre}_online_users")
+                        "query" => "TRUNCATE TABLE {$pre}_online_users"
                     ],
                     "crchan" => [
-                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_channels (chname, pwd, priv) VALUES (:chn, :pwd, :priv)"),
+                        "query" => "INSERT INTO {$pre}_channels (chname, pwd, priv) VALUES (:chn, :pwd, :priv)",
                         "chn" => "", "pwd" => "", "priv" => ""
                     ],
                     "modchan" => [
-                        "query" => Database::$conn->prepare("UPDATE {$pre}_channels SET chname = :chn, pwd = :pwd, priv = :priv WHERE chname = :chon"),
+                        "query" => "UPDATE {$pre}_channels SET chname = :chn, pwd = :pwd, priv = :priv WHERE chname = :chon",
                         "chn" => "", "pwd" => "", "priv" => "", "chon" => ""
                     ],
                     "delchan" => [
-                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_channels WHERE chname = :chn"),
+                        "query" => "DELETE FROM {$pre}_channels WHERE chname = :chn",
                         "chn" => ""
                     ],
                     "fetchchan" => [
-                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_channels")
+                        "query" => "SELECT * FROM {$pre}_channels"
                     ],
                     "banuser" => [
-                        "query" => Database::$conn->prepare("INSERT INTO {$pre}_banned_users (bantype, banvalue, expiration) VALUES (:type, :val, :exp)"),
-                        "type" => "", "val" => "", "exp" => ""
+                        "query" => "INSERT INTO {$pre}_banned_users (ip, uid, username, expiration) VALUES (:ip, :id, :uname, :exp)",
+                        "ip" => "", "id" => "", "uname" => "", "exp" => ""
                     ],
-                    "unbanuser" => [
-                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_banned_users WHERE bantype = :type AND banvalue = :val"),
-                        "type" => "", "val" => ""
+                    "unban" => [
+                        "query" => "DELETE FROM {$pre}_banned_users WHERE (ip IS NOT NULL AND ip LIKE :ip) OR (id IS NOT NULL AND id = :id) OR (username IS NOT NULL AND username = :uname)",
+                        "ip" => "", "id" => "", "uname" => ""
                     ],
                     "fetchbans" => [
-                        "query" => Database::$conn->prepare("SELECT * FROM {$pre}_banned_users")
+                        "query" => "SELECT * FROM {$pre}_banned_users"
                     ],
                     "updatebans" => [
-                        "query" => Database::$conn->prepare("DELETE FROM {$pre}_banned_users WHERE expiration <= :epoch AND expiration != -1"),
+                        "query" => "DELETE FROM {$pre}_banned_users WHERE expiration <= :epoch AND expiration != -1",
                         "epoch" => ""
                     ]
                 ];
-
-                foreach(Database::$statements as $stmt) {
-                    foreach($stmt as $param => $value) {
-                        if($param != "query") $stmt["query"]->bindParam(":{$param}", $stmt[$param]);
-                    }
-                }
             } catch(\Exception $err) {
                 echo "Could not connect to the database! Details: ". $err->getMessage() ."\n";
                 return;
@@ -171,8 +177,22 @@ class Database {
         } else FFDB::Init();
     }
 
+    public static function FetchBacklog($chan) {
+        if(!Database::$useFlatFile) {
+            $ret = new Backlog();
+
+            Database::$statements["fetchbacklog"]["chan"] = $chan;
+            $logs = Database::Execute("fetchbacklog", true);
+            foreach($logs as $log)
+                $ret->Log(new User($log["userid"], "", $log["username"], $log["color"], "", null), $log["message"], "rlbl", $log["epoch"]);
+            $ret->logs = array_reverse($ret->logs);
+
+            return $ret;
+        } else return new Backlog();
+    }
+
     public static function TruncateUserList() {
-        if(!Database::$useFlatFile) Database::$statements["clrusers"]["query"]->execute();
+        if(!Database::$useFlatFile) Database::Execute("clrusers");
     }
 
     public static function Login($user) {
@@ -181,40 +201,41 @@ class Database {
             Database::$statements["login"]["uname"] = $user->username;
             Database::$statements["login"]["col"] = $user->color;
             Database::$statements["login"]["perms"] = $user->permstr;
-            Database::$statements["login"]["query"]->execute();
+            Database::Execute("login");
         }
     }
 
     public static function Logout($user) {
         if(!Database::$useFlatFile) {
             Database::$statements["logout"]["uid"] = $user->id;
-            Database::$statements["logout"]["query"]->execute();
+            Database::Execute("logout");
         }
     }
 
-    public static function Log($time, $user, $msg) {
+    public static function Log($time, $user, $msg, $chan = null) {
         if(Database::$useFlatFile)
-            FFDB::Log("(". date("m/d/Y H:i:s") . ") ". $user->username .": ". $msg);
+            FFDB::Log("(". date("m/d/Y H:i:s") . ") ". $user->username ." to ". ($chan == null ? $user->channel : $chan) .": ". $msg);
         else {
             Database::$statements["logstore"]["epoch"] = $time;
             Database::$statements["logstore"]["uid"] = $user->id;
             Database::$statements["logstore"]["uname"] = $user->username;
             Database::$statements["logstore"]["color"] = $user->color;
-            Database::$statements["logstore"]["chan"] = $user->channel;
+            Database::$statements["logstore"]["chan"] = $chan == null ? $user->channel : $chan;
             Database::$statements["logstore"]["chrank"] = Context::GetChannel($user->channel)->permissionLevel;
             Database::$statements["logstore"]["msg"] = $msg;
-            Database::$statements["logstore"]["query"]->execute();
+            Database::Execute("logstore");
         }
     }
 
-    public static function Ban($type, $value, $expire) {
+    public static function Ban($ip, $id, $username, $expire) {
         if(Database::$useFlatFile)
-            FFDB::Ban($type, $value, $expire);
+            FFDB::Ban($ip, $id, $username, $expire);
         else {
-            Database::$statements["banuser"]["type"] = $type;
-            Database::$statements["banuser"]["val"] = $value;
+            Database::$statements["banuser"]["ip"] = $ip;
+            Database::$statements["banuser"]["id"] = $id;
+            Database::$statements["banuser"]["uname"] = $username;
             Database::$statements["banuser"]["exp"] = $expire;
-            Database::$statements["banuser"]["query"]->execute();
+            Database::Execute("banuser");
         }
     }
 
@@ -226,12 +247,12 @@ class Database {
         else {
             $time = time();
             Database::$statements["updatebans"]["epoch"] = $time;
-            Database::$statements["updatebans"]["query"]->execute();
+            Database::Execute("updatebans");
 
             $blist = [];
-            $bans = Database::$statements["fetchbans"]["query"]->execute()->fetchAll(PDO::FETCH_BOTH);
+            $bans = Database::Execute("fetchbans", true);
             foreach($bans as $ban) {
-                if($ban["expiration"] > $time) array_push($blist, new Ban($ban["bantype"], $ban["banvalue"], $ban["expiration"]));
+                if($ban["expiration"] > $time || $ban["expiration"] == "-1") array_push($blist, new Ban($ban["ip"], $ban["uid"], $ban["username"], $ban["expiration"]));
             }
             return $blist;
         }
@@ -239,13 +260,14 @@ class Database {
 
     // you want some
     // i'll give it ya
-    public static function Unban($type, $value) {
+    public static function Unban($ip, $id, $username) {
         if(Database::$useFlatFile)
-            FFDB::Unban($type, $value);
+            FFDB::Unban($ip, $id, $username);
         else {
-            Database::$statements["unbanuser"]["type"] = $type;
-            Database::$statements["unbanuser"]["val"] = $value;
-            Database::$statements["unbanuser"]["query"]->execute();
+            Database::$statements["unbanuser"]["ip"] = $ip;
+            Database::$statements["unbanuser"]["id"] = $id;
+            Database::$statements["unbanuser"]["uname"] = $username;
+            Database::Execute("unbanuser");
         }
     }
 
@@ -256,7 +278,7 @@ class Database {
             Database::$statements["crchan"]["chn"] = $name;
             Database::$statements["crchan"]["pwd"] = $pwd;
             Database::$statements["crchan"]["priv"] = $priv;
-            Database::$statements["crchan"]["query"]->execute();
+            Database::Execute("crchan");
         }
     }
 
@@ -265,7 +287,7 @@ class Database {
             FFDB::RemoveChannel($name);
         else {
             Database::$statements["delchan"]["chn"] = $name;
-            Database::$statements["delchan"]["query"]->execute();
+            Database::Execute("delchan");
         }
     }
 
@@ -277,7 +299,7 @@ class Database {
             Database::$statements["modchan"]["chn"] = $newname;
             Database::$statements["modchan"]["pwd"] = $pwd;
             Database::$statements["modchan"]["priv"] = $priv;
-            Database::$statements["modchan"]["query"]->execute();
+            Database::Execute("modchan");
         }
     }
 
@@ -286,9 +308,9 @@ class Database {
             return FFDB::GetAllChannels();
         else {
             $clist = [];
-            $chans = Database::$statements["fetchchan"]["query"]->execute()->fetchAll(PDO::FETCH_BOTH);
+            $chans = Database::Execute("fetchchan", true);
             foreach($chans as $chan)
-                array_push($clist, new Channel($chan["chname"], $chan["pwd"], $chan["priv"]));
+                $clist[$chan["chname"]] = new Channel($chan["chname"], $chan["pwd"], $chan["priv"], null, CHANNEL_PERM, Database::FetchBacklog($chan["chname"]));
             return $clist;
         }
     }

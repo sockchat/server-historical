@@ -3,12 +3,12 @@ namespace sockchat;
 use \sockchat\User;
 
 class Backlog {
-    public $loglen = 10;
+    public static $loglen = 10;
     public $logs = array();
 
-    public function Log($user, $msg, $msgid) {
-        array_push($this->logs, [gmdate("U"), clone $user, $msg, $msgid]);
-        if(count($this->logs) > $this->loglen)
+    public function Log($user, $msg, $msgid, $time = null) {
+        array_push($this->logs, [$time == null ? gmdate("U") : $time, clone $user, $msg, $msgid]);
+        if(count($this->logs) > Backlog::$loglen)
             $this->logs = array_slice($this->logs, 1);
     }
 
@@ -34,13 +34,13 @@ class Channel {
 
     public $log;
 
-    public function __construct($name, $password = "", $permissionLevel = 0, $channelOwner = null, $channelType = CHANNEL_PERM) {
+    public function __construct($name, $password = "", $permissionLevel = 0, $channelOwner = null, $channelType = CHANNEL_PERM, $backlog = null) {
         $this->name = $name;
         $this->permissionLevel = $permissionLevel;
         $this->password = $password;
         $this->channelOwner = $channelOwner;
         $this->channelType = $channelType;
-        $this->log = new Backlog();
+        $this->log = $backlog == null ? new Backlog() : $backlog;
     }
 
     public function GetOwner() {

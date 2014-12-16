@@ -9,19 +9,17 @@ class Ban {
     public $username = null;
     public $expire;
 
-    public function __construct($type, $value, $expire) {
-        $value = explode("\t", $value);
-
-        $this->id = $type == BAN_ID ? $value[0] : ($type == BAN_IP_ID ? $value[1] : null);
-        $this->ip = $type == BAN_IP || $type == BAN_IP_ID || $type == BAN_IP_USERNAME ? $value[0] : null;
-        $this->username = $type == BAN_USERNAME ? $value[0] : ($type == BAN_IP_USERNAME ? $value[1] : null);
+    public function __construct($ip, $id, $username, $expire) {
+        $this->id = Utils::$chat["AUTOID"] ? null : $id;
+        $this->ip = $ip;
+        $this->username = $username;
         $this->expire = $expire;
     }
 
     public function Check($id, $ip, $username) {
-        return ((($id == null || $this->id == null) ? false : $id == $this->id) ||
-                (($ip == null || $this->ip == null) ? false : $ip == $this->ip) ||
-                (($username == null || $this->username == null) ? false : $username == $this->username)) &&
+        return (($this->id == null ? false : $id == $this->id) ||
+                ($this->ip == null ? false : Utils::CheckIPAddresses($ip, $this->ip)) ||
+                ($this->username == null ? false : $username == $this->username)) &&
                ($this->expire > time() || $this->expire == -1);
     }
 }
@@ -90,6 +88,7 @@ class Context {
             if($channel->name[0] != "@" && $channel->name[0] != "*") {
                 Context::$channelList[$channel->name] = $channel;
                 Message::HandleChannelCreation($channel);
+                Database::CreateChannel($channel->name, $channel->password, $channel->permissionLevel);
                 return "OK";
             } else return Utils::FormatBotMessage(MSG_ERROR, "inchan", []);
         } else return Utils::FormatBotMessage(MSG_ERROR, "nischan", [$channel->name]);
@@ -120,6 +119,7 @@ class Context {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
         foreach($channel->users as $user) Context::SwitchChannel($user, Utils::$chat["DEFAULT_CHANNEL"]);
         Message::HandleChannelDeletion($channel);
+        Database::RemoveChannel($channel->name);
         unset(Context::$channelList[$channel->name]);
     }
 
@@ -127,11 +127,12 @@ class Context {
         Message::HandleJoin($user);
         Context::$onlineUsers[$user->id] = $user;
         Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]]->users[$user->id] = Context::$onlineUsers[$user->id];
+        Database::Login($user);
     }
 
     public static function AllowUser($username, $sock) {
         foreach(Context::$onlineUsers as $user) {
-            if($user->username != $username) {
+            if($user->GetOriginalUsername() != $username) {
                 if($sock == $user->sock) {
                     return 2;
                 }
@@ -142,7 +143,7 @@ class Context {
 
     public static function CheckBan($id, $ip, $name) {
         foreach(Context::$bannedUsers as $ban) {
-            if($ban->Check($id, $ip, $name)) return true;
+            if($ban->Check($id, $ip, $name)) return $ban->expire;
         }
 
         return false;
@@ -154,10 +155,29 @@ class Context {
         Message::HandleUserModification($u);
     }
 
-    public static function KickUser($user, $time = 0) {
+    public static function KickUser($user, $time = 0, $banip = false) {
         Message::HandleKick($user, $time);
+        if($time != 0) {
+            $exp = $time < 0 ? -1 : (int)gmdate("U") + $time;
+            Database::Ban($banip ? $user->sock->remoteAddress : null , $user->id, $user->username, $exp);
+            array_push(Context::$bannedUsers, new Ban($banip ? $user->sock->remoteAddress : null , $user->id, $user->username, $exp));
+        }
         $user->sock->close();
         Context::Leave($user, LEAVE_KICK);
+    }
+
+    public static function BanIP($ip, $time = -1) {
+        $exp = $time < 0 ? -1 : (int)gmdate("U") + $time;
+        array_push(Context::$bannedUsers, new Ban($ip, null, null, $exp));
+        Database::Ban($ip, null, null, $exp);
+
+        foreach(Context::$onlineUsers as $user) {
+            if(Utils::CheckIPAddresses($user->sock->remoteAddress, $ip)) {
+                Message::HandleKick($user, $time);
+                $user->sock->close();
+                Context::Leave($user, LEAVE_KICK);
+            }
+        }
     }
 
     public static function CheckPings() {
@@ -181,6 +201,7 @@ class Context {
         if(Context::GetChannel($user->channel)->channelType == CHANNEL_TEMP && Context::GetChannel($user->channel)->GetOwner()->id == $user->id)
             Context::DeleteChannel($user->channel);
 
+        Database::Logout($user);
         Message::HandleLeave($user, $type);
         unset(Context::GetChannel($user->channel)->users[$user->id]);
         unset(Context::$onlineUsers[$user->id]);

@@ -32,8 +32,12 @@ class Chat implements MessageComponentInterface {
         Utils::$chat = $GLOBALS["chat"];
         Database::Init();
         Message::$bot = new User("-1", "", "ChatBot", "inherit", "", null);
-        Context::CreateChannel(new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"])));
-        Context::CreateChannel(new Channel("Chinky_Palace", Utils::Hash("test test")));
+
+        Database::TruncateUserList();
+        Context::$channelList = array_merge([Utils::$chat["DEFAULT_CHANNEL"] => new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"]), "", 0, null, CHANNEL_PERM, Database::FetchBacklog(DEFAULT_CHANNEL))], Database::GetAllChannels());
+        Context::$bannedUsers = Database::GetAllBans();
+
+        var_dump(Context::$bannedUsers);
 
         echo "Server started.\n";
     }
@@ -66,7 +70,7 @@ class Chat implements MessageComponentInterface {
                         if(substr($aparts, 0, 3) == "yes") {
                             $aparts = explode("\n", mb_substr($aparts, 3));
                             if(($reason = Context::AllowUser($aparts[1], $conn)) == 0) {
-                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) == 0) {
+                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
                                     $id = 0;
                                     if(Utils::$chat["AUTOID"]) {
                                         for($i = 1;; $i++) {
@@ -78,7 +82,7 @@ class Chat implements MessageComponentInterface {
                                     } else $id = $aparts[0];
 
                                     Context::Join(new User($id, Utils::$chat["DEFAULT_CHANNEL"], Utils::SanitizeName($aparts[1]), $aparts[2], $aparts[3], $conn));
-                                } else $conn->send(Utils::PackMessage(1, array_key_exists("n", "3", $length)));
+                                } else $conn->send(Utils::PackMessage(1, array("n", "3", $length)));
                             } else $conn->send(Utils::PackMessage(1, array("n", $reason)));
                         } else $conn->send(Utils::PackMessage(1, array("n", "0")));
                     }
@@ -106,7 +110,6 @@ class Chat implements MessageComponentInterface {
                                             }
                                         } else
                                             Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
-                                            //echo "got here";
                                     }
                                 } else $conn->close();
                             }

@@ -19,7 +19,7 @@ class Utils {
     }
 
     public static function SanitizeName($name) {
-        return str_replace(" ", "_", str_replace("\\","&#92;",htmlspecialchars($name, ENT_QUOTES)));
+        return str_replace([" ","\n","\t","\f"], ["_","","",""], htmlspecialchars($name, ENT_QUOTES));
     }
 
     public static function GetHeader($sock, $name) {
@@ -40,5 +40,26 @@ class Utils {
 
     public static function Hash($in) {
         return hash("sha256", $in);
+    }
+
+    public static function IsValidIPAddress($addr) {
+        $addr = explode(".", $addr);
+        if(count($addr) != 4) return false;
+        foreach($addr as $subaddr) {
+            if(!is_numeric($subaddr) && $subaddr != "*") return false;
+            if(($subaddr > 255 || $subaddr < 0) && $subaddr != "*") return false;
+        }
+        return true;
+    }
+
+    public static function CheckIPAddresses($addr1, $addr2) {
+        $addr1 = explode(".", $addr1);
+        $addr2 = explode(".", $addr2);
+
+        for($i = 0; $i < 4; $i++) {
+            if($addr1[$i] != $addr2[$i] && $addr1[$i] != "*" && $addr2[$i] != "*") return false;
+        }
+
+        return true;
     }
 }

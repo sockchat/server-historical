@@ -15,6 +15,7 @@ class Message {
     protected static function LogToAll($user, $msg) {
         foreach(Context::$channelList as $channel)
             $channel->log->Log($user, $msg, Message::$msgId);
+        Database::Log(gmdate("U"), $user, $msg, "@all");
     }
 
     protected static function SendToChannel($msg, $channel) {
@@ -35,6 +36,7 @@ class Message {
             } else return;
         }
 
+        Database::Log(gmdate("U"), $user, $msg, $channel->name == Utils::$chat["DEFAULT_CHANNEL"] ? "@default" : $channel->name);
         $channel->log->Log($user, $msg, Message::$msgId);
     }
 
@@ -116,7 +118,7 @@ class Message {
         if($length == 0)
             $user->sock->send(Utils::PackMessage(P_BAKA, ["0"]));
         else
-            $user->sock->send(Utils::PackMessage(P_BAKA, ["1", $length]));
+            $user->sock->send(Utils::PackMessage(P_BAKA, ["1", date("U") + $length]));
     }
 
     public static function HandleUserModification($user) {

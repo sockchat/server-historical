@@ -15,7 +15,9 @@
         "Could not join chat: You are banned until",
         "Connecting to chat server ...",
         "Authenticating login data ...",
-        "Connection terminated! Details: "
+        "Connection terminated! Details: ",
+        "Click here to go back.",
+        "the end of time."
     ],
     "botText": {
         "say"       : "{0}",

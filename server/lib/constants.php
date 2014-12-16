@@ -24,12 +24,6 @@ define("CTX_USER", "0");
 define("CTX_MSG", "1");
 define("CTX_CHANNEL", "2");
 
-define("BAN_ID", "0");
-define("BAN_IP", "1");
-define("BAN_USERNAME", "2");
-define("BAN_IP_ID", "3");
-define("BAN_IP_USERNAME", "4");
-
 define("P_USER_JOIN", 1);
 define("P_SEND_MESSAGE", 2);
 define("P_USER_LEAVE", 3);

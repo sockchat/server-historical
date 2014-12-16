@@ -19,18 +19,17 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 
 use sockchat\Auth;
-$sauth = new Auth();
 
-if($sauth->GetPageType() == AUTH_FETCH) {
+if(Auth::GetPageType() == AUTH_FETCH) {
     $user->session_begin();
     $auth->acl($user->data);
     $user->setup();
 
     if($user->data["user_id"] != ANONYMOUS) {
-        $sauth->AppendArguments([$user->data["user_id"], $user->data["user_password"]]);
-        $sauth->Accept();
+        Auth::AppendArguments([$user->data["user_id"], $user->data["user_password"]]);
+        Auth::Accept();
     } else
-        $sauth->Deny();
+        Auth::Deny();
 } else {
     $qdata = array(
         "user_id" => request_var("arg1", -1),
@@ -45,13 +44,13 @@ if($sauth->GetPageType() == AUTH_FETCH) {
         $auth->_fill_acl($udata["user_permissions"]);
         $user->setup();
 
-        $sauth->SetUserData(
+        Auth::SetUserData(
             $udata['user_id'],
             $udata['username'],
             $udata['user_colour'] ? "#".$udata['user_colour'] : "inherit"
         );
 
-        $sauth->SetCommonPermissions(
+        Auth::SetCommonPermissions(
             $auth->acl_get("a_") ? 2 : ($auth->acl_get("m_") ? 1 : 0),
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
@@ -59,10 +58,10 @@ if($sauth->GetPageType() == AUTH_FETCH) {
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "2" : "1"
         );
 
-        $sauth->Accept();
+        Auth::Accept();
 
         $user->session_kill();
-    } else $sauth->Deny();
+    } else Auth::Deny();
 }
 
-$sauth->Serve();
+Auth::Serve();

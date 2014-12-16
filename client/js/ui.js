@@ -91,17 +91,18 @@ var UI = (function () {
         document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     };
 
-    UI.ChangeDisplay = function (chat, msgid, indicator, err) {
+    UI.ChangeDisplay = function (chat, msgid, indicator, err, link) {
         if (typeof msgid === "undefined") { msgid = 0; }
         if (typeof indicator === "undefined") { indicator = true; }
         if (typeof err === "undefined") { err = ""; }
+        if (typeof link === "undefined") { link = false; }
         if (chat) {
             document.getElementById("connmsg").style.display = "none";
             document.getElementById("chat").style.display = "block";
         } else {
             document.getElementById("chat").style.display = "none";
             document.getElementById("connmsg").style.display = "block";
-            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err;
+            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err + (link ? "<br/><br/><a href='" + Socket.redirectUrl + "'>" + UI.langs[UI.currentLang].menuText[14] + "</a>" : "");
             document.getElementById("indicator").style.display = indicator ? "block" : "none";
         }
     };

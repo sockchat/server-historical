@@ -100,14 +100,14 @@ class UI {
         document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     }
 
-    static ChangeDisplay(chat: boolean, msgid: number = 0, indicator: boolean = true, err: string = "") {
+    static ChangeDisplay(chat: boolean, msgid: number = 0, indicator: boolean = true, err: string = "", link: boolean = false) {
         if(chat) {
             document.getElementById("connmsg").style.display = "none";
             document.getElementById("chat").style.display = "block";
         } else {
             document.getElementById("chat").style.display = "none";
             document.getElementById("connmsg").style.display = "block";
-            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err;
+            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err + (link ? "<br/><br/><a href='"+ Socket.redirectUrl +"'>"+ UI.langs[UI.currentLang].menuText[14] +"</a>" : "");
             document.getElementById("indicator").style.display = indicator ? "block" : "none";
         }
     }

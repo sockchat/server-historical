@@ -61,8 +61,9 @@ class Socket {
                         UI.ChangeDisplay(true);
                         UI.AddUser(UserContext.self, false);
                         UI.RedrawUserList();
-                    } else
-                        alert(UI.langs[UI.currentLang].menuText[7 + +parts[0]] + (+parts[0] == 3 ? " "+ (new Date(+parts[1])).toDateString() +"!" : ""));
+                    } else {
+                        UI.ChangeDisplay(false, 7 + +parts[1], false, +parts[1] == 3 ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
+                    }
                 }
                 break;
             case 2:
@@ -155,8 +156,8 @@ class Socket {
                 break;
             case 9:
                 Socket.kicked = true;
-                alert(+parts[0] == 0 ? UI.langs[UI.currentLang].menuText[5] : UI.langs[UI.currentLang].menuText[6] +" "+ (new Date(+parts[1]*1000)).toDateString() +"!");
-                window.location.href = Socket.redirectUrl;
+                UI.ChangeDisplay(false, +parts[0] + 5, false, "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
+                //window.location.href = Socket.redirectUrl;
                 break;
             case 10:
                 if(+parts[0] == UserContext.self.id) {
@@ -183,9 +184,11 @@ class Socket {
     }
 
     static onConnClose(e) {
-        if(document.getElementById("chat").style.display != "none" && !Socket.kicked) {
-            UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
-            Socket.Init(Socket.addr);
-        } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code "+ e.code);
+        if(!Socket.kicked) {
+            if (document.getElementById("chat").style.display != "none") {
+                UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
+                Socket.Init(Socket.addr);
+            } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code " + e.code);
+        }
     }
 }

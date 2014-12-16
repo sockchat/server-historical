@@ -48,6 +48,18 @@ class Utils {
         return str;
     }
 
+    static AddZero(i: number, mag: number = 1): string {
+        var ret = ""+i;
+        if(i < Math.pow(10, mag)) ret = "0" + ret;
+        return ret;
+    }
+
+    static GetDateTimeString(dt: Date): string {
+        alert(dt.getTime());
+        return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText[15] :
+            dt.toDateString() +" @ "+ Utils.AddZero(dt.getHours()) +":"+ Utils.AddZero(dt.getMinutes()) +":"+ Utils.AddZero(dt.getSeconds());
+    }
+
     static EmbedVideo(link: HTMLElement) {
         var id = link.parentElement.title;
         var holder = link.parentElement.getElementsByTagName("span")[0];
