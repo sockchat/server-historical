@@ -53,6 +53,6 @@
         "rankerr"   : "Error: Cannot set channel privilege higher than your own!",
         "reconnect" : "Connection lost! Attempting to reconnect automatically...",
         "logerr"    : "Server uses the flat file database implementation and cannot serve logs to clients. To view chat logs, open the logs.txt file in the ffdb folder in the server's root directory.",
-        "logna"     : ""
+        "generr"    : "An error has occurred!"
     }
 }

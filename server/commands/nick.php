@@ -11,7 +11,7 @@ class nick implements GenericCommand {
             $name = "~". trim(Utils::SanitizeName(mb_substr(join("_", $args), 0, Utils::$chat["MAX_USERNAME_LEN"]-1)));
             if(!isset($args[0])) $name = $user->GetOriginalUsername();
             if(Context::GetUserByName($name) == null) {
-                Message::BroadcastBotMessage(MSG_NORMAL, "nick", [$user->username, $name]);
+                Message::BroadcastBotMessage(MSG_NORMAL, "nick", [$user->username, $name], $user->channel);
                 $user->username = $name;
                 Context::ModifyUser($user);
             } else Message::PrivateBotMessage(MSG_ERROR, "nameinuse", [$name], $user);

@@ -150,12 +150,6 @@ class UI {
                 Sounds.Play(Sound.Receive);
         }
 
-        UI.emotes.forEach(function(elem, i, arr) {
-            elem[1].forEach(function(elt, j, akbar) {
-                outmsg = Utils.replaceAll(outmsg, Utils.Sanitize(elt), "<img src='img/emotes/"+ elem[0] +"' class='chatEmote' />");
-            });
-        });
-
         for(var i = 0; i < UI.bbcode.length; i++) {
             if(!UI.bbcode[i]["arg"]) {
                 var at = 0;
@@ -194,6 +188,23 @@ class UI {
         }
         outmsg = tmp.join(" ");
 
+        UI.emotes.forEach(function(elem, i, arr) {
+            var args: string[] = [];
+            elem[1].forEach(function(elt: string, j, akbar) {
+                elt = Utils.Sanitize(elt);
+                var out = "";
+                for(var i = 0; i < elt.length; i++) {
+                    var cc = elt.charCodeAt(i);
+                    if(!((cc>47 && cc<58) || (cc>64 && cc<91) || (cc>96 && cc<123)))
+                        out += "\\";
+                    out += elt.charAt(i);
+                }
+                args.push(out);
+            });
+
+            outmsg = outmsg.replace(new RegExp("("+ args.join("|") +")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/"+ elem[0] +"' class='chatEmote' />");
+        });
+
         var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>: "+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
@@ -204,12 +215,14 @@ class UI {
     }
 
     static AddUser(u: User, addToContext = true) {
-        var msgDiv = document.createElement("div");
-        msgDiv.className = (this.rowEven[1])?"rowEven":"rowOdd";
-        msgDiv.id = "sock_user_"+ u.id;
-        msgDiv.innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
-        document.getElementById("userList").appendChild(msgDiv);
-        this.rowEven[1] = !this.rowEven[1];
+        if(u.visible) {
+            var msgDiv = document.createElement("div");
+            msgDiv.className = (this.rowEven[1])?"rowEven":"rowOdd";
+            msgDiv.id = "sock_user_"+ u.id;
+            msgDiv.innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
+            document.getElementById("userList").appendChild(msgDiv);
+            this.rowEven[1] = !this.rowEven[1];
+        }
 
         if(addToContext) {
             UserContext.users[""+ u.id] = u;
@@ -248,7 +261,8 @@ class UI {
         this.rowEven[1] = false;
         this.AddUser(UserContext.self, false);
         for(var key in UserContext.users) {
-            this.AddUser(<User>UserContext.users[key], false);
+            if(<User>UserContext.users[key].visible)
+                this.AddUser(<User>UserContext.users[key], false);
         }
     }
 }

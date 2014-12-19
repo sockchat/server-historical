@@ -49,7 +49,14 @@ class Channel {
     }
 
     public function GetAllUsers() {
-        return join(Utils::$separator, $this->users);
+        $arr = [];
+
+        foreach(Context::$invisibleUsers as $user)
+            array_push($arr, $user . Utils::$separator . "0");
+        foreach($this->users as $user)
+            array_push($arr, $user . Utils::$separator . "1");
+
+        return (count($this->users) + count(Context::$invisibleUsers)) . Utils::$separator . join(Utils::$separator, $arr);
     }
 
     public function __toString() {

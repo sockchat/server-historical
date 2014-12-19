@@ -12,6 +12,7 @@ class Socket {
     static redirectUrl: string;
     static addr: string;
     static kicked: boolean = false;
+    static pinging: boolean = false;
 
     static Send(msg: string) {
         this.sock.send(msg);
@@ -32,7 +33,14 @@ class Socket {
 
     static onConnOpen(e) {
         if(document.getElementById("chat").style.display == "none") UI.ChangeDisplay(false, 12);
-        setInterval("Socket.ping();", Socket.pingTime*1000);
+        if(!Socket.pinging) {
+            setInterval("Socket.ping();", Socket.pingTime * 1000);
+            Socket.pinging = true;
+        }
+        UserContext.users = {};
+        UI.rowEven[0] = true;
+        document.getElementById("chatList").innerHTML = "";
+        document.getElementById("channeldd").innerHTML = "";
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
 
@@ -50,11 +58,6 @@ class Socket {
                     Sounds.Play(Sound.Join);
                 } else {
                     if(parts[0] == "y") {
-                        UserContext.users = {};
-                        document.getElementById("chatList").innerHTML = "";
-                        document.getElementById("channeldd").innerHTML = "";
-                        UI.rowEven[0] = true;
-
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
                         UserContext.self.channel = parts[5];
                         UI.maxMsgLen = +parts[6];
@@ -124,12 +127,12 @@ class Socket {
                 switch(+parts[0]) {
                     case 0:
                         for(var i = 0; i < +parts[1]; i++) {
-                            if(+parts[2+4*i] != UserContext.self.id)
-                                UI.AddUser(new User(+parts[2+4*i], parts[3+4*i], parts[4+4*i], parts[5+4*i]));
+                            if(+parts[2+5*i] != UserContext.self.id)
+                                UI.AddUser(new User(+parts[2+5*i], parts[3+5*i], parts[4+5*i], parts[5+5*i], parts[6+5*i] == "1"));
                         }
                         break;
                     case 1:
-                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], false, false);
+                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], parts[8] == "1", parts[8] == "1");
                         break;
                     case 2:
                         for(var i = 0; i < +parts[1]; i++)

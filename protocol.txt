@@ -129,19 +129,18 @@ as an integer. The packet identifiers are as follows.
                 - USER NAME
                 - USER COLOR
                 - PERMISSION STRING
+				- VISIBLE (bool)
               WHICH EACH REPRESENT A SINGLE USER
             
         If 1, the parameters are as follows:
-            - A COUNT OF MESSAGES SENT IN PACKET (represented as N)
-            - N REPETITIONS OF
-                - TIMESTAMP
-                - USER ID
-                - USER NAME
-                - USER COLOR
-                - PERMISSION STRING
-                - MESSAGE
-                - MESSAGE ID
-              WHICH EACH REPRESENT A SINGLE MESSAGE
+			- TIMESTAMP
+			- USER ID
+			- USER NAME
+			- USER COLOR
+			- PERMISSION STRING
+			- MESSAGE
+			- MESSAGE ID
+			- ALERT USER OF MESSAGE (bool)
             
         If 2, the parameters are as follows:
             - A COUNT OF CHANNELS SENT IN PACKET (represented as N)
