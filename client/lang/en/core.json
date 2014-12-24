@@ -1,0 +1,8 @@
+{
+    "botText": {
+        "silence":  "You have been silenced!"
+    },
+    "botErrorText": {
+        "silerr":   "Error: User is already silenced!"
+    }
+}

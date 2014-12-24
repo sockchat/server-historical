@@ -92,27 +92,27 @@ class Chat implements MessageComponentInterface {
                     if(($user = Context::GetUserByID($parts[0])) != null) {
                         if($user->sock == $conn) {
                             if(trim($parts[1]) != "") {
-                                if(strlen(trim($parts[1])) <= Utils::$chat["MAX_MSG_LEN"]) {
-                                    if(trim($parts[1])[0] != "/") {
-                                        $out = Utils::Sanitize($parts[1]);
-                                        if(!Modules::ExecuteRoutine("OnMessageReceive", [$user, &$out])) return;
-                                        Message::BroadcastUserMessage($user, $out);
-                                        Modules::ExecuteRoutine("AfterMessageReceived", [$user, $out]);
-                                    } else {
-                                        $parts[1] = mb_substr(trim($parts[1]), 1);
-                                        $cmdparts = explode(" ", $parts[1]);
-                                        $cmd = str_replace(".","",$cmdparts[0]);
-                                        $cmdparts = array_slice($cmdparts, 1);
-                                        for($i = 0; $i < count($cmdparts); $i++)
-                                            $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
+                                $parts[1] = mb_substr(trim($parts[1]), 0, Utils::$chat["MAX_MSG_LEN"]);
+                                if(trim($parts[1])[0] != "/") {
+                                    $out = Utils::Sanitize($parts[1]);
+                                    if(!Modules::ExecuteRoutine("OnMessageReceive", [$user, &$out])) return;
+                                    Message::BroadcastUserMessage($user, $out);
+                                    Modules::ExecuteRoutine("AfterMessageReceived", [$user, $out]);
+                                } else {
+                                    $parts[1] = mb_substr(trim($parts[1]), 1);
+                                    $cmdparts = explode(" ", $parts[1]);
+                                    $cmd = strtolower(str_replace(".","",$cmdparts[0]));
+                                    $cmdparts = array_slice($cmdparts, 1);
+                                    for($i = 0; $i < count($cmdparts); $i++)
+                                        $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
 
-                                        if(!Modules::ExecuteRoutine("OnCommandReceive", [$user, &$cmd, &$cmdparts])) return;
+                                    if(Modules::ExecuteRoutine("OnCommandReceive", [$user, &$cmd, &$cmdparts], true)) {
                                         if(Commands::ExecuteCommand($cmd, $user, $cmdparts))
                                             Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
                                         else
                                             Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
                                     }
-                                } else $conn->close();
+                                }
                             }
                         }
                     }

@@ -49,10 +49,12 @@ class Modules {
         return array_key_exists($mod, Modules::$mods);
     }
 
-    public static function ExecuteRoutine($routine, $args) {
+    public static function ExecuteRoutine($routine, $args, $exitAfterFirstReturn = false) {
         $ret = true;
-        foreach(Modules::$mods as $mod)
+        foreach(Modules::$mods as $mod) {
             $ret &= call_user_func_array("\\sockchat\\mods\\{$mod}\\Main::{$routine}", $args) === null;
+            if(!$ret && $exitAfterFirstReturn) break;
+        }
         return $ret;
     }
 }

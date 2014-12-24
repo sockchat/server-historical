@@ -62,4 +62,13 @@ class Utils {
 
         return true;
     }
+
+    protected static function CreateUniqueFile($dir) {
+        try {
+            while(file_exists($fname = "$dir/". md5(microtime())));
+        } catch(\Exception $e) {
+            while(file_exists($fname = "$dir/". md5(time() + rand(0, 100))));
+        }
+        return $fname;
+    }
 }
