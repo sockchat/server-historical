@@ -12,6 +12,7 @@ class Socket {
     static redirectUrl: string;
     static addr: string;
     static kicked: boolean = false;
+    static pinging: boolean = false;
 
     static Send(msg: string) {
         this.sock.send(msg);
@@ -32,7 +33,14 @@ class Socket {
 
     static onConnOpen(e) {
         if(document.getElementById("chat").style.display == "none") UI.ChangeDisplay(false, 12);
-        setInterval("Socket.ping();", Socket.pingTime*1000);
+        if(!Socket.pinging) {
+            setInterval("Socket.ping();", Socket.pingTime * 1000);
+            Socket.pinging = true;
+        }
+        UserContext.users = {};
+        UI.rowEven[0] = true;
+        document.getElementById("chatList").innerHTML = "";
+        document.getElementById("channeldd").innerHTML = "";
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
 
@@ -50,18 +58,15 @@ class Socket {
                     Sounds.Play(Sound.Join);
                 } else {
                     if(parts[0] == "y") {
-                        UserContext.users = {};
-                        document.getElementById("chatList").innerHTML = "";
-                        UI.rowEven[0] = true;
-
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
                         UserContext.self.channel = parts[5];
                         UI.maxMsgLen = +parts[6];
                         UI.ChangeDisplay(true);
                         UI.AddUser(UserContext.self, false);
                         UI.RedrawUserList();
-                    } else
-                        alert(UI.langs[UI.currentLang].menuText[7 + +parts[0]] + (+parts[0] == 3 ? " "+ (new Date(+parts[1])).toDateString() +"!" : ""));
+                    } else {
+                        UI.ChangeDisplay(false, 7 + +parts[1], false, +parts[1] == 3 ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
+                    }
                 }
                 break;
             case 2:
@@ -122,12 +127,12 @@ class Socket {
                 switch(+parts[0]) {
                     case 0:
                         for(var i = 0; i < +parts[1]; i++) {
-                            if(+parts[2+4*i] != UserContext.self.id)
-                                UI.AddUser(new User(+parts[2+4*i], parts[3+4*i], parts[4+4*i], parts[5+4*i]));
+                            if(+parts[2+5*i] != UserContext.self.id)
+                                UI.AddUser(new User(+parts[2+5*i], parts[3+5*i], parts[4+5*i], parts[5+5*i], parts[6+5*i] == "1"));
                         }
                         break;
                     case 1:
-                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], false, false);
+                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], parts[8] == "1", parts[8] == "1");
                         break;
                     case 2:
                         for(var i = 0; i < +parts[1]; i++)
@@ -154,8 +159,8 @@ class Socket {
                 break;
             case 9:
                 Socket.kicked = true;
-                alert(+parts[0] == 0 ? UI.langs[UI.currentLang].menuText[5] : UI.langs[UI.currentLang].menuText[6] +" "+ (new Date(+parts[1]*1000)).toDateString() +"!");
-                window.location.href = Socket.redirectUrl;
+                UI.ChangeDisplay(false, +parts[0] + 5, false, "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
+                //window.location.href = Socket.redirectUrl;
                 break;
             case 10:
                 if(+parts[0] == UserContext.self.id) {
@@ -182,9 +187,11 @@ class Socket {
     }
 
     static onConnClose(e) {
-        if(document.getElementById("chat").style.display != "none") {
-            UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
-            Socket.Init(Socket.addr);
-        } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code "+ e.code);
+        if(!Socket.kicked) {
+            if (document.getElementById("chat").style.display != "none") {
+                UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
+                Socket.Init(Socket.addr);
+            } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code " + e.code);
+        }
     }
 }

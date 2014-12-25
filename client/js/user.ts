@@ -5,13 +5,15 @@ class User {
     public permstr: string;
     public perms: string[];
     public channel: string;
+    public visible: boolean;
 
-    public constructor(id: number, u: string, c: string, p: string) {
+    public constructor(id: number, u: string, c: string, p: string, v: boolean = true) {
         this.username = u;
         this.id = id;
         this.color = c;
         this.permstr = p;
         this.perms = p.split("\f");
+        this.visible = v;
     }
 
     public EvaluatePermString() {

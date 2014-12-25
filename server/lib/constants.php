@@ -12,6 +12,7 @@ define("CHANNEL_PERM", 1);
 
 define("ALL_CHANNELS", "@all");
 define("LOCAL_CHANNEL", "@local");
+define("DEFAULT_CHANNEL", "@default");
 
 define("CLEAR_MSGS", "0");
 define("CLEAR_USERS", "1");

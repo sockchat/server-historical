@@ -2,6 +2,7 @@
 ## Temporary Exclusions
 #################
 .idea/
+dbinfo.php
 
 #################
 ## Eclipse

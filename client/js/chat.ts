@@ -9,19 +9,9 @@
 
 class Chat {
     static Main(addr: string) {
-        Chat.LoadJSONFiles();
-
-        UI.RedrawDropDowns();
-        (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
-        UI.RenderLanguage();
-
-        UI.ChangeDisplay(false, 11);
-        Socket.args = Utils.FetchPage("./index.php?view=auth").split("\f");
         if(Socket.args[0] == "yes") {
-            UserContext.users = {};
+            Chat.LoadJSONFiles();
             Cookies.Prepare();
-
-            Socket.args = Socket.args.slice(1);
 
             (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookie.Style);
             UI.ChangeStyle();
@@ -33,6 +23,11 @@ class Chat {
             Sounds.ChangePack(Cookies.Get(Cookie.Soundpack));
 
             UI.RenderEmotes();
+
+            UI.ChangeDisplay(false, 11);
+
+            UserContext.users = {};
+            Socket.args = Socket.args.slice(1);
             Socket.Init(addr);
         } else window.location.href = Socket.redirectUrl;
     }

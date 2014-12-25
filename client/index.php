@@ -1,6 +1,7 @@
 <?php
 
 namespace sockchat;
+use \sockchat\Auth;
 
 include("lib/template.php");
 include("lib/auth.php");
@@ -9,6 +10,9 @@ include("config.php");
 include("lib/system.php");
 
 $chat = $GLOBALS["chat"];
+$inthref[0] = $chat["CINT_FILE"];
+include("auth/". $inthref[$chat['INTEGRATION']]);
+
 $tpl = new Template();
 
 $langs = LanguagePackHandler::getAllLanguagePacks();
@@ -23,7 +27,8 @@ $tpl->SetVariables([
     "LANGS"             => LanguagePackHandler::getLanguagePackString($langs),
     "SOUND_PACK_HTML"   => SoundPackHandler::getSoundPackMarkup($spacks),
     "SOUND_PACKS"       => SoundPackHandler::getSoundPackString($spacks),
-    "STYLES"            => StyleSheetHandler::getStyleMarkup($styles)
+    "STYLES"            => StyleSheetHandler::getStyleMarkup($styles),
+    "AUTH"              => Auth::$out
 ]);
 
 switch(isset($_GET["view"]) ? $_GET["view"] : "chat") {
@@ -35,8 +40,8 @@ switch(isset($_GET["view"]) ? $_GET["view"] : "chat") {
         $url = "tpl/logs.html";
         break;
     case "auth":
-        $inthref[0] = $chat["CINT_FILE"];
-        include("auth/". $inthref[$chat['INTEGRATION']]);
+        header("Access-Control-Allow-Origin: localhost");
+        echo Auth::$out;
         exit;
 }
 

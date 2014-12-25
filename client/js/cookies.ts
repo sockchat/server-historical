@@ -5,16 +5,24 @@ class Cookies {
     public static defaultVals = [];
 
     public static Set(cookie: Cookie, value: string) {
+        Cookies.SetRaw(Cookies.cookieList[cookie], value);
+    }
+
+    public static SetRaw(cookie: string, value: string) {
         var expire = new Date(Date.now() + 31536000000);
-        document.cookie = Cookies.cookieList[cookie] +"="+ value +"; expires="+ expire.toUTCString();
+        document.cookie = cookie +"="+ value +"; expires="+ expire.toUTCString();
     }
 
     public static Get(cookie: Cookie): string {
+        return Cookies.GetRaw(Cookies.cookieList[cookie]);
+    }
+
+    public static GetRaw(cookie: string): string {
         var c = document.cookie.split(";");
 
         for(var i = 0; i < c.length; i++) {
             var entry = c[i].trim().split("=");
-            if(entry[0] == Cookies.cookieList[cookie])
+            if(entry[0] == cookie)
                 return entry[1];
         }
 

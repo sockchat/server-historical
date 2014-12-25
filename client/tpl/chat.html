@@ -17,10 +17,12 @@
         var divSizes = [57, 122, 200];
         // header , footer , sidebar
 
+        Socket.args = "{|{ AUTH }|}".split("\f");
         Socket.pingTime = {{{ PING_PERIOD }}};
         Socket.redirectUrl = "{|{ REDIRECT_ADDR }|}";
 
         UI.chatTitle = "{|{ CHAT_TITLE }|}";
+        UI.ChatBot.username = "{|{ CHATBOT_NAME }|}";
         UI.spacks = [{{{ SOUND_PACKS }}}];
         UI.langs = [{{{ LANGS }}}];
 
@@ -55,10 +57,10 @@
         }
     </script>
 </head>
-<body onload="handleResize();Chat.Main('ws://{{{ SERVER_ADDR }}}');" onresize="handleResize();">
+<body onload="handleResize();Chat.Main('ws://{{{ SERVER_ADDR }}}');" onbeforeunload="Socket.kicked = true;" onresize="handleResize();">
 <div id="connmsg">
     <span id="info">
-        <span id="conntxt">Connecting to chat server ...</span>
+        <span id="conntxt">Loading Sock Chat ...</span>
         <span id="indicator">
             <img src="img/pixel.png" alt="loading" />
         </span>

@@ -19,46 +19,45 @@ define("CHANNEL_CREATE_TEMP", "1");
 define("CHANNEL_CREATE_PERM", "2");
 
 class Auth {
-    protected $args = [];
-    protected $user = [];
-    protected $perms = [[],[]];
-    protected $accept = true;
+    protected static $args = [];
+    protected static $user = [];
+    protected static $perms = [[],[]];
+    protected static $accept = true;
+    public static $out = "";
 
-    public function GetPageType() {
+    public static function GetPageType() {
         return isset($_GET["arg1"]) ? AUTH_CONFIRM : AUTH_FETCH;
     }
 
-    public function AppendArguments($in) {
+    public static function AppendArguments($in) {
         if(!is_array($in)) $in = [$in];
-        $this->args = array_merge($this->args, $in);
+        Auth::$args = array_merge(Auth::$args, $in);
     }
 
-    public function SetUserData($id, $username, $color) {
-        $this->user = [$id, $username, $color];
+    public static function SetUserData($id, $username, $color) {
+        Auth::$user = [$id, $username, $color];
     }
 
-    public function SetCommonPermissions($rank, $usertype, $viewlogs, $changenick, $createchannel) {
-        $this->perms[0] = [$rank, $usertype, $viewlogs, $changenick, $createchannel];
+    public static function SetCommonPermissions($rank, $usertype, $viewlogs, $changenick, $createchannel) {
+        Auth::$perms[0] = [$rank, $usertype, $viewlogs, $changenick, $createchannel];
     }
 
-    public function SetCustomPermissions($permarr) {
-        $this->perms[1] = is_array($permarr) ? $permarr : [$permarr];
+    public static function SetCustomPermissions($permarr) {
+        Auth::$perms[1] = is_array($permarr) ? $permarr : [$permarr];
     }
 
-    public function Accept() {
-        $this->accept = true;
+    public static function Accept() {
+        Auth::$accept = true;
     }
 
-    public function Deny() {
-        $this->accept = false;
+    public static function Deny() {
+        Auth::$accept = false;
     }
 
-    public function Serve() {
-        header("Access-Control-Allow-Origin: localhost");
-        if($this->GetPageType() == AUTH_FETCH)
-            echo $this->accept ? "yes\f". implode("\f", $this->args) : "no";
-        else {
-            echo $this->accept ? "yes" . implode("\n", $this->user) . "\n" . implode("\f", $this->perms[0]) . ($this->perms[1] == [] ? "" : "\f". implode("\f", $this->perms[1])) : "no";
-        }
+    public static function Serve() {
+        if(Auth::GetPageType() == AUTH_FETCH)
+            Auth::$out = Auth::$accept ? "yes\f". implode("\f", Auth::$args) : "no";
+        else
+            Auth::$out = Auth::$accept ? "yes" . implode("\n", Auth::$user) . "\n" . implode("\f", Auth::$perms[0]) . (Auth::$perms[1] == [] ? "" : "\f". implode("\f", Auth::$perms[1])) : "no";
     }
 }

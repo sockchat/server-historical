@@ -1,10 +1,12 @@
 var User = (function () {
-    function User(id, u, c, p) {
+    function User(id, u, c, p, v) {
+        if (typeof v === "undefined") { v = true; }
         this.username = u;
         this.id = id;
         this.color = c;
         this.permstr = p;
         this.perms = p.split("\f");
+        this.visible = v;
     }
     User.prototype.EvaluatePermString = function () {
         this.perms = this.permstr.split("\f");

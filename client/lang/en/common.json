@@ -15,7 +15,9 @@
         "Could not join chat: You are banned until",
         "Connecting to chat server ...",
         "Authenticating login data ...",
-        "Connection terminated! Details: "
+        "Connection terminated! Details: ",
+        "Click here to go back.",
+        "the end of time."
     ],
     "botText": {
         "say"       : "{0}",
@@ -27,7 +29,9 @@
         "nick"      : "{0} is now known as {1}.",
         "crchan"    : "{0} has been created.",
         "delchan"   : "{0} has been deleted.",
-        "cpwdchan"  : "Password changed successfully."
+        "cpwdchan"  : "Password changed successfully.",
+        "cprivchan" : "Channel privilege changed successfully.",
+        "ipaddr"    : "User {0} - IP Address: {1}"
     },
     "botErrText": {
         "nolang"    : "Error: Chatbot sent {1} id '{0}' with no definition in this language!",
@@ -46,6 +50,9 @@
         "ndchan"    : "Error: You are not allowed to delete channel {0}!",
         "namchan"   : "Error: You are not allowed to modify channel {0}!",
         "nameinuse" : "Error: Username {0} in use!",
-        "reconnect" : "Connection lost! Attempting to reconnect automatically..."
+        "rankerr"   : "Error: Cannot set channel privilege higher than your own!",
+        "reconnect" : "Connection lost! Attempting to reconnect automatically...",
+        "logerr"    : "Server uses the flat file database implementation and cannot serve logs to clients. To view chat logs, open the logs.txt file in the ffdb folder in the server's root directory.",
+        "generr"    : "An error has occurred!"
     }
 }

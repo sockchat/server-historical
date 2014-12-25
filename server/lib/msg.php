@@ -1,6 +1,8 @@
 <?php
 namespace sockchat;
 
+use React\Stream\Util;
+
 class Message {
     public static $msgId = 0;
     public static $bot;
@@ -13,6 +15,7 @@ class Message {
     protected static function LogToAll($user, $msg) {
         foreach(Context::$channelList as $channel)
             $channel->log->Log($user, $msg, Message::$msgId);
+        Database::Log(gmdate("U"), $user, $msg, "@all");
     }
 
     protected static function SendToChannel($msg, $channel) {
@@ -33,7 +36,30 @@ class Message {
             } else return;
         }
 
+        Database::Log(gmdate("U"), $user, $msg, $channel->name == Utils::$chat["DEFAULT_CHANNEL"] ? "@default" : $channel->name);
         $channel->log->Log($user, $msg, Message::$msgId);
+    }
+
+    public static function BroadcastSilentMessage($user, $msg, $channel = ALL_CHANNELS, $msgid = null, $time = null, $alert = false) {
+        if(!is_string($channel)) $channel = $channel->name;
+        $msgid = $msgid == null ? Message::$msgId : $msgid;
+        if($channel == ALL_CHANNELS)
+            Message::SendToAll(Utils::PackMessage(P_CTX_DATA, ["1", $time == null ? gmdate("U") : $time, $user, $msg, $msgid, $alert == true ? "1": "0"]));
+        else
+            Message::SendToChannel(Utils::PackMessage(P_CTX_DATA, ["1", $time == null ? gmdate("U") : $time, $user, $msg, $msgid, $alert == true ? "1": "0"]), $channel);
+    }
+
+    public static function BroadcastSilentBotMessage($type, $langid, $params, $channel = ALL_CHANNELS, $msgid = null, $time = null, $alert = false) {
+        Message::BroadcastSilentMessage(Message::$bot, Utils::FormatBotMessage($type, $langid, $params), $channel, $msgid, $time, $alert);
+    }
+
+    public static function PrivateSilentMessage($user, $msg, $to, $msgid = null, $time = null, $alert = false) {
+        $msgid = $msgid == null ? Message::$msgId : $msgid;
+        $to->sock->send(Utils::PackMessage(P_CTX_DATA, ["1", $time == null ? gmdate("U") : $time, $user, $msg, $msgid, $alert == true ? "1": "0"]));
+    }
+
+    public static function PrivateSilentBotMessage($type, $langid, $params, $to, $msgid = null, $time = null, $alert = false) {
+        Message::PrivateSilentMessage(Message::$bot, Utils::FormatBotMessage($type, $langid, $params), $to, $msgid, $time, $alert);
     }
 
     public static function ClearUserContext($user, $type = CLEAR_ALL) {
@@ -49,6 +75,7 @@ class Message {
 
     // NOTE: DOES NOT SANITIZE INPUT MESSAGE !! DO THIS ELSEWHERE
     public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL) {
+        if(!is_string($channel)) $channel = $channel->name;
         $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId));
 
         if($channel == ALL_CHANNELS) {
@@ -101,7 +128,7 @@ class Message {
         if($length == 0)
             $user->sock->send(Utils::PackMessage(P_BAKA, ["0"]));
         else
-            $user->sock->send(Utils::PackMessage(P_BAKA, ["1", $length]));
+            $user->sock->send(Utils::PackMessage(P_BAKA, ["1", date("U") + $length]));
     }
 
     public static function HandleUserModification($user) {
@@ -113,7 +140,7 @@ class Message {
 
         $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user, Utils::$chat["DEFAULT_CHANNEL"])));
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "join", array($user->username)), Utils::$chat["DEFAULT_CHANNEL"]);
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->users), Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
 
         $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
         foreach($msgs as $msg)
@@ -156,7 +183,7 @@ class Message {
         Message::SendToChannel(Utils::PackMessage(P_CHANGE_CHANNEL, array("0", $user, Message::$msgId)), $to);
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "jchan", array($user->username)), $to);
         $user->sock->send(Utils::PackMessage(P_CTX_CLR, array(CLEAR_MSGNUSERS)));
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", count(Context::GetChannel($to)->users), Context::GetChannel($to)->GetAllUsers(), Message::$msgId)));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel($to)->GetAllUsers(), Message::$msgId)));
 
         $msgs = Context::GetChannel($to)->log->GetAllLogStrings();
         foreach($msgs as $msg)

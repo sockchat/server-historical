@@ -6,30 +6,37 @@ use \Ratchet\ConnectionInterface;
 use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
-use \SQLite3;
+mb_internal_encoding("UTF-8");
 
 require_once("lib/constants.php");
 require_once("config.php");
+
+/* TODO: GET RID OF THIS ON RELEASE !!! */
+require_once("dbinfo.php");
+/* TODO: GET RID OF THIS ON RELEASE !!! */
+
 require_once("lib/utils.php");
 require_once("lib/db.php");
 require_once("lib/user.php");
 require_once("lib/context.php");
 require_once("lib/channel.php");
 require_once("lib/msg.php");
+require_once("lib/mods.php");
 
-require "commands/generic_cmd.php";
-foreach(glob("commands/*.php") as $fn) {
-    if($fn != "commands/generic_cmd.php")
-        include($fn);
-}
+Modules::Load();
+Commands::Load();
 
 class Chat implements MessageComponentInterface {
     public function __construct() {
-        $GLOBALS["auth_method"][0] = $GLOBALS["chat"]["CAUTH_FILE"];
         Utils::$chat = $GLOBALS["chat"];
-        Message::$bot = new User("-1", "", "bot", "inherit", "", null);
-        Context::CreateChannel(new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"])));
-        Context::CreateChannel(new Channel("Chinky_Palace", Utils::Hash("test test")));
+        Database::Init();
+        Message::$bot = new User("-1", "", "ChatBot", "inherit", "", null);
+
+        Database::TruncateUserList();
+        Context::$channelList = array_merge([Utils::$chat["DEFAULT_CHANNEL"] => new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"]), "", 0, null, CHANNEL_PERM, Database::FetchBacklog(DEFAULT_CHANNEL))], Database::GetAllChannels());
+        Context::$bannedUsers = Database::GetAllBans();
+
+        if(!Modules::ExecuteRoutine("Init", [])) exit;
 
         echo "Server started.\n";
     }
@@ -44,6 +51,8 @@ class Chat implements MessageComponentInterface {
             $parts = explode(Utils::$separator, $msg);
             $id = $parts[0];
             $parts = array_slice($parts, 1);
+
+            if(!Modules::ExecuteRoutine("OnPacketReceive", [$conn, &$id, &$parts])) return;
 
             switch($id) {
                 case 0:
@@ -62,7 +71,7 @@ class Chat implements MessageComponentInterface {
                         if(substr($aparts, 0, 3) == "yes") {
                             $aparts = explode("\n", mb_substr($aparts, 3));
                             if(($reason = Context::AllowUser($aparts[1], $conn)) == 0) {
-                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) == 0) {
+                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
                                     $id = 0;
                                     if(Utils::$chat["AUTOID"]) {
                                         for($i = 1;; $i++) {
@@ -74,7 +83,7 @@ class Chat implements MessageComponentInterface {
                                     } else $id = $aparts[0];
 
                                     Context::Join(new User($id, Utils::$chat["DEFAULT_CHANNEL"], Utils::SanitizeName($aparts[1]), $aparts[2], $aparts[3], $conn));
-                                } else $conn->send(Utils::PackMessage(1, array_key_exists("n", "3", $length)));
+                                } else $conn->send(Utils::PackMessage(1, array("n", "3", $length)));
                             } else $conn->send(Utils::PackMessage(1, array("n", $reason)));
                         } else $conn->send(Utils::PackMessage(1, array("n", "0")));
                     }
@@ -83,33 +92,34 @@ class Chat implements MessageComponentInterface {
                     if(($user = Context::GetUserByID($parts[0])) != null) {
                         if($user->sock == $conn) {
                             if(trim($parts[1]) != "") {
-                                if(strlen(trim($parts[1])) <= Utils::$chat["MAX_MSG_LEN"]) {
-                                    if(trim($parts[1])[0] != "/") {
-                                        Message::BroadcastUserMessage($user, Utils::Sanitize($parts[1]));
-                                    } else {
-                                        $parts[1] = mb_substr(trim($parts[1]), 1);
-                                        $cmdparts = explode(" ", $parts[1]);
-                                        $cmd = str_replace(".","",$cmdparts[0]);
-                                        $cmdparts = array_slice($cmdparts, 1);
-                                        for($i = 0; $i < count($cmdparts); $i++)
-                                            $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
+                                $parts[1] = mb_substr(trim($parts[1]), 0, Utils::$chat["MAX_MSG_LEN"]);
+                                if(trim($parts[1])[0] != "/") {
+                                    $out = Utils::Sanitize($parts[1]);
+                                    if(!Modules::ExecuteRoutine("OnMessageReceive", [$user, &$out])) return;
+                                    Message::BroadcastUserMessage($user, $out);
+                                    Modules::ExecuteRoutine("AfterMessageReceived", [$user, $out]);
+                                } else {
+                                    $parts[1] = mb_substr(trim($parts[1]), 1);
+                                    $cmdparts = explode(" ", $parts[1]);
+                                    $cmd = strtolower(str_replace(".","",$cmdparts[0]));
+                                    $cmdparts = array_slice($cmdparts, 1);
+                                    for($i = 0; $i < count($cmdparts); $i++)
+                                        $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
 
-                                        if(strtolower($cmd) != "generic_cmd" && file_exists("commands/". strtolower($cmd) .".php")) {
-                                            try {
-                                                call_user_func_array("\\sockchat\\cmds\\". strtolower($cmd) ."::doCommand", [$user, $cmdparts]);
-                                            } catch(\Exception $err) {
-                                                Message::BroadcastBotMessage(MSG_ERROR, "cmderr", [strtolower($cmd), $err->getMessage()]);
-                                            }
-                                        } else
+                                    if(Modules::ExecuteRoutine("OnCommandReceive", [$user, &$cmd, &$cmdparts], true)) {
+                                        if(Commands::ExecuteCommand($cmd, $user, $cmdparts))
+                                            Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
+                                        else
                                             Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
-                                            //echo "got here";
                                     }
-                                } else $conn->close();
+                                }
                             }
                         }
                     }
                     break;
             }
+
+            Modules::ExecuteRoutine("AfterPacketReceived", [$conn, $id, $parts]);
         } else
             $conn->close();
     }
@@ -120,6 +130,7 @@ class Chat implements MessageComponentInterface {
             if($user->sock == $conn) {
                 echo "found user ". $user->username .", dropped\n";
                 Context::Leave($user);
+                Modules::ExecuteRoutine("OnUserLeave", [$user]);
             }
         }
         Context::CheckPings();
