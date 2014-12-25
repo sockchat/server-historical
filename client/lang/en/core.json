@@ -1,8 +1,13 @@
 {
     "botText": {
-        "silence":  "You have been silenced!"
+        "silence":  "You have been silenced!",
+        "unsil":    "You have been unsilenced!",
+        "usilok":   "{0} has been unsilenced.",
+        "silok":    "{0} has been silenced."
     },
-    "botErrorText": {
-        "silerr":   "Error: User is already silenced!"
+    "botErrText": {
+        "silerr":   "Error: User is already silenced!",
+        "usilerr":  "Error: User is not silenced!",
+        "silself":  "Error: You cannot silence yourself!"
     }
 }

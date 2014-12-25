@@ -241,6 +241,7 @@ class UI {
     }
 
     static ModifyChannel(oldname: string, newname: string, ispwd: boolean, istemp: boolean) {
+        console.log("here");
         var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
         opt.value = newname;
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");

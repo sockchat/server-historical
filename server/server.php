@@ -111,7 +111,7 @@ class Chat implements MessageComponentInterface {
                                             Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
                                         else
                                             Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
-                                    }
+                                    } else Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
                                 }
                             }
                         }

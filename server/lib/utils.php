@@ -63,7 +63,7 @@ class Utils {
         return true;
     }
 
-    protected static function CreateUniqueFile($dir) {
+    public static function CreateUniqueFile($dir) {
         try {
             while(file_exists($fname = "$dir/". md5(microtime())));
         } catch(\Exception $e) {

@@ -39,7 +39,7 @@ abstract class GenericMod {
     public static function OnChannelDelete($channel) {} // called when a channel is deleted
     public static function AfterChannelDelete($channel) {} // called after a channel is successfully deleted
 
-    public static function GetModFolder() {
-        return "./mods/". substr(__NAMESPACE__, strrpos(__NAMESPACE__, "\\")+1);
+    public static function GetModFolder($namespace) {
+        return "./mods/". substr($namespace, strrpos($namespace, "\\")+1);
     }
 }

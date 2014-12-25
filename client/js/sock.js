@@ -10,7 +10,6 @@ var Socket = (function () {
     Socket.Send = function (msg) {
         this.sock.send(msg);
     };
-
     Socket.Init = function (addr) {
         this.addr = addr;
         this.sock = new WebSocket(addr);
@@ -19,11 +18,9 @@ var Socket = (function () {
         this.sock.onerror = this.onConnError;
         this.sock.onclose = this.onConnClose;
     };
-
     Socket.ping = function () {
         this.sock.send(Message.Pack(0, "" + UserContext.self.id));
     };
-
     Socket.onConnOpen = function (e) {
         if (document.getElementById("chat").style.display == "none")
             UI.ChangeDisplay(false, 12);
@@ -37,20 +34,19 @@ var Socket = (function () {
         document.getElementById("channeldd").innerHTML = "";
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
-
     Socket.onMessageRecv = function (e) {
         console.log(e.data);
         var parts = e.data.split(Message.Separator);
         var msgid = +parts[0];
         parts = parts.slice(1);
-
         switch (msgid) {
             case 1:
                 if (parts[0] != "y" && parts[0] != "n") {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3], parts[4]));
                     UI.AddMessage(parts[5], +parts[0], UI.ChatBot, Utils.formatBotMessage("0", "join", [parts[2]]), true, false);
                     Sounds.Play(2 /* Join */);
-                } else {
+                }
+                else {
                     if (parts[0] == "y") {
                         UserContext.self = new User(+parts[1], parts[2], parts[3], parts[4]);
                         UserContext.self.channel = parts[5];
@@ -58,7 +54,8 @@ var Socket = (function () {
                         UI.ChangeDisplay(true);
                         UI.AddUser(UserContext.self, false);
                         UI.RedrawUserList();
-                    } else {
+                    }
+                    else {
                         UI.ChangeDisplay(false, 7 + +parts[1], false, +parts[1] == 3 ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
                     }
                 }
@@ -69,7 +66,8 @@ var Socket = (function () {
                         UI.AddMessage(parts[3], +parts[0], UserContext.users[+parts[1]], parts[2]);
                     else
                         UI.AddMessage(parts[3], +parts[0], UI.ChatBot, parts[2]);
-                } else
+                }
+                else
                     UI.AddMessage(parts[3], +parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
@@ -112,10 +110,11 @@ var Socket = (function () {
                 }
                 break;
             case 6:
-                try  {
+                try {
                     var msg = document.getElementById("sock_msg_" + parts[0]);
                     msg.parentElement.removeChild(msg);
-                } catch (e) {
+                }
+                catch (e) {
                 }
                 break;
             case 7:
@@ -155,7 +154,6 @@ var Socket = (function () {
             case 9:
                 Socket.kicked = true;
                 UI.ChangeDisplay(false, +parts[0] + 5, false, "<br/>" + Utils.GetDateTimeString(new Date(+parts[1] * 1000)), true);
-
                 break;
             case 10:
                 if (+parts[0] == UserContext.self.id) {
@@ -163,30 +161,28 @@ var Socket = (function () {
                     UserContext.self.color = parts[2];
                     UserContext.self.permstr = parts[3];
                     UserContext.self.EvaluatePermString();
-
                     UI.ModifyUser(UserContext.self);
-                } else {
+                }
+                else {
                     UserContext.users[parts[0]].username = parts[1];
                     UserContext.users[parts[0]].color = parts[2];
                     UserContext.users[parts[0]].permstr = parts[3];
                     UserContext.users[parts[0]].EvaluatePermString();
-
                     UI.ModifyUser(UserContext.users[parts[0]]);
                 }
                 break;
         }
     };
-
     Socket.onConnError = function (e) {
         //alert("errored! error is "+ e.get);
     };
-
     Socket.onConnClose = function (e) {
         if (!Socket.kicked) {
             if (document.getElementById("chat").style.display != "none") {
                 UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
                 Socket.Init(Socket.addr);
-            } else
+            }
+            else
                 UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code " + e.code);
         }
     };
