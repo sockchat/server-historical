@@ -1,3 +1,5 @@
+@import url('_positioning.css');
+
 body {
     overflow: hidden;
     margin: 0;
@@ -29,58 +31,7 @@ body {
     background: url(../img/load.gif);
 }
 
-#chat #header {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 100px;
-    height: 75px;
-    /*border: 1px solid white;*/
-}
-
-/*#chat #header div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 75px;
-}*/
-
-.alignLeft {
-    float: left;
-}
-
-.alignRight {
-    float: right;
-}
-
-#chat #header #userData {
-    font-size: 0.9em;
-}
-
-#chat #center {
-    /*border: 1px solid red;*/
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 100px;
-    height: 100px;
-}
-
-#chat #messageDiv {
-    width: auto;
-    float: left;
-    height: 100%;
-}
-
-#chat #messageDiv #chatList {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-#chat #messageDiv #chatList .insertImage {
+#chat #chatList .insertImage {
     max-width: 1080px;
     max-height: 180px;
     vertical-align: top;
@@ -89,36 +40,24 @@ body {
     border: 0;
 }
 
-#chat #messageDiv #chatList iframe {
+#chat #chatList iframe {
     vertical-align: top;
     overflow: auto;
 }
 
-#chat #messageDiv #chatList .botError,
-#chat #messageDiv #chatList .botMessage,
-#chat #messageDiv #chatList .botName {
+#chat #chatList .botError,
+#chat #chatList .botMessage,
+#chat #chatList .botName {
     font-style: italic;
 }
 
-#chat #userDiv {
-    width: 150px;
-    height: 100%;
-    float: right;
-}
-
-#chat #userDiv #userList {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
-
-#chat #userDiv #userList #top {
+#chat #userList #top {
     width: auto;
     padding: 4px 10px;
     word-wrap: break-word;
 }
 
-#chat #userDiv #userList div, #chat #messageDiv #chatList div {
+#chat #userList div, #chat #chatList div {
     width: auto;
     padding: 2px 10px;
     word-wrap: break-word;
@@ -141,32 +80,18 @@ body {
     padding: 15px;
 }
 
-#chat #footer {
-    position: absolute;
-    bottom: 25px;
-    left: 20px;
-    height: 125px;
-    width: 100%;
-}
-
-#chat #footer textarea {
-    width: 100%;
-    height: 40px;
-    margin-top: 3px;
-}
-
-#chat #footer #options img {
+#chat #optionsContainer img {
     margin: 0 0 0 5px;
     padding: 0;
     width: 22px;
     height: 22px;
 }
 
-#chat #footer #options img:hover {
+#chat #optionsContainer img:hover {
     cursor: pointer;
 }
 
-#chat #footer #emotes img {
+#chat #emotes img {
     margin: 0 3px 0 0;
     padding: 0;
 }
@@ -175,46 +100,12 @@ body {
     vertical-align: middle;
 }
 
-#chat #footer #emotes img:hover {
+#chat #emotes img:hover {
     cursor: pointer;
-}
-
-.topleft {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.topright {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.botleft {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-}
-
-.botright {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
 }
 
 #hidden {
     display: none;
+	visibility: hidden;
 }
 
-/*#chat #footer div {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 125px;
-}*/
-
-/*#chat #footer div textarea {
-    width: 95%;
-}*/
