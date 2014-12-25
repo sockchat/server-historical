@@ -1,0 +1,76 @@
+/*
+	Sock Chat UI Element Positioning
+*/
+
+@charset "utf-8";
+
+#chat #chatTitle {
+	position: absolute;
+	left: 20px;
+	top: 5px;
+}
+#chat #userData {
+	position: absolute;
+	left: 20px;
+	top: 50px;
+}
+#chat #chatList {
+	position: absolute;
+	top: 85px;
+	left: 20px;
+	right: 230px;
+	bottom: 150px;
+	overflow: auto;
+}
+#chat #userList {
+	position: absolute;
+	top: 85px;
+	width: 200px;
+	right: 20px;
+	bottom: 150px;
+	overflow: auto;
+}
+#chat #inputFieldContainer {
+	position: absolute;
+	left: 20px;
+	right: 20px;
+	bottom: 95px;
+	padding-right: 4px;
+}
+#chat #inputFieldContainer #message {
+	width: 100%;
+	height: 40px;
+}
+#chat #submitButtonContainer {
+	position: absolute;
+	right: 20px;
+	bottom: 60px;
+}
+#chat #bbCodeContainer {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	padding: 3px;
+}
+#chat #emotes {
+	position: absolute;
+	left: 20px;
+	bottom: 57px;
+	padding: 3px;
+}
+#chat #copyright {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+#chat #chatTitle {
+	position: absolute;
+	left: 20px;
+	top: 5px;
+}
+#chat #optionsContainer {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	padding: 3px 0px 3px 3px;
+}

@@ -1,0 +1,116 @@
+/*
+	Cobalt Sock Chat Style
+	By Flashwave <http://flash.moe>
+	
+	Color palette inspired by PunBB style "Cobalt":
+	http://punbb.org/
+*/
+
+@charset "utf-8";
+@import url("_global.css");
+
+body {
+    background: #2A2A2A;
+    color: #D4D4D4;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: .8em;
+}
+
+#chat a, #chat a:visited {
+    color: #D4D4D4;
+}
+
+#chat #chatList a, #chat #chatList a:visited {
+    color: #60A0DC;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#chat #chatTitle {
+    font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+#chat #chatTitle {
+    font-size: 1.3em;
+    font-weight: bold;
+	margin-left: auto;
+	margin-top: 12px;
+}
+
+#chat #userData select {
+    min-width: 105px;
+    height: 22px;
+    color: #ababab;
+    background-color: #383838;
+    border: 1px solid #565656;
+}
+
+#chat #chatList {
+    border: 1px solid #565656;
+	background: #383838;
+}
+
+#chat #chatList .botName {
+    color: #60A0DC;
+}
+
+#chat #chatList .botError {
+    color: #F00;
+}
+
+.rowEven {
+    background: #565656;
+}
+
+.rowOdd {
+    background: #484848;
+}
+
+.date {
+    font-size: .7em;
+}
+
+#chat #userList {
+    border: 1px solid #565656;
+	background: #383838;
+}
+
+#chat #userList #top {
+    font-size: 1em;
+    text-align: center;
+    font-weight: bold;
+	background: #383838;
+	color: #D4D4D4;
+}
+
+#chat #userList div {
+    font-size: .9em;
+}
+
+.alert input[type="password"], .alert input[type="text"], #chat textarea {
+    color: #ababab;
+    background: #383838;
+    border: 1px solid #565656;
+}
+
+.alert input[type="password"], .alert input[type="text"] {
+	padding: 4px 2px;
+}
+
+#chat input[type="button"], #chat input[type="submit"] {
+    cursor: pointer;
+    padding: 4px 10px;
+    background: #1a1a1a;
+    color: #ababab;
+    border: 0px;
+}
+
+#chat #copyright {
+	font-size: .8em;
+}

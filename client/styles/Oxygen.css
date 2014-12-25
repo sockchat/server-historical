@@ -1,0 +1,110 @@
+/*
+	Oxygen Sock Chat Style
+	By Flashwave <http://flash.moe>
+	
+	Color palette inspired by PunBB style "Oxygen":
+	http://punbb.org/
+*/
+
+@charset "utf-8";
+@import url("_global.css");
+
+body {
+    background: #F1F1F1;
+    color: #333333;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: .8em;
+}
+
+#chat a, #chat a:visited {
+    color: #0066B9;
+}
+
+#chat #chatList a, #chat #chatList a:visited {
+    color: #0066B9;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#chat #chatTitle {
+    font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+#chat #chatTitle {
+    font-size: 1.3em;
+    font-weight: bold;
+	margin-left: auto;
+	margin-top: 12px;
+}
+
+#chat #userData select {
+    min-width: 105px;
+    height: 22px;
+    border: 1px solid #0066B9;
+}
+
+#chat #chatList {
+    border: 1px solid #0066B9;
+}
+
+#chat #chatList .botName {
+    color: #0066B9;
+}
+
+#chat #chatList .botError {
+    color: #F00;
+}
+
+.rowEven {
+    background: #F1F1F1;
+}
+
+.rowOdd {
+    background: #E6E7E7;
+}
+
+.date {
+    font-size: .7em;
+}
+
+#chat #userList {
+    border: 1px solid #0066B9;
+}
+
+#chat #userList #top {
+    font-size: 1em;
+    text-align: center;
+    font-weight: bold;
+	background: linear-gradient(to bottom, #2A6AB8, #4795CC) #0066B9;
+	color: #FFFFFF;
+}
+
+#chat #userList div {
+    font-size: .9em;
+}
+
+.alert input[type="password"], .alert input[type="text"], #chat textarea {
+    border: 1px solid #0066B9;
+}
+
+.alert input[type="password"], .alert input[type="text"] {
+	padding: 5px 2px;
+}
+
+#chat input[type="button"], #chat input[type="submit"] {
+    cursor: pointer;
+    padding: 4px 10px;
+    background: linear-gradient(to bottom, #4795CC, #2A6AB8) #0066B9;
+    color: #FFF;
+	border: 1px solid #0066B9;
+}
+
+#chat #copyright {
+	font-size: .8em;
+}
