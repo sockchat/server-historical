@@ -1,0 +1,133 @@
+/*
+	"Yuuno" Sock Chat Style
+	By Flashwave <http://flash.moe>
+*/
+
+@charset "utf-8";
+@import url("_global.css");
+
+html {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	background: linear-gradient(180deg, #C2AFFE, #FBEEFF) no-repeat scroll left top #FBEEFF;
+	background-size: cover;
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: .8em;
+	height: 100%;
+	width: 100%;
+}
+
+a, a:visited {
+	color: #22E;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active {
+	color: #E22;
+}
+
+#chat #chatTitle {
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+#chat #chatTitle {
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-left: auto;
+	margin-top: 12px;
+	color: #643B8C;
+}
+
+#chat #userData select {
+    min-width: 105px;
+    height: 22px;
+    background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
+    border: 1px solid #CCC;
+}
+
+#chat #chatList {
+    border: 1px solid #9475B2;
+	box-shadow: 0px 0px 3px #9475B2;
+}
+
+#chat #chatList .botName {
+    color: #9E8DA7;
+}
+
+#chat #chatList .botError {
+    color: #F00;
+}
+
+.rowEven {
+    background: #D3BFFF;
+}
+
+.rowOdd {
+    background: #C2AFFE;
+}
+
+.date {
+    font-size: .7em;
+}
+
+#chat #userList {
+    border: 1px solid #9475B2;
+	box-shadow: 0px 0px 3px #9475B2;
+}
+
+#chat #userList #top {
+    font-size: 1em;
+    text-align: center;
+    font-weight: bold;
+	color: #643B8C;
+	background: linear-gradient(90deg, rgba(148, 117, 178, 0.7), rgba(148, 117, 178, 0)) repeat scroll 0% 0% #C2AFFE;
+}
+
+#chat #userList div {
+    font-size: .9em;
+}
+
+.alert input[type="password"], .alert input[type="text"], #chat textarea {
+	box-shadow: 0px 0px 3px #9475B2, inset #DDD 0 0 5px;
+	background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
+	border: 1px solid #CCC;
+}
+
+.alert input[type="password"], .alert input[type="text"] {
+	padding: 5px 2px;
+}
+
+#chat input[type="button"], #chat input[type="submit"] {
+	box-shadow: inset #222 0 0 1px;
+	text-shadow: #888 0 0 2px;
+    cursor: pointer;
+    padding: 3px 10px;
+    background: linear-gradient(180deg, #9475B2 0%, #9475B2 50%, #86A 50%) #9475B2;
+	border-radius: 3px;
+    color: #F0F0F0;
+    border: 0px;
+	transition: text-shadow .5s, box-shadow .5s;
+}
+
+#chat input[type="button"]:hover, #chat input[type="submit"]:hover {
+	box-shadow: inset #222 0 0 3px;
+	text-shadow: #F1F1F1 0 0 5px;
+}
+
+#chat input[type="button"]:active, #chat input[type="submit"]:active {
+	box-shadow: inset #222 0 0 5px;
+	text-shadow: #F1F1F1 0 0 3px;
+	transition: text-shadow .2s, box-shadow .2s;
+}
+
+#chat #copyright {
+	font-size: .8em;
+}

@@ -1,24 +1,27 @@
 /*
-	Black Sock Chat Style
-	By Flashwave <http://flash.moe> and MallocNull <http://aroltd.com>
+	Oxygen Sock Chat Style
+	By Flashwave <http://flash.moe>
+	
+	Color palette inspired by PunBB style "Oxygen":
+	http://punbb.org/
 */
 
 @charset "utf-8";
 @import url("_global.css");
 
 body {
-    background: #000000;
-    color: #FFFFFF;
+    background: #F1F1F1;
+    color: #333333;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: .8em;
 }
 
 #chat a, #chat a:visited {
-    color: #FFFFFF;
+    color: #0066B9;
 }
 
 #chat #chatList a, #chat #chatList a:visited {
-    color: #1E90FF;
+    color: #0066B9;
 }
 
 a {
@@ -43,17 +46,15 @@ a:hover {
 #chat #userData select {
     min-width: 105px;
     height: 22px;
-    color: #FFFFFF;
-    background-color: #000000;
-    border: 1px solid #808080;
+    border: 1px solid #0066B9;
 }
 
 #chat #chatList {
-    border: 1px solid #808080;
+    border: 1px solid #0066B9;
 }
 
 #chat #chatList .botName {
-    color: #C0C0C0;
+    color: #0066B9;
 }
 
 #chat #chatList .botError {
@@ -61,11 +62,11 @@ a:hover {
 }
 
 .rowEven {
-    background: #212121;
+    background: #F1F1F1;
 }
 
 .rowOdd {
-    background: #000;
+    background: #E6E7E7;
 }
 
 .date {
@@ -73,13 +74,15 @@ a:hover {
 }
 
 #chat #userList {
-    border: 1px solid #808080;
+    border: 1px solid #0066B9;
 }
 
 #chat #userList #top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;
+	background: linear-gradient(to bottom, #2A6AB8, #4795CC) #0066B9;
+	color: #FFFFFF;
 }
 
 #chat #userList div {
@@ -87,9 +90,7 @@ a:hover {
 }
 
 .alert input[type="password"], .alert input[type="text"], #chat textarea {
-    color: #FFFFFF;
-    background: #000000;
-    border: 1px solid #808080;
+    border: 1px solid #0066B9;
 }
 
 .alert input[type="password"], .alert input[type="text"] {
@@ -99,9 +100,9 @@ a:hover {
 #chat input[type="button"], #chat input[type="submit"] {
     cursor: pointer;
     padding: 4px 10px;
-    background: linear-gradient(180deg, #222, #000) #000;
-    color: #F0F0F0;
-    border: 1px solid #808080;
+    background: linear-gradient(to bottom, #4795CC, #2A6AB8) #0066B9;
+    color: #FFF;
+	border: 1px solid #0066B9;
 }
 
 #chat #copyright {

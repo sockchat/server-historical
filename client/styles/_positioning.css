@@ -1,3 +1,9 @@
+/*
+	Sock Chat UI Element Positioning
+*/
+
+@charset "utf-8";
+
 #chat #chatTitle {
 	position: absolute;
 	left: 20px;

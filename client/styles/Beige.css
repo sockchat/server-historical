@@ -1,20 +1,20 @@
 /*
-	Black Sock Chat Style
-	By Flashwave <http://flash.moe> and MallocNull <http://aroltd.com>
+	Beige Sock Chat Style
+	By Flashwave <http://flash.moe>
 */
 
 @charset "utf-8";
 @import url("_global.css");
 
 body {
-    background: #000000;
-    color: #FFFFFF;
+    background: #F7F5DC;
+    color: #000000;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: .8em;
 }
 
 #chat a, #chat a:visited {
-    color: #FFFFFF;
+    color: #000000;
 }
 
 #chat #chatList a, #chat #chatList a:visited {
@@ -43,17 +43,17 @@ a:hover {
 #chat #userData select {
     min-width: 105px;
     height: 22px;
-    color: #FFFFFF;
-    background-color: #000000;
-    border: 1px solid #808080;
+    color: #000000;
+    background-color: #F7F5DC;
+    border: 1px solid #c8b360;
 }
 
 #chat #chatList {
-    border: 1px solid #808080;
+    border: 1px solid #c8b360;
 }
 
 #chat #chatList .botName {
-    color: #C0C0C0;
+    color: #FF6600;
 }
 
 #chat #chatList .botError {
@@ -61,11 +61,11 @@ a:hover {
 }
 
 .rowEven {
-    background: #212121;
+    background: #FFFFF0;
 }
 
 .rowOdd {
-    background: #000;
+    background: #F7F5DC;
 }
 
 .date {
@@ -73,7 +73,7 @@ a:hover {
 }
 
 #chat #userList {
-    border: 1px solid #808080;
+    border: 1px solid #c8b360;
 }
 
 #chat #userList #top {
@@ -86,10 +86,13 @@ a:hover {
     font-size: .9em;
 }
 
+.alert {
+	background-color: #F7F5DC;
+}
+
 .alert input[type="password"], .alert input[type="text"], #chat textarea {
-    color: #FFFFFF;
-    background: #000000;
-    border: 1px solid #808080;
+	color:#333333;
+	border:1px solid #c8b360;
 }
 
 .alert input[type="password"], .alert input[type="text"] {
@@ -99,9 +102,9 @@ a:hover {
 #chat input[type="button"], #chat input[type="submit"] {
     cursor: pointer;
     padding: 4px 10px;
-    background: linear-gradient(180deg, #222, #000) #000;
-    color: #F0F0F0;
-    border: 1px solid #808080;
+    background: linear-gradient(180deg, #E1D995, #D9CE72) #D9CE72;
+	color: #333333;
+	border: 1px solid #c8b360;
 }
 
 #chat #copyright {
