@@ -60,6 +60,6 @@ class Channel {
     }
 
     public function __toString() {
-        return join(Utils::$separator, [$this->name, $this->password != "", $this->channelType == CHANNEL_TEMP]);
+        return join(Utils::$separator, [$this->name, $this->password != "" ? "1" : "0", $this->channelType == CHANNEL_TEMP ? "1" : "0"]);
     }
 }

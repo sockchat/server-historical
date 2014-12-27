@@ -28,6 +28,7 @@ $tpl->SetVariables([
     "SOUND_PACK_HTML"   => SoundPackHandler::getSoundPackMarkup($spacks),
     "SOUND_PACKS"       => SoundPackHandler::getSoundPackString($spacks),
     "STYLES"            => StyleSheetHandler::getStyleMarkup($styles),
+    "ALT_STYLES"        => StyleSheetHandler::getAlternateStyleMarkup($styles),
     "AUTH"              => Auth::$out
 ]);
 

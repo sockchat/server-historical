@@ -18,7 +18,6 @@ class Main extends GenericMod {
     public static function Silence($user, $expires) {
         self::$silencedUsers[Utils::$chat["AUTOID"] ? $user->GetOriginalUsername() : $user->id] = $expires;
         $user->SetParameter("silence", $expires);
-        self::$folder = self::GetModFolder(__NAMESPACE__);
         $fn = Utils::CreateUniqueFile(self::$folder ."/ffdb/silences");
         file_put_contents($fn, implode("\f", [$expires, $user->id, $user->GetOriginalUsername()]));
     }
@@ -50,7 +49,6 @@ class Main extends GenericMod {
 
     public static function IsSilenced($user) {
         $tmp = $user->GetParameter("silence");
-        echo "checking ". $tmp ." ". gmdate("U") ." ". (gmdate("U") > $tmp ? "yes" : "no") ."\n";
         if($tmp == null) return false;
         else {
             if($tmp > gmdate("U") || $tmp == "-1") return true;
@@ -105,12 +103,14 @@ class Main extends GenericMod {
                 if($user->canModerate()) {
                     if(($target = Context::GetUserByName($args[0])) != null) {
                         if($target->id != $user->id) {
-                            if (!self::IsSilenced($target)) {
-                                $exp = isset($args[1]) ? (int)gmdate("U") + abs($args[1]) : -1;
-                                self::Silence($target, $exp);
-                                Message::PrivateBotMessage(MSG_NORMAL, "silence", [], $target);
-                                Message::PrivateBotMessage(MSG_NORMAL, "silok", [$target->username], $user);
-                            } else Message::PrivateBotMessage(MSG_ERROR, "silerr", [], $user);
+                            if($target->getRank() < $user->getRank()) {
+                                if (!self::IsSilenced($target)) {
+                                    $exp = isset($args[1]) ? (int)gmdate("U") + abs($args[1]) : -1;
+                                    self::Silence($target, $exp);
+                                    Message::PrivateBotMessage(MSG_NORMAL, "silence", [], $target);
+                                    Message::PrivateBotMessage(MSG_NORMAL, "silok", [$target->username], $user);
+                                } else Message::PrivateBotMessage(MSG_ERROR, "silerr", [], $user);
+                            } else Message::PrivateBotMessage(MSG_ERROR, "silperr", [], $user);
                         } else Message::PrivateBotMessage(MSG_ERROR, "silself", [], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/silence"], $user);
@@ -118,11 +118,13 @@ class Main extends GenericMod {
             } else if($cmd == "unsilence") {
                 if($user->canModerate()) {
                     if(($target = Context::GetUserByName($args[0])) != null) {
-                        if(self::IsSilenced($target)) {
-                            self::RemoveSilence($target);
-                            Message::PrivateBotMessage(MSG_NORMAL, "unsil", [], $target);
-                            Message::PrivateBotMessage(MSG_NORMAL, "usilok", [$target->username], $user);
-                        } else Message::PrivateBotMessage(MSG_ERROR, "usilerr", [], $user);
+                        if($target->getRank() < $user->getRank()) {
+                            if (self::IsSilenced($target)) {
+                                self::RemoveSilence($target);
+                                Message::PrivateBotMessage(MSG_NORMAL, "unsil", [], $target);
+                                Message::PrivateBotMessage(MSG_NORMAL, "usilok", [$target->username], $user);
+                            } else Message::PrivateBotMessage(MSG_ERROR, "usilerr", [], $user);
+                        } else Message::PrivateBotMessage(MSG_ERROR, "usilperr", [], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/unsilence"], $user);
                 return false;

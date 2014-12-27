@@ -3,6 +3,7 @@
 /// <reference path="lang.ts" />
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
+/// <reference path="sock.ts" />
 
 class Title {
     static username = "";
@@ -59,9 +60,27 @@ class UI {
     static styles = Array();
     static currentStyle = 0;
 
-    static AppendChatText(sin: string) {
-        (<HTMLInputElement>document.getElementById("message")).value += sin;
-        (<HTMLInputElement>document.getElementById("message")).focus();
+    static InsertChatText(before: string = "", after: string = "") {
+        var element = (<HTMLInputElement>document.getElementById("message"));
+
+        if (document.selection) {
+            element.focus();
+            var sel = document.selection.createRange();
+            sel.text = before + sel.text + after;
+            element.focus();
+        } else if (element.selectionStart || element.selectionStart === 0) {
+            var startPos = element.selectionStart;
+            var endPos = element.selectionEnd;
+            var scrollTop = element.scrollTop;
+            element.value = element.value.substring(0, startPos) + before + element.value.substring(startPos, endPos) + after + element.value.substring(endPos, element.value.length);
+            element.focus();
+            element.selectionStart = startPos + before.length;
+            element.selectionEnd = endPos + before.length;
+            element.scrollTop = scrollTop;
+        } else {
+            element.value += before + after;
+            element.focus();
+        }
     }
 
     static RenderEmotes() {
@@ -70,7 +89,7 @@ class UI {
             var egami = document.createElement("img");
             egami.src = "img/emotes/"+ elem[0];
             egami.alt = egami.title = elem[1][0];
-            egami.onclick = function(e) { UI.AppendChatText(egami.alt); };
+            egami.onclick = function(e) { UI.InsertChatText(egami.alt); };
             document.getElementById("emotes").appendChild(egami);
         });
         (<HTMLInputElement>document.getElementById("message")).value = "";

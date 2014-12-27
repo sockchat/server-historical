@@ -3,6 +3,7 @@
 /// <reference path="lang.ts" />
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
+/// <reference path="sock.ts" />
 var Title = (function () {
     function Title() {
     }
@@ -43,9 +44,30 @@ var Options = (function () {
 var UI = (function () {
     function UI() {
     }
-    UI.AppendChatText = function (sin) {
-        document.getElementById("message").value += sin;
-        document.getElementById("message").focus();
+    UI.InsertChatText = function (before, after) {
+        if (before === void 0) { before = ""; }
+        if (after === void 0) { after = ""; }
+        var element = document.getElementById("message");
+        if (document.selection) {
+            element.focus();
+            var sel = document.selection.createRange();
+            sel.text = before + sel.text + after;
+            element.focus();
+        }
+        else if (element.selectionStart || element.selectionStart === 0) {
+            var startPos = element.selectionStart;
+            var endPos = element.selectionEnd;
+            var scrollTop = element.scrollTop;
+            element.value = element.value.substring(0, startPos) + before + element.value.substring(startPos, endPos) + after + element.value.substring(endPos, element.value.length);
+            element.focus();
+            element.selectionStart = startPos + before.length;
+            element.selectionEnd = endPos + before.length;
+            element.scrollTop = scrollTop;
+        }
+        else {
+            element.value += before + after;
+            element.focus();
+        }
     };
     UI.RenderEmotes = function () {
         document.getElementById("emotes").innerHTML = "";
@@ -54,7 +76,7 @@ var UI = (function () {
             egami.src = "img/emotes/" + elem[0];
             egami.alt = egami.title = elem[1][0];
             egami.onclick = function (e) {
-                UI.AppendChatText(egami.alt);
+                UI.InsertChatText(egami.alt);
             };
             document.getElementById("emotes").appendChild(egami);
         });

@@ -59,6 +59,11 @@ class Context {
         } // else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user); // kind of extraneous
     }
 
+    public static function IsLobby($channel) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        return $channel->name == Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->name;
+    }
+
     public static function AddInvisibleUser($name, $color) {
         for($id = -2;;$id--) {
             if(!array_key_exists($id, Context::$onlineUsers)) break;
@@ -117,8 +122,8 @@ class Context {
                 return false;
             }
             Message::HandleChannelModification($newname, $oldname);
-            unset(Context::$channelList[$oldname]);
             Modules::ExecuteRoutine("AfterChannelModify", [Context::$channelList[$oldname], Context::$channelList[$newname]]);
+            unset(Context::$channelList[$oldname]);
             return true;
         } else return false;
     }
@@ -126,10 +131,10 @@ class Context {
     public static function ChangeChannelPassword($channel, $pwd) {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
         $tmp = [clone $channel, clone $channel];
-        $tmp[0]->password = $pwd;
+        $tmp[0]->password = trim($pwd) == "" ? "" : Utils::Hash(trim($pwd));
         if(!Modules::ExecuteRoutine("OnChannelModify", [$channel, $tmp[0]])) return;
-        $channel = $tmp[0];
-        Message::HandleChannelModification($channel);
+        Context::$channelList[$channel->name] = $tmp[0];
+        Message::HandleChannelModification(Context::$channelList[$channel->name]);
         Modules::ExecuteRoutine("AfterChannelModify", [$tmp[1], $channel]);
     }
 
@@ -138,8 +143,8 @@ class Context {
         $tmp = [clone $channel, clone $channel];
         $tmp[0]->permissionLevel = $perm;
         if(!Modules::ExecuteRoutine("OnChannelModify", [$channel, $tmp[0]])) return;
-        $channel = $tmp[0];
-        Message::HandleChannelModification($channel);
+        Context::$channelList[$channel->name] = $tmp[0];
+        Message::HandleChannelModification(Context::$channelList[$channel->name]);
         Modules::ExecuteRoutine("AfterChannelModify", [$tmp[1], $channel]);
     }
 

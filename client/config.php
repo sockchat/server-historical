@@ -76,7 +76,7 @@ $chat["DEFAULT_SPACK"] = "default";
  * Takes a string that represents the name of a stylesheet in the ./styles directory
  * without the .css extension
  */
-$chat["DEFAULT_STYLE"] = "black";
+$chat["DEFAULT_STYLE"] = "Black";
 
 /* DEFAULT LANGUAGE parameter
  *

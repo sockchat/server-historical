@@ -25,6 +25,15 @@ class StyleSheetHandler {
         }
         return $retval;
     }
+
+    public static function getAlternateStyleMarkup($styles) {
+        $retval = "";
+        foreach($styles as $style) {
+            if($style[0] != "_")
+                $retval .= '<link href="./styles/'. $style .'.css" rel="alternate stylesheet" title="'. $style .'" type="text/css" />';
+        }
+        return $retval;
+    }
 }
 
 class LanguagePackHandler {

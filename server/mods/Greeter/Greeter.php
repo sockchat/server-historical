@@ -37,6 +37,7 @@ class Main extends GenericMod {
         Message::PrivateSilentBotMessage(MSG_NORMAL, "say", ["If you need help, ask a [color=blue][b]moderator[/b][/color]."], $user, "welcome");
     }
 
+    /*
     public static function AfterChannelCreate($channel) {
         Message::BroadcastUserMessage(self::$bot, "channel ". $channel->name ." created", ALL_CHANNELS);
     }
@@ -52,4 +53,5 @@ class Main extends GenericMod {
     public static function OnUserLeave($user) {
         Message::BroadcastUserMessage(self::$bot, "this ". $user->username ." guy is a faggot", $user->channel);
     }
+    */
 }

@@ -166,9 +166,10 @@ class Message {
 
     public static function HandleChannelModification($channel, $oldname = "") {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
+        Database::ModifyChannel($oldname == "" ? $channel->name : $oldname, $channel->name, $channel->password, $channel->permissionLevel);
         foreach(Context::$onlineUsers as $user) {
             if($user->getRank() >= $channel->permissionLevel) {
-                $user->sock->send(Utils::PackMessage(4, ["2", $oldname == "" ? $channel->name : $oldname, $channel]));
+                $user->sock->send(Utils::PackMessage(4, ["1", $oldname == "" ? $channel->name : $oldname, $channel]));
                 if($user->channel == $oldname && $oldname != "") {
                     $user->sock->send(Utils::PackMessage(5, ["2", $channel->name]));
                     $user->channel = $channel->name;
