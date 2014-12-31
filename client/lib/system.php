@@ -6,6 +6,10 @@ function validateDefaults($spacks, $langs, $styles) {
 
 }
 
+function validateCookies($spacks, $langs, $styles) {
+
+}
+
 class StyleSheetHandler {
     public static function getAllStyles() {
         $styles = glob("./styles/*.css");

@@ -24,7 +24,6 @@ require_once("lib/msg.php");
 require_once("lib/mods.php");
 
 Modules::Load();
-Commands::Load();
 
 class Chat implements MessageComponentInterface {
     public function __construct() {
@@ -35,8 +34,6 @@ class Chat implements MessageComponentInterface {
         Database::TruncateUserList();
         Context::$channelList = array_merge([Utils::$chat["DEFAULT_CHANNEL"] => new Channel(Utils::SanitizeName(Utils::$chat["DEFAULT_CHANNEL"]), "", 0, null, CHANNEL_PERM, Database::FetchBacklog(DEFAULT_CHANNEL))], Database::GetAllChannels());
         Context::$bannedUsers = Database::GetAllBans();
-
-        if(!Modules::ExecuteRoutine("Init", [])) exit;
 
         echo "Server started.\n";
     }
@@ -106,12 +103,11 @@ class Chat implements MessageComponentInterface {
                                     for($i = 0; $i < count($cmdparts); $i++)
                                         $cmdparts[$i] = Utils::Sanitize(trim($cmdparts[$i]));
 
-                                    if(Modules::ExecuteRoutine("OnCommandReceive", [$user, &$cmd, &$cmdparts], true)) {
-                                        if(Commands::ExecuteCommand($cmd, $user, $cmdparts))
-                                            Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
-                                        else
-                                            Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
-                                    } else Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
+                                    if(!Modules::ExecuteRoutine("OnCommandReceive", [$user, &$cmd, &$cmdparts])) return;
+                                    if(Modules::ExecuteCommand($cmd, $user, $cmdparts))
+                                        Modules::ExecuteRoutine("AfterCommandReceived", [$user, $cmd, $cmdparts]);
+                                    else
+                                        Message::PrivateBotMessage(MSG_ERROR, "nocmd", [strtolower($cmd)], $user);
                                 }
                             }
                         }

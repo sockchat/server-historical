@@ -24,7 +24,12 @@ abstract class GenericMod {
     public static function OnMessageReceive($user, &$msg) {} // called when a message is received by the server
     public static function AfterMessageReceived($user, $msg) {} // called after a message is successfully processed by the server
 
-    public static function OnCommandReceive($user, &$cmd, &$args) {} // called when a command is received by the server
+    public static function OnCommandReceived($user, $cmd, $args) {} // called when a command is received by the server
+    // !!! DO NOT !!! USE OnCommandReceived OR AfterCommandReceived TO HANDLE
+    // PARSING COMMANDS IN YOUR MOD. INSTEAD USE THE AddCommandHook FUNCTION;
+    // THESE FUNCTIONS SHOULD ONLY BE USED IN CIRCUMSTANCES WHERE YOU NEED TO
+    // OVERRIDE THE DEFAULT BEHAVIOUR OF THE COMMAND PARSING ENGINE.
+    // For more info on AddCommandHook refer to TODO wiki link
     public static function AfterCommandReceived($user, $cmd, $args) {} // called after a command is successfully executed
 
     public static function OnPacketReceive($conn, &$pid, &$data) {} // called when a packet is received by the server
@@ -39,7 +44,31 @@ abstract class GenericMod {
     public static function OnChannelDelete($channel) {} // called when a channel is deleted
     public static function AfterChannelDelete($channel) {} // called after a channel is successfully deleted
 
+    protected static $cmdHooks = [];
+
     public static function GetModFolder($namespace) {
         return "./mods/". substr($namespace, strrpos($namespace, "\\")+1);
+    }
+
+    protected static function AddCommandHook($cmd, $functionName) {
+        if(!is_array($cmd)) $cmd = [$cmd];
+        foreach($cmd as $str)
+            self::$cmdHooks[$str] = $functionName;
+    }
+
+    public static function ExecuteCommand($cmd, $args, $user, $namespace) {
+        if(array_key_exists($cmd, self::$cmdHooks)) {
+            call_user_func_array("{$namespace}::". self::$cmdHooks[$cmd], [$cmd, $user, $args]);
+            return true;
+        } else return false;
+    }
+
+    public static function GetCommands() {
+        $retval = [];
+
+        foreach(self::$cmdHooks as $cmd => $func)
+            array_push($retval, $cmd);
+
+        return $retval;
     }
 }

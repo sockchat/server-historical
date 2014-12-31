@@ -15,9 +15,6 @@
 		<script type="text/javascript" src="js/sock.js"></script>
 		<script type="text/javascript" src="js/chat.js"></script>
 		<script type="text/javascript">
-			var divSizes = [57, 122, 200];
-			// header , footer , sidebar
-
 			Socket.args = "{|{ AUTH }|}".split("\f");
 			Socket.pingTime = {{{ PING_PERIOD }}};
 			Socket.redirectUrl = "{|{ REDIRECT_ADDR }|}";
@@ -40,12 +37,6 @@
 			</span>
 		</div>
 		<div id="chat" style="display: none;">
-			<div class="alert" id="pwdPrompt" style="display: none;">
-				Enter the password for <span id="chname"></span>: <br /><br />
-				<form method="post" action="./" onsubmit="Chat.ChangeChannelWithPassword();return false;">
-					<input type="password" id="chpwd" style="width: calc(100% - 45px);" /> <input type="submit" value="Go" style="width: 33px;" />
-				</form>
-			</div>
 			<div id="chatTitle">{{{ CHAT_TITLE }}}</div>
 			<div id="userData">
 				<label id="tchan" for="channeldd">Channel</label>:

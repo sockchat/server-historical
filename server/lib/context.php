@@ -53,10 +53,12 @@ class Context {
                 if($pwd == Context::GetChannel($to)->password || $user->canModerate() || Context::GetChannel($to)->GetOwner()->id == $user->id) {
                     if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
                         Context::ForceChannelSwitch($user, $to);
+                        return;
                     } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "ipwchan", array($to), $user);
             } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($to), $user);
         } // else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user); // kind of extraneous
+        $user->sock->send(Utils::PackMessage(5, ["2", $user->channel]));
     }
 
     public static function IsLobby($channel) {

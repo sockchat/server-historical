@@ -100,7 +100,7 @@ $chat["DEFAULT_LANG"] = "en";
  * this, see http://php.net/manual/en/pdo.construct.php#refsect1-pdo.construct-parameters
  *
  * DB_TABLE_PREFIX is the string prefixed onto the the table names. This is set in the
- * installation file when the database is configured
+ * installation file when the database is configured.
  */
 $chat["DB_ENABLE"]              = true;
 $chat["DB_DSN"]                 = "mysql:host=localhost;dbname=sockchat";

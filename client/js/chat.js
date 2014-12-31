@@ -66,19 +66,7 @@ var Chat = (function () {
     };
     Chat.ChangeChannel = function () {
         var dd = document.getElementById("channeldd");
-        if (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate()) {
-            document.getElementById("chname").innerHTML = dd.value;
-            document.getElementById("chpwd").value = "";
-            document.getElementById("pwdPrompt").style.display = "table-cell";
-        }
-        else
-            Chat.SendMessageWrapper("/join " + dd.value);
-        dd.value = UserContext.self.channel;
-    };
-    Chat.ChangeChannelWithPassword = function () {
-        document.getElementById("pwdPrompt").style.display = "none";
-        Chat.SendMessageWrapper("/join " + document.getElementById("chname").innerHTML + " " + document.getElementById("chpwd").value);
-        document.getElementById("channeldd").value = UserContext.self.channel;
+        Chat.SendMessageWrapper("/join " + dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " " + prompt("Enter password for " + dd.value, "") : ""));
     };
     return Chat;
 })();
