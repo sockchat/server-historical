@@ -105,7 +105,7 @@ class Main extends GenericMod {
 
         self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip"], "handleModeratorCommands");
-        self::AddCommandHook(["msg", "nick", "me", "action", "roll", "afk"], "handleUserCommands");
+        self::AddCommandHook(["msg", "nick", "afk"], "handleUserCommands");
     }
 
     public static function OnUserJoin($user) {
@@ -251,7 +251,31 @@ class Main extends GenericMod {
     }
 
     public static function handleUserCommands($cmd, $user, $args) {
-        
+        switch($cmd) {
+            case "nick":
+                if($user->canChangeNick()) {
+                    $name = "~". trim(Utils::SanitizeName(mb_substr(join("_", $args), 0, Utils::$chat["MAX_USERNAME_LEN"]-1)));
+                    if(!isset($args[0])) $name = $user->GetOriginalUsername();
+                    if(Context::GetUserByName($name) == null) {
+                        Message::BroadcastBotMessage(MSG_NORMAL, "nick", [$user->username, $name], $user->channel);
+                        $user->username = $name;
+                        Context::ModifyUser($user);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "nameinuse", [$name], $user);
+                } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/nick"], $user);
+                break;
+            case "whisper":
+            case "msg":
+                // TODO how have i not written this command yet
+                break;
+            case "afk":
+                $val = isset($args[0]) ? strtoupper(mb_substr($args[0], 0, self::$maxAfkTagLength)) : "AFK";
+                if($user->GetParameter("afk") == null && $val != "") {
+                    $user->SetParameter("afk", $val);
+                    $user->username = "&lt;$val&gt;_". $user->username;
+                    Context::ModifyUser($user);
+                }
+                break;
+        }
     }
 
     public static function OnCommandReceive($user, &$cmd, &$args) {
