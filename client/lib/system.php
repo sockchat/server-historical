@@ -3,11 +3,31 @@
 namespace sockchat;
 
 function validateDefaults($spacks, $langs, $styles) {
+    if(!in_array($GLOBALS["chat"]["DEFAULT_SPACK"], $spacks)) $GLOBALS["chat"]["DEFAULT_SPACK"] = $spacks[0];
+    if(!in_array($GLOBALS["chat"]["DEFAULT_STYLE"], $styles)) $GLOBALS["chat"]["DEFAULT_STYLE"] = $styles[0];
 
+    $found = false;
+    foreach($langs as $lang) {
+        if($lang[0] == $GLOBALS["chat"]["DEFAULT_LANG"]) {
+            $found = true;
+            break;
+        }
+    }
+    if(!$found) $GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
 }
 
 function validateCookies($spacks, $langs, $styles) {
+    if(!isset($_COOKIE["soundpack"]) || !in_array($_COOKIE["soundpack"], $spacks)) setcookie("soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
+    if(!isset($_COOKIE["style"]) || !in_array($_COOKIE["style"], $styles)) setcookie("style", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
 
+    $found = false;
+    foreach($langs as $lang) {
+        if($lang[0] == $GLOBALS["chat"]["DEFAULT_LANG"]) {
+            $found = true;
+            break;
+        }
+    }
+    if(!$found) $GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
 }
 
 class StyleSheetHandler {

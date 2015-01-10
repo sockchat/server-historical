@@ -43,12 +43,20 @@ class Stack {
     public function Size() {
         return count($this->stack);
     }
+
+    public function Full() {
+        return $this->size == count($this->stack);
+    }
 }
 
 class Main extends GenericMod {
     protected static $silencedUsers;
-    protected static $maxAfkTagLength = 5;
     protected static $allowedCmds = ["join", "whois", "afk"];
+
+    protected static $maxAfkTagLength = 5;
+    protected static $floodFilterSize = 30;
+    protected static $floodFilerDuration = 10;
+
     protected static $folder;
 
     public static function Silence($user, $expires) {
@@ -131,8 +139,11 @@ class Main extends GenericMod {
 
     public static function OnPacketReceive($conn, &$pid, &$data) {
         if(($target = Context::GetUserBySock($conn)) != null) {
-            if($target->GetParameter("packetlog") == null) $target->SetParameter("packetlog", new Stack(30));
-
+            if($target->GetParameter("packetlog") == null) $target->SetParameter("packetlog", new Stack(self::$floodFilterSize));
+            $stack = $target->GetParameter("packetlog");
+            if($stack->Full()) {
+                if($stack->Top() - $stack->Bottom() <= self::$floodFilerDuration) Context::KickUser($target, null, 0, false, "flood");
+            }
         }
     }
 

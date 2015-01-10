@@ -11,7 +11,6 @@ class Chat {
     static Main(addr: string) {
         if(Socket.args[0] == "yes") {
             Chat.LoadJSONFiles();
-            Cookies.Prepare();
 
             (<HTMLSelectElement>document.getElementById("styledd")).value = Cookies.Get(Cookie.Style);
             UI.ChangeStyle();

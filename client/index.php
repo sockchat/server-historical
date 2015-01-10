@@ -20,6 +20,7 @@ $spacks = SoundPackHandler::getAllSoundPacks();
 $styles = StyleSheetHandler::getAllStyles();
 
 validateDefaults($spacks, $langs, $styles);
+validateCookies($spacks, $langs, $styles);
 
 $tpl->SetVariables($chat);
 

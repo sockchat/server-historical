@@ -68,9 +68,12 @@ class Context {
 
     public static function AddInvisibleUser($name, $color) {
         for($id = -2;;$id--) {
-            if(!array_key_exists($id, Context::$onlineUsers)) break;
+            if(!array_key_exists($id, Context::$onlineUsers) && !array_key_exists($id, Context::$invisibleUsers)) break;
         }
         Context::$invisibleUsers[$id] = new User($id, "", $name, $color, "6770\f1\f1\f1\f1\f1", null, false);
+        foreach(Context::$onlineUsers as $user) {
+            $user->sock->send(Utils::PackMessage(7, ["1", $id, $name, $color, "6770\f1\f1\f1\f1\f1", ]));
+        }
         return Context::$invisibleUsers[$id];
     }
 

@@ -29,10 +29,10 @@ class Cookies {
         return undefined;
     }
 
-    public static Prepare() {
+    /*public static Prepare() {
         for(var i = 0; i < Cookies.cookieList.length; i++) {
             if(Cookies.Get(i) == undefined)
                 Cookies.Set(i, Cookies.defaultVals[i]);
         }
-    }
+    }*/
 }
