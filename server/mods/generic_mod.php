@@ -24,7 +24,7 @@ abstract class GenericMod {
     public static function OnMessageReceive($user, &$msg) {} // called when a message is received by the server
     public static function AfterMessageReceived($user, $msg) {} // called after a message is successfully processed by the server
 
-    public static function OnCommandReceived($user, $cmd, $args) {} // called when a command is received by the server
+    public static function OnCommandReceive($user, $cmd, $args) {} // called when a command is received by the server
     // !!! DO NOT !!! USE OnCommandReceived OR AfterCommandReceived TO HANDLE
     // PARSING COMMANDS IN YOUR MOD. INSTEAD USE THE AddCommandHook FUNCTION;
     // THESE FUNCTIONS SHOULD ONLY BE USED IN CIRCUMSTANCES WHERE YOU NEED TO

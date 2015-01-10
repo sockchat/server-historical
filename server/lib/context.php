@@ -87,6 +87,14 @@ class Context {
         return null;
     }
 
+    public static function GetUserBySock($sock) {
+        foreach(Context::$onlineUsers as $user) {
+            if($user->sock == $sock) return $user;
+        }
+
+        return null;
+    }
+
     public static function GetAllChannels() {
         return join(Utils::$separator, Context::$channelList);
     }
@@ -195,7 +203,7 @@ class Context {
         Message::HandleUserModification($u);
     }
 
-    public static function KickUser($user, $by = null, $time = 0, $banip = false) {
+    public static function KickUser($user, $by = null, $time = 0, $banip = false, $type = LEAVE_KICK) {
         if(!Modules::ExecuteRoutine("OnUserKick", [$user, $by == null ? Message::$bot : $by, &$time, &$banip])) return;
         Message::HandleKick($user, $time);
         if($time != 0) {
@@ -205,7 +213,7 @@ class Context {
         }
         $ip = $user->sock->remoteAddress;
         $user->sock->close();
-        Context::Leave($user, LEAVE_KICK);
+        Context::Leave($user, $type);
         if($banip) Context::BanIP($ip, $time, $by, true);
         Modules::ExecuteRoutine("AfterUserKick", [$user, $by == null ? Message::$bot : $by, $time, $banip]);
     }

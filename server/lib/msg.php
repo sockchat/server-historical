@@ -102,6 +102,7 @@ class Message {
     public static function PrivateUserMessage($user, $to, $msg) {
         $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId));
         $to->sock->send($out);
+        Message::LogToChannel($user, $msg, "@priv");
         Message::$msgId++;
     }
 
@@ -197,7 +198,7 @@ class Message {
 
     public static function HandleLeave($user, $method = LEAVE_NORMAL) {
         Message::SendToChannel(Utils::PackMessage(P_USER_LEAVE, array($user->id, $user->username, $method, gmdate("U"), Message::$msgId)), $user->channel);
-        Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, $method == LEAVE_NORMAL ? "leave" : "kick", array($user->username)), $user->channel);
+        Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, $method, array($user->username)), $user->channel);
         Message::$msgId++;
     }
 }

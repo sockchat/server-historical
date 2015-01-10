@@ -6,6 +6,8 @@ use \Ratchet\ConnectionInterface;
 use \Ratchet\Server\IoServer;
 use \Ratchet\Http\HttpServer;
 use \Ratchet\WebSocket\WsServer;
+use React\Stream\Util;
+
 mb_internal_encoding("UTF-8");
 
 require_once("lib/constants.php");
@@ -96,6 +98,8 @@ class Chat implements MessageComponentInterface {
                                     Message::BroadcastUserMessage($user, $out);
                                     Modules::ExecuteRoutine("AfterMessageReceived", [$user, $out]);
                                 } else {
+                                    Database::Log(gmdate("U"), $user, Utils::Sanitize(trim($parts[1])));
+
                                     $parts[1] = mb_substr(trim($parts[1]), 1);
                                     $cmdparts = explode(" ", $parts[1]);
                                     $cmd = strtolower(str_replace(".","",$cmdparts[0]));

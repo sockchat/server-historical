@@ -53,23 +53,23 @@ class User {
         $this->permissions = $user->permissions;
     }
 
-    public function getRank() {
+    public function GetRank() {
         return $this->permissions[0];
     }
 
-    public function canModerate() {
+    public function CanModerate() {
         return $this->permissions[1] == "1";
     }
 
-    public function canViewLogs() {
+    public function CanViewLogs() {
         return $this->permissions[2] == "1";
     }
 
-    public function canChangeNick() {
+    public function CanChangeNick() {
         return $this->permissions[3] == "1";
     }
 
-    public function channelCreationPermission() {
+    public function ChannelCreationPermission() {
         return $this->permissions[4];
     }
 

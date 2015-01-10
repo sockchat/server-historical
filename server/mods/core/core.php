@@ -35,6 +35,14 @@ class Stack {
     public function Bottom() {
         return ($this->stack == []) ? null : $this->stack[0];
     }
+
+    public function MaxSize() {
+        return $this->size;
+    }
+
+    public function Size() {
+        return count($this->stack);
+    }
 }
 
 class Main extends GenericMod {
@@ -105,7 +113,7 @@ class Main extends GenericMod {
 
         self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip"], "handleModeratorCommands");
-        self::AddCommandHook(["msg", "nick", "afk"], "handleUserCommands");
+        self::AddCommandHook(["whisper", "msg", "nick", "afk"], "handleUserCommands");
     }
 
     public static function OnUserJoin($user) {
@@ -119,6 +127,13 @@ class Main extends GenericMod {
             Context::ModifyUser($user);
         }
         if(self::IsSilenced($user)) return false;
+    }
+
+    public static function OnPacketReceive($conn, &$pid, &$data) {
+        if(($target = Context::GetUserBySock($conn)) != null) {
+            if($target->GetParameter("packetlog") == null) $target->SetParameter("packetlog", new Stack(30));
+
+        }
     }
 
     public static function handleChannelCommands($cmd, $user, $args) {
