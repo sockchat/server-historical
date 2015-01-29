@@ -1,8 +1,6 @@
 <?php
 namespace sockchat;
 
-use React\Stream\Util;
-
 class Message {
     public static $msgId = 0;
     public static $bot;

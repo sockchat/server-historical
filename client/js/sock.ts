@@ -79,7 +79,7 @@ class Socket {
                     UI.AddMessage(parts[3], +parts[0], UserContext.self, parts[2]);
                 break;
             case 3:
-                UI.AddMessage(parts[4], +parts[3], UI.ChatBot, Utils.formatBotMessage("0",parts[2] == "0" ? "leave" : "kick",[parts[1]]), true, false);
+                UI.AddMessage(parts[4], +parts[3], UI.ChatBot, Utils.formatBotMessage("0", parts[2], [parts[1]]), true, false);
                 Sounds.Play(Sound.Leave);
                 UI.RemoveUser(+parts[0]);
                 break;

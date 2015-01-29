@@ -15,10 +15,10 @@ $chat["AUTOID"]                 = false;
 $chat["MAX_IDLE_TIME"]          = 180;
 $chat["BACKLOG_LENGTH"]         = 9;
 
-$GLOBALS["chat"]                = $chat;
-
 $chat["DB_ENABLE"]              = true;
 $chat["DB_DSN"]                 = "mysql:host=localhost;dbname=sockchat";
 $chat["DB_TABLE_PREFIX"]        = "sock";
 $chat["DB_USER"]                = "username";
 $chat["DB_PASS"]                = "password";
+
+$GLOBALS["chat"]                = $chat;

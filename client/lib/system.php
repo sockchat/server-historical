@@ -18,16 +18,18 @@ function validateDefaults($spacks, $langs, $styles) {
 
 function validateCookies($spacks, $langs, $styles) {
     if(!isset($_COOKIE["soundpack"]) || !in_array($_COOKIE["soundpack"], $spacks)) setcookie("soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
-    if(!isset($_COOKIE["style"]) || !in_array($_COOKIE["style"], $styles)) setcookie("style", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
+    if(!isset($_COOKIE["style"]) || !in_array($_COOKIE["style"], $styles)) setcookie("style", $GLOBALS["chat"]["DEFAULT_STYLE"], time() + 31536000);
 
     $found = false;
-    foreach($langs as $lang) {
-        if($lang[0] == $GLOBALS["chat"]["DEFAULT_LANG"]) {
-            $found = true;
-            break;
+    if(isset($_COOKIE["lang"])) {
+        foreach ($langs as $lang) {
+            if ($lang[0] == $_COOKIE["lang"]) {
+                $found = true;
+                break;
+            }
         }
     }
-    if(!$found) $GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
+    if(!$found) setcookie("lang", $GLOBALS["chat"]["DEFAULT_LANG"], time() + 31536000); //$GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
 }
 
 class StyleSheetHandler {
