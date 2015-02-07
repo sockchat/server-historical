@@ -1,3 +1,4 @@
+/// <reference path="ui.ts" />
 var Utils = (function () {
     function Utils() {
     }
@@ -68,6 +69,9 @@ var Utils = (function () {
         imglink.innerHTML = holder.title == "link" ? "<img src='" + id + "' alt='userimg' class='insertImage' />" : id;
         link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
         holder.title = holder.title == "link" ? "image" : "link";
+    };
+    Utils.Random = function (min, max) {
+        return Math.round(Math.random() * (max - min)) + min;
     };
     return Utils;
 })();

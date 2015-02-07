@@ -9,7 +9,7 @@ var Language = (function () {
             if (str == 0)
                 this.code = blob[str];
             else
-                json.push(JSON.parse(Utils.FetchPage(blob[str])));
+                json.push(JSON.parse(Utils.FetchPage(blob[str] + "?a=" + Utils.Random(1000000000, 9999999999))));
         }
         for (var file in json) {
             if (json[file].name != undefined) {

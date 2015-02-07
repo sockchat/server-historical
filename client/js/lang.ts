@@ -13,7 +13,7 @@ class Language {
         var json = [];
         for(var str in blob) {
             if(str == 0) this.code = blob[str];
-            else json.push(JSON.parse(Utils.FetchPage(blob[str])));
+            else json.push(JSON.parse(Utils.FetchPage(blob[str] +"?a="+ Utils.Random(1000000000,9999999999))));
         }
 
         for(var file in json) {

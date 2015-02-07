@@ -5,6 +5,7 @@
 		<title>{{{ CHAT_TITLE }}}</title>
 		<link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
         {{{ ALT_STYLES }}}
+		<script type="text/javascript" src="js/notify.js"></script>
 		<script type="text/javascript" src="js/sound.js"></script>
 		<script type="text/javascript" src="js/lang.js"></script>
 		<script type="text/javascript" src="js/utils.js"></script>
@@ -61,7 +62,7 @@
 			</div>
 			<div id="emotes"></div>
 			<div id="bbCodeContainer">
-				{{{ BUTTONS }}}
+				<!-- {{{ BUTTONS }}} --> <a href="#" onclick="Notify.Show('malloc', 'cocks', 'img/alert.png'); return false;">nigger</a>
 			</div>
 			<div id="submitButtonContainer">
 				<input type="button" value="Submit" id="sendmsg" onclick='Chat.SendMessage();' />

@@ -6,6 +6,7 @@
 /// <reference path="sound.ts" />
 /// <reference path="lang.ts" />
 /// <reference path="utils.ts" />
+/// <reference path="notify.ts" />
 var Chat = (function () {
     function Chat() {
     }
@@ -20,6 +21,7 @@ var Chat = (function () {
             Sounds.ChangePack(Cookies.Get(0 /* Soundpack */));
             UI.RenderEmotes();
             UI.ChangeDisplay(false, 11);
+            Notify.Init();
             UserContext.users = {};
             Socket.args = Socket.args.slice(1);
             Socket.Init(addr);
@@ -38,11 +40,11 @@ var Chat = (function () {
             return true;
     };
     Chat.LoadJSONFiles = function () {
-        var tmp = JSON.parse(Utils.FetchPage("bbcode.json"));
+        var tmp = JSON.parse(Utils.FetchPage("bbcode.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.bbcode.forEach(function (elt, i, arr) {
             UI.bbcode.push(elt);
         });
-        tmp = JSON.parse(Utils.FetchPage("emotes.json"));
+        tmp = JSON.parse(Utils.FetchPage("emotes.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.emotes.forEach(function (elt, i, arr) {
             UI.emotes.push(Array(elt["img"], elt["syn"]));
         });

@@ -4,6 +4,7 @@
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
 /// <reference path="sock.ts" />
+/// <reference path="notify.ts" />
 
 class Title {
     static username = "";
@@ -147,7 +148,7 @@ class UI {
         // TODO message reparsing
     }
 
-    static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true) {
+    static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true, pm = false) {
         var msgDiv = document.createElement("div");
         msgDiv.id = "sock_msg_"+ msgid;
         msgDiv.className = (this.rowEven[0])?"rowEven":"rowOdd";
@@ -167,6 +168,11 @@ class UI {
                 Sounds.Play(Sound.Send);
             else
                 Sounds.Play(Sound.Receive);
+        }
+
+        if(outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus() && strobe) {
+            var stripbb = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "");
+            Notify.Show(u.username, stripbb, "img/alert.png");
         }
 
         for(var i = 0; i < UI.bbcode.length; i++) {

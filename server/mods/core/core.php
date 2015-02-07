@@ -13,9 +13,12 @@ class Stack {
     protected $size;
     protected $stack;
 
-    public function __construct($size) {
+    public function __construct($size, $copy = null) {
         $this->size = $size;
-        $this->stack = [];
+        if($copy != null) {
+            if($copy->Size() <= $this->size) $this->stack = $copy->Raw();
+            else $this->stack = array_slice($copy->Raw(), $copy->Size()-$this->size);
+        } else $this->stack = [];
     }
 
     public function Push($val) {
@@ -46,6 +49,10 @@ class Stack {
 
     public function Full() {
         return $this->size == count($this->stack);
+    }
+
+    public function Raw() {
+        return $this->stack;
     }
 }
 
@@ -139,10 +146,20 @@ class Main extends GenericMod {
 
     public static function OnPacketReceive($conn, &$pid, &$data) {
         if(($target = Context::GetUserBySock($conn)) != null) {
+            echo "packet recv\n";
             if($target->GetParameter("packetlog") == null) $target->SetParameter("packetlog", new Stack(self::$floodFilterSize));
+            $target->GetParameter("packetlog")->Push(gmdate("U"));
             $stack = $target->GetParameter("packetlog");
+            //var_dump($stack);
+            $tmp = new Stack(self::$floodFilterSize-5, $stack);
+            if($tmp->Full()) {
+                if($stack->Top() - $stack->Bottom() <= self::$floodFilerDuration)
+                    Message::PrivateBotMessage(MSG_NORMAL, "flwarn", [], $target);
+            }
+
             if($stack->Full()) {
-                if($stack->Top() - $stack->Bottom() <= self::$floodFilerDuration) Context::KickUser($target, null, 0, false, "flood");
+                if($stack->Top() - $stack->Bottom() <= self::$floodFilerDuration)
+                    Context::KickUser($target, null, 0, false, "flood");
             }
         }
     }

@@ -3,7 +3,9 @@
         "silence":  "You have been silenced!",
         "unsil":    "You have been unsilenced!",
         "usilok":   "{0} has been unsilenced.",
-        "silok":    "{0} has been silenced."
+        "silok":    "{0} has been silenced.",
+        "flood":    "{0} has been kicked for flood protection.",
+        "flwarn":   "[b]Warning! You will be kicked for flood protection if you continue.[/b]"
     },
     "botErrText": {
         "silerr":   "Error: User is already silenced!",

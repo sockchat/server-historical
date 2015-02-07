@@ -1,3 +1,5 @@
+/// <reference path="ui.ts" />
+
 class Utils {
     static replaceAll(haystack: string, needle: string, replace: string, ignore = false): string {
         return haystack.replace(new RegExp(needle.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(replace)=="string")?replace.replace(/\$/g,"$$$$"):replace);
@@ -77,5 +79,9 @@ class Utils {
         imglink.innerHTML = holder.title == "link" ? "<img src='"+ id +"' alt='userimg' class='insertImage' />" : id;
         link.innerHTML = holder.title == "link" ? "Remove" : "Embed";
         holder.title = holder.title == "link" ? "image" : "link";
+    }
+
+    static Random(min: number, max: number): number {
+        return Math.round(Math.random() * (max - min)) + min;
     }
 }

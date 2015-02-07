@@ -4,6 +4,7 @@
 /// <reference path="cookies.ts" />
 /// <reference path="sound.ts" />
 /// <reference path="sock.ts" />
+/// <reference path="notify.ts" />
 var Title = (function () {
     function Title() {
     }
@@ -128,9 +129,10 @@ var UI = (function () {
         document.getElementById("sendmsg").value = UI.langs[id].menuText[4];
         // TODO message reparsing
     };
-    UI.AddMessage = function (msgid, date, u, msg, strobe, playsound) {
+    UI.AddMessage = function (msgid, date, u, msg, strobe, playsound, pm) {
         if (strobe === void 0) { strobe = true; }
         if (playsound === void 0) { playsound = true; }
+        if (pm === void 0) { pm = false; }
         var msgDiv = document.createElement("div");
         msgDiv.id = "sock_msg_" + msgid;
         msgDiv.className = (this.rowEven[0]) ? "rowEven" : "rowOdd";
@@ -148,6 +150,10 @@ var UI = (function () {
                 Sounds.Play(5 /* Send */);
             else
                 Sounds.Play(4 /* Receive */);
+        }
+        if (outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus() && strobe) {
+            var stripbb = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "");
+            Notify.Show(u.username, stripbb, "img/alert.png");
         }
         for (var i = 0; i < UI.bbcode.length; i++) {
             if (!UI.bbcode[i]["arg"]) {

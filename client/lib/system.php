@@ -2,6 +2,16 @@
 
 namespace sockchat;
 
+function insertIcons($tpl) {
+    $btns = ["help", "settings", "users", "audio", "clear", "autoscroll"];
+
+    $out = "";
+    foreach($btns as $btn)
+        $out .= '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
+
+    $tpl->SetVariable("ICONS", $out);
+}
+
 function validateDefaults($spacks, $langs, $styles) {
     if(!in_array($GLOBALS["chat"]["DEFAULT_SPACK"], $spacks)) $GLOBALS["chat"]["DEFAULT_SPACK"] = $spacks[0];
     if(!in_array($GLOBALS["chat"]["DEFAULT_STYLE"], $styles)) $GLOBALS["chat"]["DEFAULT_STYLE"] = $styles[0];
