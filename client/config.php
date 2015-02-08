@@ -7,7 +7,16 @@ $chat = array();
  * Sets the title of the chat as it appears above the message list.
  * Takes a string.
  */
-$chat["CHAT_TITLE"] = "Some kind of ошибка";
+$chat["CHAT_TITLE"] = "Alec's Amazing Cool Super Awesome But Shitty Sock Chat Beta";
+
+/* MOBILE CHAT TITLE parameter
+ *
+ * Sets the title of the chat as it appears above the message list
+ * for mobile users. Make sure this is pretty short, try staying
+ * under 20 characters.
+ * Takes a string.
+ */
+$chat["M_CHAT_TITLE"] = "Sock Chat Beta";
 
 /* CHAT BOT NAME parameter
  *

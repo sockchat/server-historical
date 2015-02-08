@@ -45,6 +45,9 @@ var Options = (function () {
 var UI = (function () {
     function UI() {
     }
+    UI.IsMobileView = function () {
+        return document.body.style.zIndex == "1";
+    };
     UI.InsertChatText = function (before, after) {
         if (before === void 0) { before = ""; }
         if (after === void 0) { after = ""; }
@@ -151,9 +154,11 @@ var UI = (function () {
             else
                 Sounds.Play(4 /* Receive */);
         }
-        if (outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus() && strobe) {
-            var stripbb = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "");
-            Notify.Show(u.username, stripbb, "img/alert.png");
+        if (strobe) {
+            if (outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus()) {
+                var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
+                Notify.Show(u.username, strip, "img/alert.png");
+            }
         }
         for (var i = 0; i < UI.bbcode.length; i++) {
             if (!UI.bbcode[i]["arg"]) {
@@ -208,7 +213,7 @@ var UI = (function () {
             outmsg = outmsg.replace(new RegExp("(" + args.join("|") + ")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
         });
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
-        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:" + u.color + ";'>" + name + "</span>: " + outmsg + "";
+        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:" + u.color + ";'>" + name + "</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>" + outmsg + "";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;

@@ -4,10 +4,24 @@
 
 @charset "utf-8";
 
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	z-index: 0;
+}
+
 #chat #chatTitle {
 	position: absolute;
 	left: 20px;
 	top: 5px;
+}
+#chat #mobileChatTitle {
+	position: absolute;
+	left: 10px;
+	top: 0px;
+	display: none;
 }
 #chat #userData {
 	position: absolute;
@@ -21,6 +35,9 @@
 	right: 230px;
 	bottom: 150px;
 	overflow: auto;
+}
+#chat #chatList .msgBreak {
+	display: none;
 }
 #chat #userList {
 	position: absolute;
@@ -73,4 +90,65 @@
 	right: 20px;
 	bottom: 20px;
 	padding: 3px 0px 3px 3px;
+}
+
+@media screen and (max-width: 800px), (max-device-width: 800px) {
+	body {
+		z-index: 1;
+	}
+
+	#chat #userList, #chat #userData, #chat #bbCodeContainer, #chat #emotes, #chat #copyright, #chat #submitButtonContainer, #chat #chatTitle {
+		display: none;
+	}
+
+	#chat #userList {
+		right: 15px;
+		top: 45px;
+		bottom: 45px;
+		width: 220px;
+	}
+
+	#chat #mobileChatTitle {
+		display: block;
+	}
+
+	#chat #optionsContainer {
+		right: 10px;
+		top: 7px;
+	}
+
+	#chat #inputFieldContainer {
+		left: 10px;
+		right: 10px;
+		bottom: 10px;
+	}
+
+	#chat #inputFieldContainer #message {
+		height: 17px;
+		padding: 0 2px 0 0;
+		margin: 0;
+	}
+
+	#chat #chatList {
+		top: 40px;
+		right: 10px;
+		left: 10px;
+		bottom: 40px;
+		/*font-size: 12px;*/
+	}
+}
+
+@media screen and (max-width: 500px), (device-width: 500px) {
+	#chat #chatList .msgBreak {
+		display: inline;
+	}
+	#chat #chatList .msgColon {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 400px), (device-width: 400px) {
+	#chat #mobileChatTitle {
+		display: none;
+	}
 }

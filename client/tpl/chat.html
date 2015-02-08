@@ -3,6 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>{{{ CHAT_TITLE }}}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" />
 		<link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
         {{{ ALT_STYLES }}}
 		<script type="text/javascript" src="js/notify.js"></script>
@@ -39,6 +40,7 @@
 		</div>
 		<div id="chat" style="display: none;">
 			<div id="chatTitle">{{{ CHAT_TITLE }}}</div>
+			<div id="mobileChatTitle">{{{ M_CHAT_TITLE }}}</div>
 			<div id="userData">
 				<label id="tchan" for="channeldd">Channel</label>:
 				<select id="channeldd" onchange="Chat.ChangeChannel();"></select>

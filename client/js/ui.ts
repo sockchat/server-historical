@@ -61,6 +61,10 @@ class UI {
     static styles = Array();
     static currentStyle = 0;
 
+    static IsMobileView() {
+        return document.body.style.zIndex == "1";
+    }
+
     static InsertChatText(before: string = "", after: string = "") {
         var element = (<HTMLInputElement>document.getElementById("message"));
 
@@ -170,9 +174,11 @@ class UI {
                 Sounds.Play(Sound.Receive);
         }
 
-        if(outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus() && strobe) {
-            var stripbb = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "");
-            Notify.Show(u.username, stripbb, "img/alert.png");
+        if(strobe) {
+            if (outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus()) {
+                var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
+                Notify.Show(u.username, strip, "img/alert.png");
+            }
         }
 
         for(var i = 0; i < UI.bbcode.length; i++) {
@@ -231,7 +237,7 @@ class UI {
         });
 
         var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
-        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span>: "+ outmsg +"";
+        msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>"+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;

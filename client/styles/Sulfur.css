@@ -32,11 +32,11 @@ a:hover {
     text-decoration: underline;
 }
 
-#chat #chatTitle {
+#chat #chatTitle, #chat #mobileChatTitle {
     font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
-#chat #chatTitle {
+#chat #chatTitle, #chat #mobileChatTitle {
     font-size: 1.3em;
     font-weight: bold;
 	margin-left: auto;
@@ -74,6 +74,7 @@ a:hover {
 }
 
 #chat #userList {
+    background: #F1F1F1;
     border: 1px solid #B84623;
 }
 

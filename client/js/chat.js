@@ -40,11 +40,11 @@ var Chat = (function () {
             return true;
     };
     Chat.LoadJSONFiles = function () {
-        var tmp = JSON.parse(Utils.FetchPage("bbcode.json?a=" + Utils.Random(1000000000, 9999999999)));
+        var tmp = JSON.parse(Utils.FetchPage("conf/bbcode.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.bbcode.forEach(function (elt, i, arr) {
             UI.bbcode.push(elt);
         });
-        tmp = JSON.parse(Utils.FetchPage("emotes.json?a=" + Utils.Random(1000000000, 9999999999)));
+        tmp = JSON.parse(Utils.FetchPage("conf/emotes.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.emotes.forEach(function (elt, i, arr) {
             UI.emotes.push(Array(elt["img"], elt["syn"]));
         });

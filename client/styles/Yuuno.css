@@ -34,11 +34,11 @@ a:active {
 	color: #E22;
 }
 
-#chat #chatTitle {
+#chat #chatTitle, #chat #mobileChatTitle {
 	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
-#chat #chatTitle {
+#chat #chatTitle, #chat #mobileChatTitle {
 	font-size: 1.3em;
 	font-weight: bold;
 	margin-left: auto;
