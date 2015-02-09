@@ -125,9 +125,9 @@ class Message {
 
     public static function HandleKick($user, $length = 0) {
         if($length == 0)
-            $user->sock->send(Utils::PackMessage(P_BAKA, ["0"]));
+            $user->sock->send(Utils::PackMessage(P_BAKA, ["kick"]));
         else
-            $user->sock->send(Utils::PackMessage(P_BAKA, ["1", date("U") + $length]));
+            $user->sock->send(Utils::PackMessage(P_BAKA, ["ban", date("U") + $length]));
     }
 
     public static function HandleUserModification($user) {

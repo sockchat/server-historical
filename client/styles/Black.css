@@ -60,7 +60,7 @@ a:hover {
     color: #F00;
 }
 
-.rowEven {
+.rowEven, #chat .sidebar .top, #chat .widebar .top {
     background: #212121;
 }
 
@@ -72,18 +72,18 @@ a:hover {
     font-size: .7em;
 }
 
-#chat #userList {
+#chat .sidebar, #chat .widebar {
     border: 1px solid #808080;
     background: #000000;
 }
 
-#chat #userList #top {
+#chat .sidebar .top, #chat .widebar .top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;
 }
 
-#chat #userList div {
+#chat .sidebar div, #chat .widebar div {
     font-size: .9em;
 }
 

@@ -19,9 +19,14 @@ var Chat = (function () {
             document.getElementById("langdd").value = Cookies.Get(1 /* Language */);
             UI.RenderLanguage();
             Sounds.ChangePack(Cookies.Get(0 /* Soundpack */));
+            Chat.HideSidebars();
+            if (!UI.IsMobileView())
+                document.getElementById("userList").style.display = "block";
             UI.RenderEmotes();
-            UI.ChangeDisplay(false, 11);
+            UI.RenderIcons();
+            UI.RenderButtons();
             Notify.Init();
+            UI.ChangeDisplay(false, "conn");
             UserContext.users = {};
             Socket.args = Socket.args.slice(1);
             Socket.Init(addr);
@@ -48,6 +53,10 @@ var Chat = (function () {
         tmp.emotes.forEach(function (elt, i, arr) {
             UI.emotes.push(Array(elt["img"], elt["syn"]));
         });
+        tmp = JSON.parse(Utils.FetchPage("conf/icons.json?a=" + Utils.Random(1000000000, 9999999999)));
+        tmp.icons.forEach(function (elt, i, arr) {
+            UI.icons.push(Array(elt["img"], elt["action"]));
+        });
         tmp = UI.langs;
         UI.langs = [];
         tmp.forEach(function (elt, i, arr) {
@@ -68,6 +77,25 @@ var Chat = (function () {
     Chat.ChangeChannel = function () {
         var dd = document.getElementById("channeldd");
         Chat.SendMessageWrapper("/join " + dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " " + prompt("Enter password for " + dd.value, "") : ""));
+    };
+    Chat.HideSidebars = function () {
+        var sidebars = document.getElementsByClassName("sidebar");
+        for (var i = 0; i < sidebars.length; i++)
+            sidebars[i].style.display = "none";
+        var sidebars = document.getElementsByClassName("widebar");
+        for (var i = 0; i < sidebars.length; i++)
+            sidebars[i].style.display = "none";
+    };
+    Chat.ToggleSidebar = function (id, wide) {
+        if (wide === void 0) { wide = true; }
+        var open = document.getElementById(id).style.display != "none";
+        Chat.HideSidebars();
+        if (!open) {
+            document.getElementById(id).style.display = "block";
+            document.getElementById("chatList").className = wide ? "wideSideVisible" : "userListVisible";
+        }
+        else
+            document.getElementById("chatList").className = "fullWidth";
     };
     return Chat;
 })();

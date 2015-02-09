@@ -184,9 +184,9 @@ class Context {
         foreach(Context::$onlineUsers as $user) {
             if($user->GetOriginalUsername() != $username) {
                 if($sock == $user->sock) {
-                    return 2;
+                    return "sockfail";
                 }
-            } else return 1;
+            } else return "userfail";
         }
         return 0;
     }

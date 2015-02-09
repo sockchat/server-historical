@@ -32,7 +32,7 @@ class Socket {
     }
 
     static onConnOpen(e) {
-        if(document.getElementById("chat").style.display == "none") UI.ChangeDisplay(false, 12);
+        if(document.getElementById("chat").style.display == "none") UI.ChangeDisplay(false, "auth");
         if(!Socket.pinging) {
             setInterval("Socket.ping();", Socket.pingTime * 1000);
             Socket.pinging = true;
@@ -65,7 +65,7 @@ class Socket {
                         UI.AddUser(UserContext.self, false);
                         UI.RedrawUserList();
                     } else {
-                        UI.ChangeDisplay(false, 7 + +parts[1], false, +parts[1] == 3 ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
+                        UI.ChangeDisplay(false, parts[1], false, parts[1] == "joinfail" ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
                     }
                 }
                 break;
@@ -159,7 +159,7 @@ class Socket {
                 break;
             case 9:
                 Socket.kicked = true;
-                UI.ChangeDisplay(false, +parts[0] + 5, false, "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
+                UI.ChangeDisplay(false, parts[0], false, "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
                 //window.location.href = Socket.redirectUrl;
                 break;
             case 10:
@@ -191,7 +191,7 @@ class Socket {
             if (document.getElementById("chat").style.display != "none") {
                 UI.AddMessage("rc", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "reconnect", []), false, false);
                 Socket.Init(Socket.addr);
-            } else UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code " + e.code);
+            } else UI.ChangeDisplay(false, "term", false, "<br /><br />Exit code " + e.code);
         }
     }
 }

@@ -56,13 +56,13 @@ body {
     font-style: italic;
 }
 
-#chat #userList #top {
+#chat .sidebar .top, #chat .widebar .top {
     width: auto;
     padding: 4px 10px;
     word-wrap: break-word;
 }
 
-#chat #userList div, #chat #chatList div {
+#chat .sidebar div, #chat .widebar div, #chat #chatList div {
     width: auto;
     padding: 2px 10px;
     word-wrap: break-word;
@@ -83,6 +83,10 @@ body {
     background-color: white;
     border: 3px double black;
     padding: 15px;
+}
+
+#chat #bbCodeContainer input {
+    margin: 0 3px 0 0;
 }
 
 #chat #optionsContainer img {

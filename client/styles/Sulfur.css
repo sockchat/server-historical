@@ -61,7 +61,7 @@ a:hover {
     color: #F00;
 }
 
-.rowEven {
+.rowEven, #chat .sidebar .top, #chat .widebar .top {
     background: #F1F1F1;
 }
 
@@ -73,12 +73,12 @@ a:hover {
     font-size: .7em;
 }
 
-#chat #userList {
+#chat .sidebar, #chat .widebar {
     background: #F1F1F1;
     border: 1px solid #B84623;
 }
 
-#chat #userList #top {
+#chat .sidebar .top, #chat .widebar .top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;
@@ -86,7 +86,7 @@ a:hover {
 	color: #FFFFFF;
 }
 
-#chat #userList div {
+#chat .sidebar div, #chat .widebar div {
     font-size: .9em;
 }
 

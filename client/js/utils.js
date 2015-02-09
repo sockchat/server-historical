@@ -53,7 +53,7 @@ var Utils = (function () {
     };
     Utils.GetDateTimeString = function (dt) {
         alert(dt.getTime());
-        return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText[15] : dt.toDateString() + " @ " + Utils.AddZero(dt.getHours()) + ":" + Utils.AddZero(dt.getMinutes()) + ":" + Utils.AddZero(dt.getSeconds());
+        return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText["eot"] : dt.toDateString() + " @ " + Utils.AddZero(dt.getHours()) + ":" + Utils.AddZero(dt.getMinutes()) + ":" + Utils.AddZero(dt.getSeconds());
     };
     Utils.EmbedVideo = function (link) {
         var id = link.parentElement.title;
@@ -72,6 +72,23 @@ var Utils = (function () {
     };
     Utils.Random = function (min, max) {
         return Math.round(Math.random() * (max - min)) + min;
+    };
+    Utils.ContainsSpecialChar = function (input) {
+        for (var i = 0; i < input.length; i++) {
+            if (input.charCodeAt(i) > 127)
+                return true;
+        }
+        return false;
+    };
+    Utils.SanitizeRegex = function (input) {
+        var out = "";
+        for (var i = 0; i < input.length; i++) {
+            var cc = input.charCodeAt(i);
+            if (!((cc > 47 && cc < 58) || (cc > 64 && cc < 91) || (cc > 96 && cc < 123)))
+                out += "\\";
+            out += input.charAt(i);
+        }
+        return out;
     };
     return Utils;
 })();

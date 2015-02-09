@@ -36,12 +36,6 @@ class Title {
     }
 }
 
-class Options {
-    static getValue(): number {
-        return 2;
-    }
-}
-
 class UI {
     static chatTitle = "";
     static rowEven = [true, false];
@@ -51,6 +45,7 @@ class UI {
 
     static bbcode = Array();
     static emotes = Array();
+    static icons = Array();
 
     static spacks = Array();
     static currentPack = 0;
@@ -62,7 +57,7 @@ class UI {
     static currentStyle = 0;
 
     static IsMobileView() {
-        return document.body.style.zIndex == "1";
+        return window.innerWidth <= 800;
     }
 
     static InsertChatText(before: string = "", after: string = "") {
@@ -86,6 +81,44 @@ class UI {
             element.value += before + after;
             element.focus();
         }
+    }
+
+    static RenderButtons() {
+        document.getElementById("bbCodeContainer").innerHTML = "";
+        UI.bbcode.forEach(function(elem, i, arr) {
+            if(elem["button"] != undefined) {
+                var btn = document.createElement("input");
+                btn.setAttribute("type", "button");
+                if(elem["bstyle"] != undefined) btn.setAttribute("style", elem["bstyle"]);
+                btn.value = elem["button"];
+                if(!elem["arg"])
+                    btn.onclick = function(e) { UI.InsertChatText("["+ elem['tag'] +"]","[/"+ elem['tag'] +"]") };
+                else {
+                    if(elem["bhandle"] != undefined)
+                        btn.onclick = function(e) { eval(elem["bhandle"]); };
+                    else {
+                        btn.onclick = function (e) {
+                            var val = prompt(elem["bprompt"] != undefined ? elem["bprompt"] : "Enter the argument:", "");
+                            if(val != null && val != undefined)
+                                UI.InsertChatText("[" + elem['tag'] + "="+ val +"]", "[/" + elem['tag'] + "]")
+                        };
+                    }
+                }
+                document.getElementById("bbCodeContainer").appendChild(btn);
+            }
+        });
+    }
+
+    static RenderIcons() {
+        document.getElementById("optionsContainer").innerHTML = "";
+        UI.icons.forEach(function(elem, i, arr) {
+            var icon = document.createElement("img");
+            icon.src = "img/pixel.png";
+            icon.alt = elem[0];
+            icon.style.background = "url(img/"+ elem[0] +") no-repeat scroll transparent";
+            icon.onclick = function(e) { eval(elem[1]); };
+            document.getElementById("optionsContainer").appendChild(icon);
+        });
     }
 
     static RenderEmotes() {
@@ -124,14 +157,14 @@ class UI {
         document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     }
 
-    static ChangeDisplay(chat: boolean, msgid: number = 0, indicator: boolean = true, err: string = "", link: boolean = false) {
+    static ChangeDisplay(chat: boolean, msgid: string = "chan", indicator: boolean = true, err: string = "", link: boolean = false) {
         if(chat) {
             document.getElementById("connmsg").style.display = "none";
             document.getElementById("chat").style.display = "block";
         } else {
             document.getElementById("chat").style.display = "none";
             document.getElementById("connmsg").style.display = "block";
-            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err + (link ? "<br/><br/><a href='"+ Socket.redirectUrl +"'>"+ UI.langs[UI.currentLang].menuText[14] +"</a>" : "");
+            document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err + (link ? "<br/><br/><a href='"+ Socket.redirectUrl +"'>"+ UI.langs[UI.currentLang].menuText["back"] +"</a>" : "");
             document.getElementById("indicator").style.display = indicator ? "block" : "none";
         }
     }
@@ -142,12 +175,16 @@ class UI {
 
         Cookies.Set(Cookie.Language, UI.langs[id].code);
 
-        document.getElementById("tchan").innerHTML = UI.langs[id].menuText[0];
-        document.getElementById("tstyle").innerHTML = UI.langs[id].menuText[1];
-        document.getElementById("tlang").innerHTML = UI.langs[id].menuText[2];
+        document.getElementById("tchan").innerHTML = UI.langs[id].menuText["chan"];
+        document.getElementById("tstyle").innerHTML = UI.langs[id].menuText["style"];
+        document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
 
-        document.getElementById("top").innerHTML = UI.langs[id].menuText[3];
-        (<HTMLInputElement>document.getElementById("sendmsg")).value = UI.langs[id].menuText[4];
+        console.log(UI.langs[id].menuText["online"]);
+
+        (<HTMLElement>document.getElementsByClassName("top")[0]).innerHTML = UI.langs[id].menuText["online"];
+        (<HTMLElement>document.getElementsByClassName("top")[1]).innerHTML = UI.langs[id].menuText["sets"];
+        (<HTMLElement>document.getElementsByClassName("top")[2]).innerHTML = UI.langs[id].menuText["help"];
+        (<HTMLInputElement>document.getElementById("sendmsg")).value = UI.langs[id].menuText["submit"];
 
         // TODO message reparsing
     }
@@ -174,11 +211,17 @@ class UI {
                 Sounds.Play(Sound.Receive);
         }
 
-        if(strobe) {
-            if (outmsg.indexOf(UserContext.self.username) != -1 && !document.hasFocus()) {
-                var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
-                Notify.Show(u.username, strip, "img/alert.png");
-            }
+        var mention = false;
+        try {
+            if (!Utils.ContainsSpecialChar(UserContext.self.username))
+                mention = (new RegExp("\\b" + Utils.SanitizeRegex(UserContext.self.username) + "\\b", "i")).test(outmsg);
+            else
+                mention = (outmsg.toLowerCase()).indexOf(UserContext.self.username.toLowerCase()) != -1;
+        } catch(e) {}
+
+        if(strobe && mention && !document.hasFocus()) {
+            var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
+            Notify.Show(u.username, strip, "img/alert.png");
         }
 
         for(var i = 0; i < UI.bbcode.length; i++) {
@@ -222,15 +265,7 @@ class UI {
         UI.emotes.forEach(function(elem, i, arr) {
             var args: string[] = [];
             elem[1].forEach(function(elt: string, j, akbar) {
-                elt = Utils.Sanitize(elt);
-                var out = "";
-                for(var i = 0; i < elt.length; i++) {
-                    var cc = elt.charCodeAt(i);
-                    if(!((cc>47 && cc<58) || (cc>64 && cc<91) || (cc>96 && cc<123)))
-                        out += "\\";
-                    out += elt.charAt(i);
-                }
-                args.push(out);
+                args.push(Utils.SanitizeRegex(Utils.Sanitize(elt)));
             });
 
             outmsg = outmsg.replace(new RegExp("("+ args.join("|") +")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/"+ elem[0] +"' class='chatEmote' />");
@@ -289,7 +324,7 @@ class UI {
     }
 
     static RedrawUserList() {
-        document.getElementById("userList").innerHTML = '<div id="top" class="rowEven">'+ UI.langs[UI.currentLang].menuText[3] +'</div>';
+        document.getElementById("userList").innerHTML = '<div class="top">'+ UI.langs[UI.currentLang].menuText["online"] +'</div>';
         this.rowEven[1] = false;
         this.AddUser(UserContext.self, false);
         for(var key in UserContext.users) {

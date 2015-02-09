@@ -2,10 +2,30 @@
     "icons":
         [
             {
-
+                "img"    : "help.png",
+                "action" : "Chat.ToggleSidebar('helpList');"
             },
             {
-
+                "img"    : "settings.png",
+                "action" : "Chat.ToggleSidebar('settingsList');"
+            },
+            {
+                "img"    : "users.png",
+                "action" : "Chat.ToggleSidebar('userList', false);"
+            },
+            {
+                "img"    : "audio.png",
+                "action" : "Chat.ToggleSound();",
+                "load"   : "Chat.PrepareSound();"
+            },
+            {
+                "img"    : "clear.png",
+                "action" : "Chat.Clear();"
+            },
+            {
+                "img"    : "autoscroll.png",
+                "action" : "Chat.ToggleScrolling();",
+                "load"   : "Chat.PrepareScrolling();"
             }
         ]
 }

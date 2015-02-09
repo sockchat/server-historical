@@ -23,7 +23,7 @@ var Socket = (function () {
     };
     Socket.onConnOpen = function (e) {
         if (document.getElementById("chat").style.display == "none")
-            UI.ChangeDisplay(false, 12);
+            UI.ChangeDisplay(false, "auth");
         if (!Socket.pinging) {
             setInterval("Socket.ping();", Socket.pingTime * 1000);
             Socket.pinging = true;
@@ -56,7 +56,7 @@ var Socket = (function () {
                         UI.RedrawUserList();
                     }
                     else {
-                        UI.ChangeDisplay(false, 7 + +parts[1], false, +parts[1] == 3 ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
+                        UI.ChangeDisplay(false, parts[1], false, parts[1] == "joinfail" ? "<br/>" + Utils.GetDateTimeString(new Date(+parts[2] * 1000)) : "", true);
                     }
                 }
                 break;
@@ -153,7 +153,7 @@ var Socket = (function () {
                 break;
             case 9:
                 Socket.kicked = true;
-                UI.ChangeDisplay(false, +parts[0] + 5, false, "<br/>" + Utils.GetDateTimeString(new Date(+parts[1] * 1000)), true);
+                UI.ChangeDisplay(false, parts[0], false, "<br/>" + Utils.GetDateTimeString(new Date(+parts[1] * 1000)), true);
                 break;
             case 10:
                 if (+parts[0] == UserContext.self.id) {
@@ -183,7 +183,7 @@ var Socket = (function () {
                 Socket.Init(Socket.addr);
             }
             else
-                UI.ChangeDisplay(false, 13, false, "<br /><br />Exit code " + e.code);
+                UI.ChangeDisplay(false, "term", false, "<br /><br />Exit code " + e.code);
         }
     };
     Socket.kicked = false;

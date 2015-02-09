@@ -4,17 +4,35 @@
             {
                 "tag": "b",
                 "arg": false,
-                "swap": "<b>{0}</b>"
+                "swap": "<b>{0}</b>",
+                "button": "b",
+                "bstyle": "font-weight: bold;"
             },
             {
                 "tag": "i",
                 "arg": false,
-                "swap": "<i>{0}</i>"
+                "swap": "<i>{0}</i>",
+                "button": "i",
+                "bstyle": "font-style: italic;"
             },
             {
                 "tag": "u",
                 "arg": false,
-                "swap": "<u>{0}</u>"
+                "swap": "<u>{0}</u>",
+                "button": "u",
+                "bstyle": "text-decoration: underline;"
+            },
+            {
+                "tag": "quote",
+                "arg": false,
+                "swap": "<q style='font-variant: small-caps;'>{0}</q>",
+                "button": "Quote"
+            },
+            {
+                "tag": "code",
+                "arg": false,
+                "swap": "<code style='font-size: 1.2em;'>{0}</code>",
+                "button": "Code"
             },
             {
                 "tag": "color",
@@ -32,7 +50,9 @@
                 "tag": "url",
                 "arg": true,
                 "rmarg": "\"'",
-                "swap": "<a href='{0}' onclick='window.open(this.href);return false;'>{1}</a>"
+                "swap": "<a href='{0}' onclick='window.open(this.href);return false;'>{1}</a>",
+                "button": "Link",
+                "bprompt": "Enter the URL:"
             },
             {
                 "tag": "video",
@@ -44,7 +64,8 @@
                 "tag": "img",
                 "arg": false,
                 "rmin": "\"'",
-                "swap": "<span title='{0}'><span title='link'><a href='{0}' onclick='window.open(this.href);return false;'>{0}</a></span>&nbsp;[<a href='#' onclick='Utils.EmbedImage(this);return false;'>Embed</a>]</span>"
+                "swap": "<span title='{0}'><span title='link'><a href='{0}' onclick='window.open(this.href);return false;'>{0}</a></span>&nbsp;[<a href='#' onclick='Utils.EmbedImage(this);return false;'>Embed</a>]</span>",
+                "button": "Image"
             }
         ]
 }

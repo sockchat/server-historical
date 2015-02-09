@@ -82,9 +82,9 @@ class Chat implements MessageComponentInterface {
                                     } else $id = $aparts[0];
 
                                     Context::Join(new User($id, Utils::$chat["DEFAULT_CHANNEL"], Utils::SanitizeName($aparts[1]), $aparts[2], $aparts[3], $conn));
-                                } else $conn->send(Utils::PackMessage(1, array("n", "3", $length)));
+                                } else $conn->send(Utils::PackMessage(1, array("n", "joinfail", $length)));
                             } else $conn->send(Utils::PackMessage(1, array("n", $reason)));
-                        } else $conn->send(Utils::PackMessage(1, array("n", "0")));
+                        } else $conn->send(Utils::PackMessage(1, array("n", "authfail")));
                     }
                     break;
                 case 2:

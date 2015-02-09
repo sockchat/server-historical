@@ -30,22 +30,39 @@ body {
 }
 #chat #chatList {
 	position: absolute;
-	top: 85px;
-	left: 20px;
-	right: 230px;
-	bottom: 150px;
 	overflow: auto;
+	top: 85px;
+	bottom: 150px;
+	left: 20px;
+}
+#chat .userListVisible {
+	right: 230px;
+}
+#chat .wideSideVisible {
+	right: 390px;
+}
+#chat .fullWidth {
+	right: 20px;
 }
 #chat #chatList .msgBreak {
 	display: none;
 }
-#chat #userList {
+#chat .sidebar, .widebar {
 	position: absolute;
 	top: 85px;
-	width: 200px;
 	right: 20px;
 	bottom: 150px;
 	overflow: auto;
+}
+#chat .sidebar {
+	width: 200px;
+}
+#chat .widebar {
+	width: 360px;
+	display: none;
+}
+#chat #settingsList .mSetting {
+	display: none;
 }
 #chat #inputFieldContainer {
 	position: absolute;
@@ -101,11 +118,18 @@ body {
 		display: none;
 	}
 
-	#chat #userList {
+	#chat .userListVisible, #chat .wideSideVisible, #chat .fullWidth {
+		right: 10px;
+	}
+
+	#chat .sidebar, #chat .widebar {
 		right: 15px;
 		top: 45px;
 		bottom: 45px;
-		width: 220px;
+	}
+
+	#chat #settingsList .mSetting {
+		display: block;
 	}
 
 	#chat #mobileChatTitle {
@@ -150,5 +174,17 @@ body {
 @media screen and (max-width: 400px), (device-width: 400px) {
 	#chat #mobileChatTitle {
 		display: none;
+	}
+
+	#chat .widebar {
+		left: 15px;
+		width: auto;
+	}
+}
+
+@media screen and (max-width: 235px), (device-width: 235px) {
+	#chat .sidebar {
+		left: 15px;
+		width: auto;
 	}
 }

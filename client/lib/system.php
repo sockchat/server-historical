@@ -9,7 +9,7 @@ function insertIcons($tpl) {
     foreach($btns as $btn)
         $out .= '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
 
-    $tpl->SetVariable("ICONS", $out);
+    //$tpl->SetVariable("ICONS", $out);
 }
 
 function validateDefaults($spacks, $langs, $styles) {

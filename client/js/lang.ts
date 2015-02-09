@@ -20,9 +20,11 @@ class Language {
             if(json[file].name != undefined) {
                 this.name = json[file].name;
                 this.dir = json[file].dir;
+            }
 
+            if(json[file].menuText != undefined) {
                 for(var key in json[file].menuText) {
-                    this.menuText.push(json[file].menuText[key]);
+                    this.menuText[key] = json[file].menuText[key];
                 }
             }
 

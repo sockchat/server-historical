@@ -58,7 +58,7 @@ class Utils {
 
     static GetDateTimeString(dt: Date): string {
         alert(dt.getTime());
-        return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText[15] :
+        return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText["eot"] :
             dt.toDateString() +" @ "+ Utils.AddZero(dt.getHours()) +":"+ Utils.AddZero(dt.getMinutes()) +":"+ Utils.AddZero(dt.getSeconds());
     }
 
@@ -83,5 +83,23 @@ class Utils {
 
     static Random(min: number, max: number): number {
         return Math.round(Math.random() * (max - min)) + min;
+    }
+
+    static ContainsSpecialChar(input: string): boolean {
+        for(var i = 0; i < input.length; i++) {
+            if(input.charCodeAt(i) > 127) return true;
+        }
+        return false;
+    }
+
+    static SanitizeRegex(input: string): string {
+        var out = "";
+        for(var i = 0; i < input.length; i++) {
+            var cc = input.charCodeAt(i);
+            if(!((cc>47 && cc<58) || (cc>64 && cc<91) || (cc>96 && cc<123)))
+                out += "\\";
+            out += input.charAt(i);
+        }
+        return out;
     }
 }
