@@ -15,17 +15,17 @@
             },
             {
                 "img"    : "audio.png",
-                "action" : "Chat.ToggleSound();",
-                "load"   : "Chat.PrepareSound();"
+                "action" : "Chat.ToggleSound(this);",
+                "load"   : "Chat.PrepareSound(this);"
             },
             {
                 "img"    : "clear.png",
-                "action" : "Chat.Clear();"
+                "action" : "Chat.Clear();",
+                "limit"  : true
             },
             {
                 "img"    : "autoscroll.png",
-                "action" : "Chat.ToggleScrolling();",
-                "load"   : "Chat.PrepareScrolling();"
+                "action" : "Chat.ToggleScrolling(this);"
             }
         ]
 }

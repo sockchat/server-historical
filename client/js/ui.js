@@ -105,6 +105,10 @@ var UI = (function () {
             icon.onclick = function (e) {
                 eval(elem[1]);
             };
+            if (elem[2] != undefined)
+                icon.onload = function (e) {
+                    eval(elem[2]);
+                };
             document.getElementById("optionsContainer").appendChild(icon);
         });
     };
@@ -253,7 +257,8 @@ var UI = (function () {
         msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:" + u.color + ";'>" + name + "</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>" + outmsg + "";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
-        document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
+        if (UI.autoscroll)
+            document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
         if (strobe && u.id != UserContext.self.id)
             Title.Strobe(u.username);
     };
@@ -308,6 +313,7 @@ var UI = (function () {
     UI.currentView = 0;
     UI.maxMsgLen = 2000;
     UI.ChatBot = new User(-1, "ChatBot", "inherit", "");
+    UI.autoscroll = true;
     UI.bbcode = Array();
     UI.emotes = Array();
     UI.icons = Array();

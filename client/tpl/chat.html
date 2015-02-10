@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>{{{ CHAT_TITLE }}}</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 		<link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
         {{{ ALT_STYLES }}}
 		<script type="text/javascript" src="js/notify.js"></script>
@@ -27,6 +27,7 @@
 			UI.langs = [{{{ LANGS }}}];
 
 			Cookies.defaultVals = ["{|{ DEFAULT_SPACK }|}", "{|{ DEFAULT_LANG }|}", "{|{ DEFAULT_STYLE }|}", ""];
+			Cookies.prefix = "{|{ COOKIE_PREFIX }|}";
 		</script>
 	</head>
 	<body onload="Chat.Main('ws://{{{ SERVER_ADDR }}}');" onbeforeunload="Socket.kicked = true;">

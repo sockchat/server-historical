@@ -9,6 +9,11 @@
 /// <reference path="notify.ts" />
 
 class Chat {
+    static Settings: any = {
+        "sound": true,
+        "volume": 0.5
+    };
+
     static Main(addr: string) {
         if(Socket.args[0] == "yes") {
             Chat.LoadJSONFiles();
@@ -25,6 +30,17 @@ class Chat {
             Chat.HideSidebars();
             if(!UI.IsMobileView()) document.getElementById("userList").style.display = "block";
 
+            // todo load settings from settings.json
+            try {
+                var opts = JSON.parse(Cookies.Get(Cookie.Options));
+            } catch(e) {
+                opts = {};
+            }
+            for(var opt in Chat.Settings) {
+                if(opts[opt] != undefined) Chat.Settings[opt] = opts[opt];
+            }
+            Chat.BindSettings();
+
             UI.RenderEmotes();
             UI.RenderIcons();
             UI.RenderButtons();
@@ -36,6 +52,10 @@ class Chat {
             Socket.args = Socket.args.slice(1);
             Socket.Init(addr);
         } else window.location.href = Socket.redirectUrl;
+    }
+
+    static BindSettings() {
+        Cookies.Set(Cookie.Options, JSON.stringify(Chat.Settings));
     }
 
     static HandleMessage(e) : boolean {
@@ -61,7 +81,7 @@ class Chat {
 
         tmp = JSON.parse(Utils.FetchPage("conf/icons.json?a="+ Utils.Random(1000000000,9999999999)));
         tmp.icons.forEach(function(elt, i, arr) {
-            UI.icons.push(Array(elt["img"], elt["action"]));
+            UI.icons.push(Array(elt["img"], elt["action"], elt["load"]));
         });
 
         tmp = UI.langs;
@@ -73,7 +93,7 @@ class Chat {
 
     static SendMessage() {
         var msg = (<HTMLInputElement>document.getElementById("message")).value;
-        msg = msg.replace(/\t/g, " ");
+        msg = msg.replace(/\t/g, "    ");
 
         Chat.SendMessageWrapper(msg);
 
@@ -108,5 +128,27 @@ class Chat {
             document.getElementById("chatList").className = wide ? "wideSideVisible" : "userListVisible";
         } else
             document.getElementById("chatList").className = "fullWidth";
+    }
+
+    static Clear() {
+        document.getElementById("chatList").innerHTML = "";
+        UI.rowEven[0] = true;
+    }
+
+    static ToggleScrolling(icon: HTMLElement) {
+        icon.style.backgroundPosition = UI.autoscroll ? "0px -22px" : "0px 0px";
+        UI.autoscroll = !UI.autoscroll;
+    }
+
+    static PrepareSound(icon: HTMLElement) {
+        if(!Chat.Settings["sound"]) Sounds.ChangeVolume(0);
+        icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px 0px" : "0px -22px";
+    }
+
+    static ToggleSound(icon: HTMLElement) {
+        icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px -22px" : "0px 0px";
+        Sounds.ChangeVolume(Chat.Settings["sound"] ? 0 : Chat.Settings["volume"]);
+        Chat.Settings["sound"] = !Chat.Settings["sound"];
+        Chat.BindSettings();
     }
 }

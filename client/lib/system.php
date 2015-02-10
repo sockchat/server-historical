@@ -2,16 +2,6 @@
 
 namespace sockchat;
 
-function insertIcons($tpl) {
-    $btns = ["help", "settings", "users", "audio", "clear", "autoscroll"];
-
-    $out = "";
-    foreach($btns as $btn)
-        $out .= '<img src="img/pixel.png" style="background: url(img/'. $btn .'.png) no-repeat scroll transparent;" />';
-
-    //$tpl->SetVariable("ICONS", $out);
-}
-
 function validateDefaults($spacks, $langs, $styles) {
     if(!in_array($GLOBALS["chat"]["DEFAULT_SPACK"], $spacks)) $GLOBALS["chat"]["DEFAULT_SPACK"] = $spacks[0];
     if(!in_array($GLOBALS["chat"]["DEFAULT_STYLE"], $styles)) $GLOBALS["chat"]["DEFAULT_STYLE"] = $styles[0];
@@ -27,19 +17,22 @@ function validateDefaults($spacks, $langs, $styles) {
 }
 
 function validateCookies($spacks, $langs, $styles) {
-    if(!isset($_COOKIE["soundpack"]) || !in_array($_COOKIE["soundpack"], $spacks)) setcookie("soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
-    if(!isset($_COOKIE["style"]) || !in_array($_COOKIE["style"], $styles)) setcookie("style", $GLOBALS["chat"]["DEFAULT_STYLE"], time() + 31536000);
+    $pre = $GLOBALS["chat"]["COOKIE_PREFIX"];
+
+    if(!isset($_COOKIE["{$pre}opts"])) setcookie("{$pre}opts", "{}", time() + 31536000);
+    if(!isset($_COOKIE["{$pre}soundpack"]) || !in_array($_COOKIE["{$pre}soundpack"], $spacks)) setcookie("{$pre}soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
+    if(!isset($_COOKIE["{$pre}style"]) || !in_array($_COOKIE["{$pre}style"], $styles)) setcookie("{$pre}style", $GLOBALS["chat"]["DEFAULT_STYLE"], time() + 31536000);
 
     $found = false;
-    if(isset($_COOKIE["lang"])) {
+    if(isset($_COOKIE["{$pre}lang"])) {
         foreach ($langs as $lang) {
-            if ($lang[0] == $_COOKIE["lang"]) {
+            if ($lang[0] == $_COOKIE["{$pre}lang"]) {
                 $found = true;
                 break;
             }
         }
     }
-    if(!$found) setcookie("lang", $GLOBALS["chat"]["DEFAULT_LANG"], time() + 31536000); //$GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
+    if(!$found) setcookie("{$pre}lang", $GLOBALS["chat"]["DEFAULT_LANG"], time() + 31536000); //$GLOBALS["chat"]["DEFAULT_LANG"] = $langs[0][0];
 }
 
 class StyleSheetHandler {

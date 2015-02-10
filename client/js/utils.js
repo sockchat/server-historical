@@ -52,7 +52,6 @@ var Utils = (function () {
         return ret;
     };
     Utils.GetDateTimeString = function (dt) {
-        alert(dt.getTime());
         return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText["eot"] : dt.toDateString() + " @ " + Utils.AddZero(dt.getHours()) + ":" + Utils.AddZero(dt.getMinutes()) + ":" + Utils.AddZero(dt.getSeconds());
     };
     Utils.EmbedVideo = function (link) {

@@ -22,6 +22,17 @@ var Chat = (function () {
             Chat.HideSidebars();
             if (!UI.IsMobileView())
                 document.getElementById("userList").style.display = "block";
+            try {
+                var opts = JSON.parse(Cookies.Get(3 /* Options */));
+            }
+            catch (e) {
+                opts = {};
+            }
+            for (var opt in Chat.Settings) {
+                if (opts[opt] != undefined)
+                    Chat.Settings[opt] = opts[opt];
+            }
+            Chat.BindSettings();
             UI.RenderEmotes();
             UI.RenderIcons();
             UI.RenderButtons();
@@ -33,6 +44,9 @@ var Chat = (function () {
         }
         else
             window.location.href = Socket.redirectUrl;
+    };
+    Chat.BindSettings = function () {
+        Cookies.Set(3 /* Options */, JSON.stringify(Chat.Settings));
     };
     Chat.HandleMessage = function (e) {
         var key = ('which' in e) ? e.which : e.keyCode;
@@ -55,7 +69,7 @@ var Chat = (function () {
         });
         tmp = JSON.parse(Utils.FetchPage("conf/icons.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.icons.forEach(function (elt, i, arr) {
-            UI.icons.push(Array(elt["img"], elt["action"]));
+            UI.icons.push(Array(elt["img"], elt["action"], elt["load"]));
         });
         tmp = UI.langs;
         UI.langs = [];
@@ -65,7 +79,7 @@ var Chat = (function () {
     };
     Chat.SendMessage = function () {
         var msg = document.getElementById("message").value;
-        msg = msg.replace(/\t/g, " ");
+        msg = msg.replace(/\t/g, "    ");
         Chat.SendMessageWrapper(msg);
         document.getElementById("message").value = "";
         document.getElementById("message").focus();
@@ -96,6 +110,29 @@ var Chat = (function () {
         }
         else
             document.getElementById("chatList").className = "fullWidth";
+    };
+    Chat.Clear = function () {
+        document.getElementById("chatList").innerHTML = "";
+        UI.rowEven[0] = true;
+    };
+    Chat.ToggleScrolling = function (icon) {
+        icon.style.backgroundPosition = UI.autoscroll ? "0px -22px" : "0px 0px";
+        UI.autoscroll = !UI.autoscroll;
+    };
+    Chat.PrepareSound = function (icon) {
+        if (!Chat.Settings["sound"])
+            Sounds.ChangeVolume(0);
+        icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px 0px" : "0px -22px";
+    };
+    Chat.ToggleSound = function (icon) {
+        icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px -22px" : "0px 0px";
+        Sounds.ChangeVolume(Chat.Settings["sound"] ? 0 : Chat.Settings["volume"]);
+        Chat.Settings["sound"] = !Chat.Settings["sound"];
+        Chat.BindSettings();
+    };
+    Chat.Settings = {
+        "sound": true,
+        "volume": 0.5
     };
     return Chat;
 })();

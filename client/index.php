@@ -21,7 +21,6 @@ $styles = StyleSheetHandler::getAllStyles();
 
 validateDefaults($spacks, $langs, $styles);
 validateCookies($spacks, $langs, $styles);
-insertIcons($tpl);
 
 $tpl->SetVariables($chat);
 

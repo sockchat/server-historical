@@ -96,6 +96,13 @@ $chat["DEFAULT_STYLE"] = "Black";
  */
 $chat["DEFAULT_LANG"] = "en";
 
+/* COOKIE PREFIX parameter
+ *
+ * String prefixed to the beginning of all cookie names.
+ * Takes a string.
+ */
+$chat["COOKIE_PREFIX"] = "sockchat_";
+
 /* DATABASE CONFIGURATION parameters
  *
  * Information pertaining to establishing a connection to the database containing

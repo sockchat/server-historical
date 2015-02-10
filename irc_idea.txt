@@ -1,1 +1,13 @@
-to allow for an "irc server" to pipe data into the sockchat server and vise versa, have a seperate daemon that starts the irc server on some port; however, this daemon also connects to the sockchat server using some special initialization step on packet id 1 (only possible on localhost so as to prevent exploitation) which is caught by the irc sockchat mod and stored accordingly, but overrides the default connection process so it is not parsed by the vanilla server. the irc sockchat mod then uses this connection abnormally to relay data to and from the irc server, such as message data, channel data, users, etc.
+to allow for an "irc server" to pipe data into the 
+sockchat server and vise versa, have a seperate 
+daemon that starts the irc server on some port; 
+however, this daemon also connects to the sockchat 
+server using some special initialization step on 
+packet id 1 (only possible on localhost so as to 
+prevent exploitation) which is caught by the irc 
+sockchat mod and stored accordingly, but overrides 
+the default connection process so it is not parsed 
+by the vanilla server. the irc sockchat mod then 
+uses this connection abnormally to relay data to 
+and from the irc server, such as message data, 
+channel data, users, etc. 

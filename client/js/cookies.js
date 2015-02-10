@@ -13,7 +13,7 @@ var Cookies = (function () {
     };
     Cookies.SetRaw = function (cookie, value) {
         var expire = new Date(Date.now() + 31536000000);
-        document.cookie = cookie + "=" + value + "; expires=" + expire.toUTCString();
+        document.cookie = Cookies.prefix + cookie + "=" + value + "; expires=" + expire.toUTCString();
     };
     Cookies.Get = function (cookie) {
         return Cookies.GetRaw(Cookies.cookieList[cookie]);
@@ -22,11 +22,12 @@ var Cookies = (function () {
         var c = document.cookie.split(";");
         for (var i = 0; i < c.length; i++) {
             var entry = c[i].trim().split("=");
-            if (entry[0] == cookie)
-                return entry[1];
+            if (entry[0] == Cookies.prefix + cookie)
+                return decodeURIComponent(entry[1]);
         }
         return undefined;
     };
+    Cookies.prefix = "sockchat_";
     Cookies.cookieList = ["soundpack", "lang", "style", "opts"];
     Cookies.defaultVals = [];
     return Cookies;

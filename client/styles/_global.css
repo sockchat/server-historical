@@ -45,6 +45,13 @@ body {
     border: 0;
 }
 
+#chat #chatList, #chat .sidebar, #chat .widebar {
+    -webkit-overflow-scrolling: touch;
+    -ms-scroll-chaining: none;
+    -ms-touch-action: pan-y;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
 #chat #chatList iframe {
     vertical-align: top;
     overflow: auto;

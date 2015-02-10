@@ -1,6 +1,7 @@
 enum Cookie {Soundpack, Language, Style, Options}
 
 class Cookies {
+    public static prefix = "sockchat_";
     public static cookieList = ["soundpack","lang","style","opts"];
     public static defaultVals = [];
 
@@ -10,7 +11,7 @@ class Cookies {
 
     public static SetRaw(cookie: string, value: string) {
         var expire = new Date(Date.now() + 31536000000);
-        document.cookie = cookie +"="+ value +"; expires="+ expire.toUTCString();
+        document.cookie = Cookies.prefix + cookie +"="+ value +"; expires="+ expire.toUTCString();
     }
 
     public static Get(cookie: Cookie): string {
@@ -22,8 +23,8 @@ class Cookies {
 
         for(var i = 0; i < c.length; i++) {
             var entry = c[i].trim().split("=");
-            if(entry[0] == cookie)
-                return entry[1];
+            if(entry[0] == Cookies.prefix + cookie)
+                return decodeURIComponent(entry[1]);
         }
 
         return undefined;

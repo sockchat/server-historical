@@ -159,7 +159,7 @@ class Socket {
                 break;
             case 9:
                 Socket.kicked = true;
-                UI.ChangeDisplay(false, parts[0], false, "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
+                UI.ChangeDisplay(false, parts[0], false, parts[0] == "kick" ? "" : "<br/>"+ Utils.GetDateTimeString(new Date(+parts[1]*1000)), true);
                 //window.location.href = Socket.redirectUrl;
                 break;
             case 10:

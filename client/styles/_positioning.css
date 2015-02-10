@@ -108,6 +108,9 @@ body {
 	bottom: 20px;
 	padding: 3px 0px 3px 3px;
 }
+#chat #optionsContainer .mobileOnly {
+	display: none;
+}
 
 @media screen and (max-width: 800px), (max-device-width: 800px) {
 	body {
@@ -132,6 +135,13 @@ body {
 		display: block;
 	}
 
+	#chat #optionsContainer .mobileOnly {
+		display: inline;
+	}
+	#chat #optionsContainer .desktopOnly {
+		display: none;
+	}
+
 	#chat #mobileChatTitle {
 		display: block;
 	}
@@ -139,6 +149,7 @@ body {
 	#chat #optionsContainer {
 		right: 10px;
 		top: 7px;
+		bottom: auto;
 	}
 
 	#chat #inputFieldContainer {
@@ -148,7 +159,7 @@ body {
 	}
 
 	#chat #inputFieldContainer #message {
-		height: 17px;
+		height: 20px;
 		padding: 0 2px 0 0;
 		margin: 0;
 	}

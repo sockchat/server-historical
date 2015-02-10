@@ -153,7 +153,7 @@ var Socket = (function () {
                 break;
             case 9:
                 Socket.kicked = true;
-                UI.ChangeDisplay(false, parts[0], false, "<br/>" + Utils.GetDateTimeString(new Date(+parts[1] * 1000)), true);
+                UI.ChangeDisplay(false, parts[0], false, parts[0] == "kick" ? "" : "<br/>" + Utils.GetDateTimeString(new Date(+parts[1] * 1000)), true);
                 break;
             case 10:
                 if (+parts[0] == UserContext.self.id) {

@@ -57,7 +57,6 @@ class Utils {
     }
 
     static GetDateTimeString(dt: Date): string {
-        alert(dt.getTime());
         return (dt.getTime() < 0) ? UI.langs[UI.currentLang].menuText["eot"] :
             dt.toDateString() +" @ "+ Utils.AddZero(dt.getHours()) +":"+ Utils.AddZero(dt.getMinutes()) +":"+ Utils.AddZero(dt.getSeconds());
     }

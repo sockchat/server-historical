@@ -42,6 +42,7 @@ class UI {
     static currentView = 0;
     static maxMsgLen = 2000;
     static ChatBot = new User(-1, "ChatBot", "inherit", "");
+    static autoscroll = true;
 
     static bbcode = Array();
     static emotes = Array();
@@ -117,6 +118,7 @@ class UI {
             icon.alt = elem[0];
             icon.style.background = "url(img/"+ elem[0] +") no-repeat scroll transparent";
             icon.onclick = function(e) { eval(elem[1]); };
+            if(elem[2] != undefined) icon.onload = function(e) { eval(elem[2]); };
             document.getElementById("optionsContainer").appendChild(icon);
         });
     }
@@ -275,7 +277,8 @@ class UI {
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>"+ outmsg +"";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
-        document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
+        if(UI.autoscroll)
+            document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
 
         if(strobe && u.id != UserContext.self.id) Title.Strobe(u.username);
     }
