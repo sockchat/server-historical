@@ -37,12 +37,29 @@ body {
 }
 
 #chat #chatList .insertImage {
-    max-width: 1080px;
-    max-height: 180px;
+    /*max-width: 1080px;
+    max-height: 180px;*/
+    max-width: 70vw;
+    max-height: 90vh;
     vertical-align: top;
     overflow: auto;
     margin: 5px;
     border: 0;
+}
+
+#chat #settingsList table, #chat #helpList table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#chat #settingsList table tr td, #chat #helpList table tr td {
+    padding: 4px 10px;
+    vertical-align: middle;
+}
+#chat #settingsList .setting {
+    width: 115px;
+}
+#chat #settingsList input[type="text"] {
+    width: 100px;
 }
 
 #chat #chatList, #chat .sidebar, #chat .widebar {

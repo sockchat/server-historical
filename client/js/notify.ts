@@ -8,10 +8,10 @@ declare var Notification : Notification;
 class Notify {
     public static enabled: boolean = false;
 
-    public static Init() {
+    public static Init(force: boolean = false) {
         if("Notification" in window) {
             if(Notification.permission === "granted") this.enabled = true;
-            else if(Notification.permission !== "denied") {
+            else if(Notification.permission !== "denied" || force) {
                 Notification.requestPermission(function(perm) {
                     if(perm === "granted") Notify.enabled = true;
                 });

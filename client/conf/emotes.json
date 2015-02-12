@@ -87,6 +87,10 @@
         {
             "img" : "warning.png",
             "syn" : [":warning:"]
+        },
+        {
+            "img" : "xp.png",
+            "syn" : [":xp:"]
         }
     ]
 }

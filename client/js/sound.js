@@ -22,12 +22,13 @@ var Sounds = (function () {
     };
     Sounds.ChangeVolume = function (vol) {
         try {
-            if (vol > 1 || vol < 0)
-                alert("WHAT THE FUCK ARE YOU DOING");
-            else {
-                var audioFiles = document.getElementsByTagName("audio");
-                for (var file in audioFiles) {
-                    audioFiles[file].volume = vol;
+            if (vol <= 1 && vol >= 0) {
+                Sounds.volume = vol;
+                if (Sounds.enabled) {
+                    var audioFiles = document.getElementsByTagName("audio");
+                    for (var file in audioFiles) {
+                        audioFiles[file].volume = vol;
+                    }
                 }
             }
         }
@@ -42,6 +43,8 @@ var Sounds = (function () {
     };
     Sounds.SoundList = ["chatbot", "error", "join", "leave", "receive", "send"];
     Sounds.currentSoundPack = "";
+    Sounds.enabled = true;
+    Sounds.volume = 0.5;
     return Sounds;
 })();
 //# sourceMappingURL=sound.js.map

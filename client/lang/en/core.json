@@ -13,5 +13,8 @@
         "silperr":  "Error: You are not allowed to silence this user!",
         "usilperr": "Error: You are not allowed to unsilence this user!",
         "silself":  "Error: You cannot silence yourself!"
+    },
+    "helpText": {
+
     }
 }

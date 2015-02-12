@@ -23,14 +23,50 @@ class Chat {
 
             UI.RedrawDropDowns();
             (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
-            UI.RenderLanguage();
 
             Sounds.ChangePack(Cookies.Get(Cookie.Soundpack));
 
             Chat.HideSidebars();
             if(!UI.IsMobileView()) document.getElementById("userList").style.display = "block";
 
-            // todo load settings from settings.json
+            var tmp = JSON.parse(Utils.FetchPage("conf/settings.json?a="+ Utils.Random(1000000000,9999999999)));
+            var table = <HTMLTableElement>document.getElementById("settingsList").getElementsByTagName("table")[0];
+            tmp.settings.forEach(function(elt, i, arr) {
+                Chat.Settings[elt["id"]] = elt["default"];
+                var row = <HTMLTableRowElement>table.insertRow(i);
+                row.className = i % 2 == 0 ? "rowOdd" : "rowEven";
+                row.setAttribute("name", elt["id"]);
+                var cell = row.insertCell(0);
+                cell.innerHTML = elt["id"];
+                cell = row.insertCell(1);
+                cell.className = "setting";
+                switch(elt["type"]) {
+                    case "select":
+                        var select = document.createElement("select");
+                        select.onchange = function(e) { var value = this.value; Chat.Settings[elt["id"]] = value; eval(elt["change"]); };
+                        if(elt["options"] != undefined) {
+                            for(var val in elt["options"]) {
+                                var option = document.createElement("option");
+                                option.value = val;
+                                option.innerHTML = elt["options"][val];
+                                select.appendChild(option);
+                            }
+                        }
+                        cell.appendChild(select);
+                        break;
+                    case "checkbox":
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "checkbox");
+                        input.onchange = function(e) { var value = this.checked; Chat.Settings[elt["id"]] = value; eval(elt["change"]); };
+                        cell.appendChild(input);
+                        break;
+                    default:
+                        var input = document.createElement("input");
+                        input.setAttribute("type", elt["type"]);
+                        input.onchange = function(e) { var value = this.value; Chat.Settings[elt["id"]] = value; eval(elt["change"]); };
+                        cell.appendChild(input);
+                }
+            });
             try {
                 var opts = JSON.parse(Cookies.Get(Cookie.Options));
             } catch(e) {
@@ -41,6 +77,9 @@ class Chat {
             }
             Chat.BindSettings();
 
+
+            Sounds.ChangeVolume(Chat.Settings["volume"]);
+            UI.RenderLanguage();
             UI.RenderEmotes();
             UI.RenderIcons();
             UI.RenderButtons();

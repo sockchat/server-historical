@@ -69,7 +69,7 @@ class Chat implements MessageComponentInterface {
 
                         if(substr($aparts, 0, 3) == "yes") {
                             $aparts = explode("\n", mb_substr($aparts, 3));
-                            if(($reason = Context::AllowUser($aparts[1], $conn)) == 0) {
+                            if(($reason = Context::AllowUser($aparts[1], $conn)) === 0) {
                                 if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
                                     $id = 0;
                                     if(Utils::$chat["AUTOID"]) {

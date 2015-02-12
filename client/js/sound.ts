@@ -3,6 +3,8 @@ enum Sound {ChatBot, Error, Join, Leave, Receive, Send}
 class Sounds {
     static SoundList = ["chatbot","error","join","leave","receive","send"];
     static currentSoundPack = "";
+    static enabled = true;
+    static volume = 0.5;
 
     static Play(id: Sound) {
         try {
@@ -15,12 +17,15 @@ class Sounds {
 
     static ChangeVolume(vol: number) {
         try {
-            if(vol > 1 || vol < 0) alert("WHAT THE FUCK ARE YOU DOING");
-            else {
-                var audioFiles = document.getElementsByTagName("audio");
+            if(vol <= 1 && vol >= 0) {
+                Sounds.volume = vol;
 
-                for(var file in audioFiles) {
-                    (<HTMLAudioElement>audioFiles[file]).volume = vol;
+                if(Sounds.enabled) {
+                    var audioFiles = document.getElementsByTagName("audio");
+
+                    for (var file in audioFiles) {
+                        (<HTMLAudioElement>audioFiles[file]).volume = vol;
+                    }
                 }
             }
         } catch(e) {}

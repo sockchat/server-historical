@@ -8,6 +8,8 @@ class Language {
     public menuText = [];
     public botText = [];
     public botErrText = [];
+    public settingsText = [];
+    public helpText = [];
 
     public constructor(blob: string[]) {
         var json = [];
@@ -37,6 +39,18 @@ class Language {
             if(json[file].botErrText != undefined) {
                 for(var key in json[file].botErrText) {
                     this.botErrText[key] = json[file].botErrText[key];
+                }
+            }
+
+            if(json[file].settingsText != undefined) {
+                for(var key in json[file].settingsText) {
+                    this.settingsText[key] = json[file].settingsText[key];
+                }
+            }
+
+            if(json[file].helpText != undefined) {
+                for(var key in json[file].helpText) {
+                    this.helpText[key] = json[file].helpText[key];
                 }
             }
         }

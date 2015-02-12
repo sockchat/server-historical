@@ -146,7 +146,6 @@ class Main extends GenericMod {
 
     public static function OnPacketReceive($conn, &$pid, &$data) {
         if(($target = Context::GetUserBySock($conn)) != null) {
-            echo "packet recv\n";
             if($target->GetParameter("packetlog") == null) $target->SetParameter("packetlog", new Stack(self::$floodFilterSize));
             $target->GetParameter("packetlog")->Push(gmdate("U"));
             $stack = $target->GetParameter("packetlog");

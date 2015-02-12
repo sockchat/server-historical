@@ -1,3 +1,41 @@
 {
-
+    "settings": [
+        {
+            "id"        : "bbcode",
+            "type"      : "checkbox",
+            "default"   : true,
+            "change"    : "UI.enableBBCode = value;"
+        },
+        {
+            "id"        : "emotes",
+            "type"      : "checkbox",
+            "default"   : true,
+            "change"    : "UI.enableEmotes = value;"
+        },
+        {
+            "id"        : "links",
+            "type"      : "checkbox",
+            "default"   : true,
+            "change"    : "UI.enableLinks = value;"
+        },
+        {
+            "id"        : "volume",
+            "type"      : "select",
+            "default"   : "0.5",
+            "options"   : {
+                "1.0" : "100%",
+                "0.9" : "90%",
+                "0.8" : "80%",
+                "0.7" : "70%",
+                "0.6" : "60%",
+                "0.5" : "50%",
+                "0.4" : "40%",
+                "0.3" : "30%",
+                "0.2" : "20%",
+                "0.1" : "10%",
+                "0.0" : "0%"
+            },
+            "change"    : "Sounds.ChangeVolume(value);"
+        }
+    ]
 }

@@ -5,6 +5,7 @@
 /// <reference path="sound.ts" />
 /// <reference path="sock.ts" />
 /// <reference path="notify.ts" />
+/// <reference path="chat.ts" />
 
 class Title {
     static username = "";
@@ -43,6 +44,10 @@ class UI {
     static maxMsgLen = 2000;
     static ChatBot = new User(-1, "ChatBot", "inherit", "");
     static autoscroll = true;
+
+    static enableBBCode = true;
+    static enableEmotes = true;
+    static enableLinks = true;
 
     static bbcode = Array();
     static emotes = Array();
@@ -188,7 +193,18 @@ class UI {
         (<HTMLElement>document.getElementsByClassName("top")[2]).innerHTML = UI.langs[id].menuText["help"];
         (<HTMLInputElement>document.getElementById("sendmsg")).value = UI.langs[id].menuText["submit"];
 
-        // TODO message reparsing
+        var rows = document.getElementById("settingsList").getElementsByTagName("table")[0].getElementsByTagName("tr");
+        console.log(rows);
+        for(var i = 0; i < rows.length; i++) {
+            if(rows[i].getAttribute("name").substr(0,2) == ";;") {
+                // persistence
+            } else if(rows[i].getAttribute("name").substr(0,2) == "||") {
+                // togglable
+            } else {
+                if(UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] != undefined)
+                    (<HTMLTableCellElement>(<HTMLTableRowElement>rows[i]).cells[0]).innerHTML = UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] +":";
+            }
+        }
     }
 
     static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true, pm = false) {
@@ -226,52 +242,58 @@ class UI {
             Notify.Show(u.username, strip, "img/alert.png");
         }
 
-        for(var i = 0; i < UI.bbcode.length; i++) {
-            if(!UI.bbcode[i]["arg"]) {
-                var at = 0;
-                while((at = outmsg.indexOf("["+ UI.bbcode[i]['tag'] +"]", at)) != -1) {
-                    var end;
-                    if((end = outmsg.indexOf("[/"+ UI.bbcode[i]['tag'] +"]", at)) != -1) {
-                        var inner = Utils.StripCharacters(outmsg.substring(at + ("["+UI.bbcode[i]['tag']+"]").length, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
-                        outmsg = outmsg.substring(0, at) +
-                                 Utils.replaceAll(UI.bbcode[i]['swap'], "{0}", inner) +
-                                 outmsg.substring(end + ("[/"+ UI.bbcode[i]['tag'] +"]").length);
-                    } else break;
-                }
-            } else {
-                var at = 0;
-                while((at = outmsg.indexOf("["+ UI.bbcode[i]['tag'] +"=", at)) != -1) {
-                    var start, end;
-                    if((start = outmsg.indexOf("]", at)) != -1) {
-                        if((end = outmsg.indexOf("[/"+ UI.bbcode[i]['tag'] +"]", start)) != -1) {
-                            var arg = Utils.StripCharacters(outmsg.substring(at + ("["+ UI.bbcode[i]['tag'] +"=").length, start), "[]" + (UI.bbcode[i]["rmarg"] == undefined ? "" : UI.bbcode[i]["rmarg"]));
-                            var inner = Utils.StripCharacters(outmsg.substring(start+1, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
-                            outmsg = outmsg.substring(0, at) +
-                                     Utils.replaceAll(Utils.replaceAll(UI.bbcode[i]['swap'], "{1}", inner), "{0}", arg) +
-                                     outmsg.substring(end + ("[/"+ UI.bbcode[i]['tag'] +"]").length);
+        if(UI.enableBBCode) {
+            for (var i = 0; i < UI.bbcode.length; i++) {
+                if (!UI.bbcode[i]["arg"]) {
+                    var at = 0;
+                    while ((at = outmsg.indexOf("[" + UI.bbcode[i]['tag'] + "]", at)) != -1) {
+                        var end;
+                        if ((end = outmsg.indexOf("[/" + UI.bbcode[i]['tag'] + "]", at)) != -1) {
+                            var inner = Utils.StripCharacters(outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "]").length, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
+                            var replace = Utils.replaceAll(UI.bbcode[i]['swap'], "{0}", inner);
+                            outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
+                            at += replace.length;
                         } else break;
-                    } else break;
+                    }
+                } else {
+                    var at = 0;
+                    while ((at = outmsg.indexOf("[" + UI.bbcode[i]['tag'] + "=", at)) != -1) {
+                        var start, end;
+                        if ((start = outmsg.indexOf("]", at)) != -1) {
+                            if ((end = outmsg.indexOf("[/" + UI.bbcode[i]['tag'] + "]", start)) != -1) {
+                                var arg = Utils.StripCharacters(outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "=").length, start), "[]" + (UI.bbcode[i]["rmarg"] == undefined ? "" : UI.bbcode[i]["rmarg"]));
+                                var inner = Utils.StripCharacters(outmsg.substring(start + 1, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
+                                var replace = Utils.replaceAll(Utils.replaceAll(UI.bbcode[i]['swap'], "{1}", inner), "{0}", arg);
+                                outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
+                                at += replace.length;
+                            } else break;
+                        } else break;
+                    }
                 }
             }
         }
 
-        var tmp = outmsg.split(' ');
-        for(var i = 0; i < tmp.length; i++) {
-            if(tmp[i].substr(0, 7) == "http://" ||
-               tmp[i].substr(0, 8) == "https://" ||
-               tmp[i].substr(0, 6) == "ftp://")
-                tmp[i] = "<a href='"+ tmp[i] +"' onclick='window.open(this.href);return false;'>"+ tmp[i] +"</a>";
+        if(UI.enableLinks) {
+            var tmp = outmsg.split(' ');
+            for (var i = 0; i < tmp.length; i++) {
+                if (tmp[i].substr(0, 7) == "http://" ||
+                    tmp[i].substr(0, 8) == "https://" ||
+                    tmp[i].substr(0, 6) == "ftp://")
+                    tmp[i] = "<a href='" + tmp[i] + "' onclick='window.open(this.href);return false;'>" + tmp[i] + "</a>";
+            }
+            outmsg = tmp.join(" ");
         }
-        outmsg = tmp.join(" ");
 
-        UI.emotes.forEach(function(elem, i, arr) {
-            var args: string[] = [];
-            elem[1].forEach(function(elt: string, j, akbar) {
-                args.push(Utils.SanitizeRegex(Utils.Sanitize(elt)));
+        if(UI.enableEmotes) {
+            UI.emotes.forEach(function (elem, i, arr) {
+                var args:string[] = [];
+                elem[1].forEach(function (elt:string, j, akbar) {
+                    args.push(Utils.SanitizeRegex(Utils.Sanitize(elt)));
+                });
+
+                outmsg = outmsg.replace(new RegExp("(" + args.join("|") + ")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
             });
-
-            outmsg = outmsg.replace(new RegExp("("+ args.join("|") +")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/"+ elem[0] +"' class='chatEmote' />");
-        });
+        }
 
         var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:"+ u.color +";'>"+ name +"</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>"+ outmsg +"";
