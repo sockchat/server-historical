@@ -7,6 +7,7 @@
 /// <reference path="lang.ts" />
 /// <reference path="utils.ts" />
 /// <reference path="notify.ts" />
+/// <reference path="logs.ts" />
 var Chat = (function () {
     function Chat() {
     }
@@ -19,8 +20,10 @@ var Chat = (function () {
             UI.RedrawDropDowns();
             document.getElementById("langdd").value = Cookies.Get(0 /* Language */);
             Chat.HideSidebars();
-            if (!UI.IsMobileView())
+            if (!UI.IsMobileView() && !logs)
                 document.getElementById("userList").style.display = "block";
+            if (!UI.IsMobileView() && logs)
+                document.getElementById("settingsList").style.display = "block";
             var tmp = JSON.parse(Utils.FetchPage("conf/settings.json?a=" + Utils.Random(1000000000, 9999999999)));
             var table = document.getElementById("settingsList").getElementsByTagName("table")[0];
             var cnt = 0;
@@ -148,16 +151,24 @@ var Chat = (function () {
                 }
             });
             Chat.BindBBEnable();
-            Sounds.ChangeVolume(Chat.Settings["volume"]);
-            UI.RenderLanguage();
-            UI.RenderEmotes();
-            UI.RenderIcons();
-            UI.RenderButtons();
-            Notify.Init();
-            UI.ChangeDisplay(false, "conn");
-            UserContext.users = {};
             Socket.args = Socket.args.slice(1);
-            Socket.Init(addr);
+            if (!logs) {
+                Sounds.ChangeVolume(Chat.Settings["volume"]);
+                UI.RenderLanguage();
+                UI.RenderEmotes();
+                UI.RenderIcons();
+                UI.RenderButtons();
+                Notify.Init();
+                UI.ChangeDisplay(false, "conn");
+                UserContext.users = {};
+                Socket.Init(addr);
+            }
+            else {
+                Sounds.Toggle(false);
+                UI.RenderLanguage();
+                UserContext.self = UI.ChatBot;
+                Logs.Main();
+            }
         }
         else
             window.location.href = Socket.redirectUrl;
@@ -213,7 +224,7 @@ var Chat = (function () {
     };
     Chat.ChangeChannel = function () {
         var dd = document.getElementById("channeldd");
-        Chat.SendMessageWrapper("/join " + dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " " + prompt("Enter password for " + dd.value, "") : ""));
+        Chat.SendMessageWrapper("/join " + dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " " + prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", dd.value)) : ""));
     };
     Chat.HideSidebars = function () {
         var sidebars = document.getElementsByClassName("sidebar");

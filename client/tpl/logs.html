@@ -1,10 +1,137 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<html manifest="./lib/cache.manifest.php">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{{ CHAT_TITLE }}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
+    {{{ ALT_STYLES }}}
+    <script type="text/javascript" src="js/notify.js"></script>
+    <script type="text/javascript" src="js/sound.js"></script>
+    <script type="text/javascript" src="js/lang.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/cookies.js"></script>
+    <script type="text/javascript" src="js/user.js"></script>
+    <script type="text/javascript" src="js/msg.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+    <script type="text/javascript" src="js/sock.js"></script>
+    <script type="text/javascript" src="js/chat.js"></script>
+    <script type="text/javascript" src="js/logs.js"></script>
+    <script type="text/javascript">
+        Socket.args = "{|{ AUTH }|}".split("\f");
+        Socket.pingTime = {{{ PING_PERIOD }}};
+        Socket.redirectUrl = "{|{ REDIRECT_ADDR }|}";
 
+        UI.chatTitle = "{|{ CHAT_TITLE }|}";
+        UI.ChatBot.username = "{|{ CHATBOT_NAME }|}";
+        UI.spacks = [{{{ SOUND_PACKS }}}];
+        UI.langs = [{{{ LANGS }}}];
+
+        Cookies.defaultVals = ["{|{ DEFAULT_SPACK }|}", "{|{ DEFAULT_LANG }|}", "{|{ DEFAULT_STYLE }|}", ""];
+        Cookies.prefix = "{|{ COOKIE_PREFIX }|}";
+    </script>
+</head>
+<body onload="Chat.Main('ws://{{{ SERVER_ADDR }}}', true);">
+<div id="connmsg" style="display: none;">
+        <span id="info">
+            <span id="conntxt">Loading Sock Chat ...</span>
+            <span id="indicator">
+                <img src="img/pixel.png" alt="loading" />
+            </span>
+        </span>
+</div>
+<div id="chat">
+    <div id="chatTitle">{{{ CHAT_TITLE }}}</div>
+    <div id="mobileChatTitle">{{{ M_CHAT_TITLE }}}</div>
+    <div id="userData">
+        <label id="tchan" for="channeldd">Channel</label>:
+        <select id="channeldd" onchange="Logs.BindParameters();">
+            <option value="">All Channels</option>
+            <option value="@priv">Private Messages</option>
+            <option value="@default">Default Channel</option>
+            <option disabled="disabled"> </option>
+        </select>
+        <label id="tstyle" for="styledd">Style</label>:
+        <select id="styledd" onchange="UI.ChangeStyle();">
+            {{{ STYLES }}}
+        </select>
+        <label id="tlang" for="langdd">Language</label>:
+        <select id="langdd" onchange="UI.RenderLanguage();"></select>
+    </div>
+    <div id="chatList" class="wideSideVisible">
+
+    </div>
+    <div class="sidebar" id="userList">
+        <div class="top">
+            Loadings Logs ...
+        </div>
+    </div>
+    <div class="widebar" id="settingsList">
+        <div class="top">
+
+        </div>
+        <table>
+
+        </table>
+    </div>
+    <div class="widebar" id="helpList">
+        <div class="top">
+
+        </div>
+        <table>
+
+        </table>
+    </div>
+    <div id="inputFieldContainer">
+        <table style="border-collapse: collapse; width: 100%;">
+            <tr class="desktopOnly">
+                <td style="width: 10%;" id="namelabel">
+                    Username
+                </td>
+                <td id="msglabel">
+                    Message
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-right: 10px;">
+                    <input type="text" style="width: 100%;" id="username" onkeypress="Logs.HandleDataChange(event);" />
+                </td>
+                <td>
+                    <input type="text" id="msg" onkeypress="Logs.HandleDataChange(event);" style="width: 100%;" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="emotes"></div>
+    <div id="bbCodeContainer">
+        <select onchange="Logs.BindParameters();" id="year">
+            {{{ YEARS }}}
+        </select>
+        <select onchange="Logs.BindParameters();" id="month">
+            {{{ MONTHS }}}
+        </select>
+        <select onchange="Logs.BindParameters();" id="day">
+            {{{ DAYS }}}
+        </select>
+        <select onchange="Logs.BindParameters();" id="time">
+            {{{ TIME }}}
+        </select>
+    </div>
+    <div id="submitButtonContainer">
+        <input type="button" value="Submit" id="sendmsg" onclick='Logs.BindParameters();' />
+    </div>
+    <div id="optionsContainer">
+        <img src="img/pixel.png" alt="settings" style="background: url(img/settings.png) no-repeat scroll transparent;" onclick="Chat.ToggleSidebar('settingsList');" />
+        <img src="img/pixel.png" alt="settings" style="background: url(img/autoscroll.png) no-repeat scroll transparent;" onclick="Chat.ToggleScrolling(this);" />
+    </div>
+    <!--
+        Remove this if you want, I don't really care.
+        Just remember that the top right corner will
+        look really boring without it.
+    -->
+    <div id="copyright">
+        <a href="http://sockch.at">Sock Chat</a> &copy; <a href="http://aroltd.com">aroltd.com</a>
+    </div>
+</div>
 </body>
 </html>

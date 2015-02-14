@@ -34,6 +34,9 @@ var Utils = (function () {
         else
             return "";
     };
+    Utils.UnixTime = function (t) {
+        return Math.round(t.getTime() / 1000);
+    };
     Utils.UnixNow = function () {
         return Math.round((new Date()).getTime() / 1000);
     };

@@ -46,6 +46,9 @@ a:hover {
 #chat #userData select {
     min-width: 105px;
     height: 22px;
+}
+
+#chat select {
     color: #333333;
     background-color: #FFFFFF;
     border: 1px solid #6C8A3F;
@@ -92,7 +95,7 @@ a:hover {
     font-size: .9em;
 }
 
-.alert input[type="password"], .alert input[type="text"], #chat textarea {
+.alert input[type="password"], .alert input[type="text"], #chat textarea, #chat #inputFieldContainer input[type="text"] {
     color: #333333;
     border: 1px solid #6C8A3F;
 }

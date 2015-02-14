@@ -44,8 +44,7 @@ var Sounds = (function () {
     Sounds.ChangePack = function (pack) {
         if (document.getElementById(pack + "." + Sounds.SoundList[0]) != null)
             Sounds.currentSoundPack = pack;
-        else
-            alert("Sound pack " + pack + " does not exist !");
+        //else alert("Sound pack "+ pack +" does not exist !");
     };
     Sounds.SoundList = ["chatbot", "error", "join", "leave", "receive", "send"];
     Sounds.currentSoundPack = "";

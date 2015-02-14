@@ -39,6 +39,6 @@ class Sounds {
     static ChangePack(pack: string) {
         if(document.getElementById(pack +"."+ Sounds.SoundList[0]) != null)
             Sounds.currentSoundPack = pack;
-        else alert("Sound pack "+ pack +" does not exist !");
+        //else alert("Sound pack "+ pack +" does not exist !");
     }
 }

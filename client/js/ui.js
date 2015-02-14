@@ -177,6 +177,16 @@ var UI = (function () {
         document.getElementsByClassName("top")[1].innerHTML = UI.langs[id].menuText["sets"];
         document.getElementsByClassName("top")[2].innerHTML = UI.langs[id].menuText["help"];
         document.getElementById("sendmsg").value = UI.langs[id].menuText["submit"];
+        try {
+            document.getElementById("namelabel").innerHTML = UI.langs[id].menuText["username"];
+        }
+        catch (e) {
+        }
+        try {
+            document.getElementById("msglabel").innerHTML = UI.langs[id].menuText["message"];
+        }
+        catch (e) {
+        }
         var rows = document.getElementById("settingsList").getElementsByTagName("table")[0].getElementsByTagName("tr");
         console.log(rows);
         for (var i = 0; i < rows.length; i++) {
@@ -184,7 +194,7 @@ var UI = (function () {
             }
             else if (rows[i].getAttribute("name").substr(0, 2) == "||") {
                 var code = rows[i].getAttribute("name").substr(2);
-                rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].menuText["enable"] + " " + (UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code) + ":";
+                rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].menuText["enable"].replace("{0}", UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code);
             }
             else {
                 if (UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] != undefined)
@@ -197,17 +207,20 @@ var UI = (function () {
                 btns[i].value = UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] != undefined ? UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] : btns[i].getAttribute("name");
         }
     };
-    UI.AddMessage = function (msgid, date, u, msg, strobe, playsound, pm) {
+    UI.AddMessage = function (msgid, date, u, msg, strobe, playsound, flags, fulldate) {
         if (strobe === void 0) { strobe = true; }
         if (playsound === void 0) { playsound = true; }
-        if (pm === void 0) { pm = false; }
+        if (flags === void 0) { flags = "10010"; }
+        if (fulldate === void 0) { fulldate = false; }
         var msgDiv = document.createElement("div");
         msgDiv.id = "sock_msg_" + msgid;
         msgDiv.className = (this.rowEven[0]) ? "rowEven" : "rowOdd";
         /*var timecorrection = (new Date()).getTimezoneOffset()*60000;
         var dateval = new Date((date + ((((UI.dst)?0:1)+UI.timezone)*3600))*1000 + timecorrection);*/
         var dateval = new Date(date * 1000);
-        var datestr = (((dateval.getHours() > 9) ? "" : "0") + dateval.getHours()) + ":" + (((dateval.getMinutes() > 9) ? "" : "0") + dateval.getMinutes()) + ":" + (((dateval.getSeconds() > 9) ? "" : "0") + dateval.getSeconds());
+        var datestr = Utils.AddZero(dateval.getHours()) + ":" + Utils.AddZero(dateval.getMinutes()) + ":" + Utils.AddZero(dateval.getSeconds());
+        if (fulldate)
+            datestr = dateval.getFullYear() + "-" + Utils.AddZero(dateval.getMonth() + 1) + "-" + Utils.AddZero(dateval.getDate()) + " " + datestr;
         var outmsg = msg;
         if (u.id == -1)
             outmsg = UI.langs[UI.currentLang].interpretBotString(msg);

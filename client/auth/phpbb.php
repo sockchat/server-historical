@@ -60,7 +60,7 @@ if(Auth::GetPageType() == AUTH_FETCH) {
 
         Auth::Accept();
 
-        $user->session_kill();
+        //$user->session_kill();
     } else Auth::Deny();
 }
 

@@ -39,6 +39,10 @@ class Utils {
         else return "";
     }
 
+    static UnixTime(t: Date) {
+        return Math.round(t.getTime()/1000);
+    }
+
     static UnixNow(): number {
         return Math.round((new Date()).getTime()/1000);
     }

@@ -49,8 +49,11 @@ a:active {
 #chat #userData select {
     min-width: 105px;
     height: 22px;
-    background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
-    border: 1px solid #CCC;
+}
+
+#chat select {
+	background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
+	border: 1px solid #CCC;
 }
 
 #chat #chatList {
@@ -95,7 +98,7 @@ a:active {
     font-size: .9em;
 }
 
-.alert input[type="password"], .alert input[type="text"], #chat textarea {
+.alert input[type="password"], .alert input[type="text"], #chat textarea, #chat #inputFieldContainer input[type="text"] {
 	box-shadow: 0px 0px 3px #9475B2, inset #DDD 0 0 5px;
 	background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
 	border: 1px solid #CCC;

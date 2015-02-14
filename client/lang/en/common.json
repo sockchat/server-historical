@@ -20,10 +20,13 @@
         "term"      : "Connection terminated! Details: ",
         "back"      : "Click here to go back.",
         "eot"       : "the end of time.",
-        "enable"    : "Enable",
-        "persist"   : "Persist",
+        "enable"    : "Enable {0} Tag",
+        "persist"   : "Persist {0} Tag",
         "bbprompt"  : "Enter the argument:",
-        "urlprompt" : "Enter the URL:"
+        "urlprompt" : "Enter the URL:",
+        "chanpwd"   : "Enter the password for {0}:",
+        "username"  : "Username",
+        "message"   : "Message"
     },
     "botText": {
         "say"       : "{0}",

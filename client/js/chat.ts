@@ -7,6 +7,7 @@
 /// <reference path="lang.ts" />
 /// <reference path="utils.ts" />
 /// <reference path="notify.ts" />
+/// <reference path="logs.ts" />
 
 class Chat {
     static Settings: any = {
@@ -29,7 +30,8 @@ class Chat {
             (<HTMLSelectElement>document.getElementById("langdd")).value = Cookies.Get(Cookie.Language);
 
             Chat.HideSidebars();
-            if(!UI.IsMobileView()) document.getElementById("userList").style.display = "block";
+            if(!UI.IsMobileView() && !logs) document.getElementById("userList").style.display = "block";
+            if(!UI.IsMobileView() && logs) document.getElementById("settingsList").style.display = "block";
 
             var tmp = JSON.parse(Utils.FetchPage("conf/settings.json?a="+ Utils.Random(1000000000,9999999999)));
             var table = <HTMLTableElement>document.getElementById("settingsList").getElementsByTagName("table")[0];
@@ -131,18 +133,26 @@ class Chat {
             });
             Chat.BindBBEnable();
 
-            Sounds.ChangeVolume(Chat.Settings["volume"]);
-            UI.RenderLanguage();
-            UI.RenderEmotes();
-            UI.RenderIcons();
-            UI.RenderButtons();
-            Notify.Init();
-
-            UI.ChangeDisplay(false, "conn");
-
-            UserContext.users = {};
             Socket.args = Socket.args.slice(1);
-            Socket.Init(addr);
+
+            if(!logs) {
+                Sounds.ChangeVolume(Chat.Settings["volume"]);
+                UI.RenderLanguage();
+                UI.RenderEmotes();
+                UI.RenderIcons();
+                UI.RenderButtons();
+                Notify.Init();
+
+                UI.ChangeDisplay(false, "conn");
+
+                UserContext.users = {};
+                Socket.Init(addr);
+            } else {
+                Sounds.Toggle(false);
+                UI.RenderLanguage();
+                UserContext.self = UI.ChatBot;
+                Logs.Main();
+            }
         } else window.location.href = Socket.redirectUrl;
     }
 
@@ -207,7 +217,7 @@ class Chat {
 
     static ChangeChannel() {
         var dd = <HTMLSelectElement>document.getElementById("channeldd");
-        Chat.SendMessageWrapper("/join "+ dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " "+ prompt("Enter password for "+ dd.value, "") : ""));
+        Chat.SendMessageWrapper("/join "+ dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " "+ prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", dd.value)) : ""));
     }
 
     static HideSidebars() {
