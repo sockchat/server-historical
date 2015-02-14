@@ -19,21 +19,27 @@
             "change"    : "UI.enableLinks = value;"
         },
         {
+            "id"        : "spack",
+            "type"      : "select",
+            "load"      : "Chat.Settings['spack'] = Cookies.defaultVals[0]; for(var pack in UI.spacks) { var opt = document.createElement('option'); opt.value = opt.innerHTML = UI.spacks[pack]; input.appendChild(opt); }",
+            "change"    : "Sounds.ChangePack(value);"
+        },
+        {
             "id"        : "volume",
             "type"      : "select",
             "default"   : "0.5",
             "options"   : {
-                "1.0" : "100%",
-                "0.9" : "90%",
-                "0.8" : "80%",
-                "0.7" : "70%",
-                "0.6" : "60%",
-                "0.5" : "50%",
-                "0.4" : "40%",
-                "0.3" : "30%",
-                "0.2" : "20%",
-                "0.1" : "10%",
-                "0.0" : "0%"
+                "1.0" : " 100%",
+                "0.9" : "  90%",
+                "0.8" : "  80%",
+                "0.7" : "  70%",
+                "0.6" : "  60%",
+                "0.5" : "  50%",
+                "0.4" : "  40%",
+                "0.3" : "  30%",
+                "0.2" : "  20%",
+                "0.1" : "  10%",
+                "0.0" : "   0%"
             },
             "change"    : "Sounds.ChangeVolume(value);"
         }

@@ -98,17 +98,27 @@ class FFDB {
 
 class Database {
     protected static $conn = null;
+    protected static $persist = true;
     protected static $statements;
     protected static $useFlatFile;
 
     protected static function Execute($stmt, $fetch = false) {
+        Database::SpawnConnection();
         $tmp = Database::$conn->prepare(Database::$statements[$stmt]["query"]);
         foreach(Database::$statements[$stmt] as $param => $value) {
             if($param != "query") $tmp->bindValue(":{$param}", $value);
         }
         $tmp->execute();
-        if ($fetch) return $tmp->fetchAll(PDO::FETCH_BOTH);
-        else return [];
+        $ret = [];
+        if ($fetch) $ret = $tmp->fetchAll(PDO::FETCH_BOTH);
+        $tmp = null;
+        Database::$conn = null;
+        return $ret;
+    }
+
+    public static function SpawnConnection() {
+        $chat = $GLOBALS["chat"];
+        Database::$conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], Database::$persist ? [PDO::ATTR_PERSISTENT => true] : []);
     }
 
     public static function Init($persist = true) {
@@ -116,7 +126,8 @@ class Database {
         Database::$useFlatFile = !$chat["DB_ENABLE"];
         if($chat["DB_ENABLE"]) {
             try {
-                Database::$conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], $persist ? [PDO::ATTR_PERSISTENT => true] : []);
+                self::$persist = $persist;
+                Database::SpawnConnection();
                 $pre = $chat["DB_TABLE_PREFIX"];
 
                 Database::$statements = [

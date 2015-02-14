@@ -6,6 +6,7 @@ var Language = (function () {
         this.botErrText = [];
         this.settingsText = [];
         this.helpText = [];
+        this.bbCodeText = [];
         var json = [];
         for (var str in blob) {
             if (str == 0)
@@ -41,6 +42,11 @@ var Language = (function () {
             if (json[file].helpText != undefined) {
                 for (var key in json[file].helpText) {
                     this.helpText[key] = json[file].helpText[key];
+                }
+            }
+            if (json[file].bbCodeText != undefined) {
+                for (var key in json[file].bbCodeText) {
+                    this.bbCodeText[key] = json[file].bbCodeText[key];
                 }
             }
         }

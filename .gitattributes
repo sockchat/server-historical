@@ -20,3 +20,12 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Release Excludes
+*.ts export-ignore
+*.js.map export-ignore
+lang/el/ export-ignore
+lang/in/ export-ignore
+lang/jp/ export-ignore
+lang/nl/ export-ignore
+lang/pl/ export-ignore

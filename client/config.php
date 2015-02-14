@@ -40,6 +40,14 @@ $chat["INTEGRATION"] = INT_PHPBB;
  */
 $chat["CINT_FILE"] = "";
 
+/* LOG BATCH SIZE parameter
+ *
+ * Determines the size that log data blocks are transferred in. If reading from
+ * the logs is exceptionally slow, decrease this value.
+ * Takes an integer.
+ */
+$chat["LOG_BATCH_SIZE"] = 50;
+
 /* SERVER ADDRESS parameter
  *
  * Tells the socket where it should connect to. Use the format "ADDRESS:PORT".
@@ -51,6 +59,13 @@ $chat["CINT_FILE"] = "";
  * on port 6770.
  */
 $chat["SERVER_ADDR"] = "aroltd.com:12120";
+
+/* ROOT DIRECTORY parameter
+ *
+ * Tells various elements of the client where the root of the chat is located.
+ * Takes a string in the format http[s]://address.ext/path/to/dir
+ */
+$chat["ROOT"] = "http://aroltd.com/chat";
 
 /* REDIRECT ADDRESS parameter
  *

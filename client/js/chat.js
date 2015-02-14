@@ -10,34 +10,37 @@
 var Chat = (function () {
     function Chat() {
     }
-    Chat.Main = function (addr) {
+    Chat.Main = function (addr, logs) {
+        if (logs === void 0) { logs = false; }
         if (Socket.args[0] == "yes") {
             Chat.LoadJSONFiles();
-            document.getElementById("styledd").value = Cookies.Get(2 /* Style */);
+            document.getElementById("styledd").value = Cookies.Get(1 /* Style */);
             UI.ChangeStyle();
             UI.RedrawDropDowns();
-            document.getElementById("langdd").value = Cookies.Get(1 /* Language */);
-            Sounds.ChangePack(Cookies.Get(0 /* Soundpack */));
+            document.getElementById("langdd").value = Cookies.Get(0 /* Language */);
             Chat.HideSidebars();
             if (!UI.IsMobileView())
                 document.getElementById("userList").style.display = "block";
             var tmp = JSON.parse(Utils.FetchPage("conf/settings.json?a=" + Utils.Random(1000000000, 9999999999)));
             var table = document.getElementById("settingsList").getElementsByTagName("table")[0];
+            var cnt = 0;
             tmp.settings.forEach(function (elt, i, arr) {
-                Chat.Settings[elt["id"]] = elt["default"];
+                Chat.Settings[elt["id"]] = elt["default"] != undefined ? elt["default"] : null;
                 var row = table.insertRow(i);
-                row.className = i % 2 == 0 ? "rowOdd" : "rowEven";
+                row.className = cnt % 2 == 0 ? "rowOdd" : "rowEven";
                 row.setAttribute("name", elt["id"]);
                 var cell = row.insertCell(0);
                 cell.innerHTML = elt["id"];
                 cell = row.insertCell(1);
                 cell.className = "setting";
+                var input = null;
                 switch (elt["type"]) {
                     case "select":
-                        var select = document.createElement("select");
-                        select.onchange = function (e) {
+                        input = document.createElement("select");
+                        input.onchange = function (e) {
                             var value = this.value;
                             Chat.Settings[elt["id"]] = value;
+                            Chat.BindSettings();
                             eval(elt["change"]);
                         };
                         if (elt["options"] != undefined) {
@@ -45,34 +48,39 @@ var Chat = (function () {
                                 var option = document.createElement("option");
                                 option.value = val;
                                 option.innerHTML = elt["options"][val];
-                                select.appendChild(option);
+                                input.appendChild(option);
                             }
                         }
-                        cell.appendChild(select);
+                        cell.appendChild(input);
                         break;
                     case "checkbox":
-                        var input = document.createElement("input");
+                        input = document.createElement("input");
                         input.setAttribute("type", "checkbox");
                         input.onchange = function (e) {
                             var value = this.checked;
                             Chat.Settings[elt["id"]] = value;
+                            Chat.BindSettings();
                             eval(elt["change"]);
                         };
                         cell.appendChild(input);
                         break;
                     default:
-                        var input = document.createElement("input");
+                        input = document.createElement("input");
                         input.setAttribute("type", elt["type"]);
                         input.onchange = function (e) {
                             var value = this.value;
                             Chat.Settings[elt["id"]] = value;
+                            Chat.BindSettings();
                             eval(elt["change"]);
                         };
                         cell.appendChild(input);
                 }
+                if (elt["load"] != undefined)
+                    eval(elt["load"]);
+                cnt++;
             });
             try {
-                var opts = JSON.parse(Cookies.Get(3 /* Options */));
+                var opts = JSON.parse(Cookies.Get(2 /* Options */));
             }
             catch (e) {
                 opts = {};
@@ -80,8 +88,66 @@ var Chat = (function () {
             for (var opt in Chat.Settings) {
                 if (opts[opt] != undefined)
                     Chat.Settings[opt] = opts[opt];
+                try {
+                    var elems = document.getElementById("settingsList").getElementsByTagName("tr");
+                    var elem = null;
+                    for (var i = 0; i < elems.length; i++) {
+                        elem = elems[i];
+                        if (elem.getAttribute("name") == opt)
+                            break;
+                        else
+                            elem = null;
+                    }
+                    if (elem == null)
+                        continue;
+                    var input = elem.getElementsByTagName("input");
+                    if (input.length > 0) {
+                        input = input[0];
+                        if (input.getAttribute("type") == "checkbox")
+                            input.checked = Chat.Settings[opt];
+                        else
+                            input.value = Chat.Settings[opt];
+                    }
+                    else {
+                        input = elem.getElementsByTagName("select")[0];
+                        input.value = Chat.Settings[opt];
+                    }
+                    input.onchange(input);
+                }
+                catch (e) {
+                }
             }
             Chat.BindSettings();
+            try {
+                opts = JSON.parse(Cookies.Get(4 /* BBEnable */));
+            }
+            catch (e) {
+                opts = {};
+            }
+            UI.bbcode.forEach(function (elt, i, arr) {
+                if (elt["toggle"] === true) {
+                    if (Chat.bbEnable[elt["tag"]] === undefined) {
+                        Chat.bbEnable[elt["tag"]] = opts[elt["tag"]] != undefined ? opts[elt["tag"]] : (elt["tdef"] != undefined ? elt["tdef"] : true);
+                        var row = table.insertRow(cnt);
+                        row.className = cnt % 2 == 0 ? "rowOdd" : "rowEven";
+                        row.setAttribute("name", "||" + elt["tag"]);
+                        var cell = row.insertCell(0);
+                        cell.innerHTML = "enable " + elt["tag"];
+                        cell = row.insertCell(1);
+                        cell.className = "setting";
+                        input = document.createElement("input");
+                        input.setAttribute("type", "checkbox");
+                        input.checked = Chat.bbEnable[elt["tag"]];
+                        input.onchange = function (e) {
+                            Chat.bbEnable[elt['tag']] = this.checked;
+                            Chat.BindBBEnable();
+                        };
+                        cell.appendChild(input);
+                        cnt++;
+                    }
+                }
+            });
+            Chat.BindBBEnable();
             Sounds.ChangeVolume(Chat.Settings["volume"]);
             UI.RenderLanguage();
             UI.RenderEmotes();
@@ -97,7 +163,13 @@ var Chat = (function () {
             window.location.href = Socket.redirectUrl;
     };
     Chat.BindSettings = function () {
-        Cookies.Set(3 /* Options */, JSON.stringify(Chat.Settings));
+        Cookies.Set(2 /* Options */, JSON.stringify(Chat.Settings));
+    };
+    Chat.BindBBEnable = function () {
+        Cookies.Set(4 /* BBEnable */, JSON.stringify(Chat.bbEnable));
+    };
+    Chat.BindPersist = function () {
+        Cookies.Set(3 /* Persist */, JSON.stringify(Chat.Persist));
     };
     Chat.HandleMessage = function (e) {
         var key = ('which' in e) ? e.which : e.keyCode;
@@ -171,20 +243,22 @@ var Chat = (function () {
         UI.autoscroll = !UI.autoscroll;
     };
     Chat.PrepareSound = function (icon) {
-        if (!Chat.Settings["sound"])
-            Sounds.ChangeVolume(0);
+        Sounds.Toggle(Chat.Settings["sound"]);
         icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px 0px" : "0px -22px";
     };
     Chat.ToggleSound = function (icon) {
         icon.style.backgroundPosition = Chat.Settings["sound"] ? "0px -22px" : "0px 0px";
-        Sounds.ChangeVolume(Chat.Settings["sound"] ? 0 : Chat.Settings["volume"]);
         Chat.Settings["sound"] = !Chat.Settings["sound"];
+        Sounds.Toggle(Chat.Settings["sound"]);
         Chat.BindSettings();
     };
     Chat.Settings = {
         "sound": true,
-        "volume": 0.5
+        "volume": 0.5,
+        "spack": Cookies.defaultVals[0]
     };
+    Chat.Persist = {};
+    Chat.bbEnable = {};
     return Chat;
 })();
 //# sourceMappingURL=chat.js.map

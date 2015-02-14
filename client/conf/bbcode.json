@@ -26,13 +26,13 @@
                 "tag": "quote",
                 "arg": false,
                 "swap": "<q style='font-variant: small-caps;'>{0}</q>",
-                "button": "Quote"
+                "button": true
             },
             {
                 "tag": "code",
                 "arg": false,
                 "swap": "<code style='font-size: 1.2em;'>{0}</code>",
-                "button": "Code"
+                "button": true
             },
             {
                 "tag": "color",
@@ -51,21 +51,25 @@
                 "arg": true,
                 "rmarg": "\"'",
                 "swap": "<a href='{0}' onclick='window.open(this.href);return false;'>{1}</a>",
-                "button": "Link",
-                "bprompt": "Enter the URL:"
+                "button": true,
+                "bprompt": "urlprompt"
             },
             {
                 "tag": "video",
                 "arg": false,
                 "rmin": ":/\\;\"'",
-                "swap": "<span title='{0}'><span title='link'><a href='https://www.youtube.com/watch?v={0}' onclick='window.open(this.href);return false;'>https://www.youtube.com/watch?v={0}</a></span>&nbsp;[<a href='#' onclick='Utils.EmbedVideo(this);return false;'>Embed</a>]</span>"
+                "swap": "<span title='{0}'><span title='link'><a href='https://www.youtube.com/watch?v={0}' onclick='window.open(this.href);return false;'>https://www.youtube.com/watch?v={0}</a></span>&nbsp;[<a href='#' onclick='Utils.EmbedVideo(this);return false;'>Embed</a>]</span>",
+                "toggle": true,
+                "tdef": false
             },
             {
                 "tag": "img",
                 "arg": false,
                 "rmin": "\"'",
                 "swap": "<span title='{0}'><span title='link'><a href='{0}' onclick='window.open(this.href);return false;'>{0}</a></span>&nbsp;[<a href='#' onclick='Utils.EmbedImage(this);return false;'>Embed</a>]</span>",
-                "button": "Image"
+                "button": true,
+                "toggle": true,
+                "tdef": true
             }
         ]
 }

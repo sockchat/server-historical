@@ -20,11 +20,13 @@ var Sounds = (function () {
         catch (e) {
         }
     };
-    Sounds.ChangeVolume = function (vol) {
+    Sounds.ChangeVolume = function (vol, f) {
+        if (f === void 0) { f = false; }
         try {
             if (vol <= 1 && vol >= 0) {
-                Sounds.volume = vol;
-                if (Sounds.enabled) {
+                if (!f)
+                    Sounds.volume = vol;
+                if (Sounds.enabled || f) {
                     var audioFiles = document.getElementsByTagName("audio");
                     for (var file in audioFiles) {
                         audioFiles[file].volume = vol;
@@ -34,6 +36,10 @@ var Sounds = (function () {
         }
         catch (e) {
         }
+    };
+    Sounds.Toggle = function (s) {
+        Sounds.ChangeVolume(s ? Sounds.volume : 0, true);
+        this.enabled = s;
     };
     Sounds.ChangePack = function (pack) {
         if (document.getElementById(pack + "." + Sounds.SoundList[0]) != null)

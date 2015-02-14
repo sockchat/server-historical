@@ -11,10 +11,14 @@ class Title {
     static username = "";
     static num = 0;
 
+    static startNum = 6;
+    static enableStrobing = true;
+
     static started = false;
     static on = false;
 
     static strobeCallback() {
+        if(!Title.enableStrobing) Title.num = 0;
         if(Title.num > 0) {
             document.title = (Title.on?"[@ ]":"[ @]") +" "+ Title.username +" - "+ UI.chatTitle;
             Title.num--;
@@ -23,7 +27,7 @@ class Title {
     }
 
     static Strobe(name: string) {
-        Title.num = 6;
+        Title.num = Title.startNum;
         Title.username = name;
 
         if(!Title.started) {
@@ -96,7 +100,8 @@ class UI {
                 var btn = document.createElement("input");
                 btn.setAttribute("type", "button");
                 if(elem["bstyle"] != undefined) btn.setAttribute("style", elem["bstyle"]);
-                btn.value = elem["button"];
+                btn.value = typeof elem["button"] == "boolean" ? UI.langs[UI.currentLang].bbCodeText[elem["tag"]] : elem["button"];
+                btn.setAttribute("name", typeof elem["button"] == "boolean" ? elem["tag"] : ";;" );
                 if(!elem["arg"])
                     btn.onclick = function(e) { UI.InsertChatText("["+ elem['tag'] +"]","[/"+ elem['tag'] +"]") };
                 else {
@@ -104,7 +109,7 @@ class UI {
                         btn.onclick = function(e) { eval(elem["bhandle"]); };
                     else {
                         btn.onclick = function (e) {
-                            var val = prompt(elem["bprompt"] != undefined ? elem["bprompt"] : "Enter the argument:", "");
+                            var val = prompt(elem["bprompt"] != undefined ? (UI.langs[UI.currentLang].menuText[elem["bprompt"]] != undefined ? UI.langs[UI.currentLang].menuText[elem["bprompt"]] : UI.langs[UI.currentLang].menuText["bbprompt"]) : UI.langs[UI.currentLang].menuText["bbprompt"], "");
                             if(val != null && val != undefined)
                                 UI.InsertChatText("[" + elem['tag'] + "="+ val +"]", "[/" + elem['tag'] + "]")
                         };
@@ -186,8 +191,6 @@ class UI {
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText["style"];
         document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
 
-        console.log(UI.langs[id].menuText["online"]);
-
         (<HTMLElement>document.getElementsByClassName("top")[0]).innerHTML = UI.langs[id].menuText["online"];
         (<HTMLElement>document.getElementsByClassName("top")[1]).innerHTML = UI.langs[id].menuText["sets"];
         (<HTMLElement>document.getElementsByClassName("top")[2]).innerHTML = UI.langs[id].menuText["help"];
@@ -199,11 +202,18 @@ class UI {
             if(rows[i].getAttribute("name").substr(0,2) == ";;") {
                 // persistence
             } else if(rows[i].getAttribute("name").substr(0,2) == "||") {
-                // togglable
+                var code = rows[i].getAttribute("name").substr(2);
+                (<HTMLTableCellElement>(<HTMLTableRowElement>rows[i]).cells[0]).innerHTML = UI.langs[UI.currentLang].menuText["enable"] +" "+ (UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code) +":";
             } else {
                 if(UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] != undefined)
                     (<HTMLTableCellElement>(<HTMLTableRowElement>rows[i]).cells[0]).innerHTML = UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] +":";
             }
+        }
+
+        var btns = document.getElementById("bbCodeContainer").getElementsByTagName("input");
+        for(var i = 0; i < btns.length; i++) {
+            if(btns[i].getAttribute("name") != ";;")
+                btns[i].value = UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] != undefined ? UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] : btns[i].getAttribute("name");
         }
     }
 
@@ -251,6 +261,7 @@ class UI {
                         if ((end = outmsg.indexOf("[/" + UI.bbcode[i]['tag'] + "]", at)) != -1) {
                             var inner = Utils.StripCharacters(outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "]").length, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
                             var replace = Utils.replaceAll(UI.bbcode[i]['swap'], "{0}", inner);
+                            if(UI.bbcode[i]['toggle'] && !Chat.bbEnable[UI.bbcode[i]['tag']]) replace = inner;
                             outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
                             at += replace.length;
                         } else break;
@@ -264,6 +275,7 @@ class UI {
                                 var arg = Utils.StripCharacters(outmsg.substring(at + ("[" + UI.bbcode[i]['tag'] + "=").length, start), "[]" + (UI.bbcode[i]["rmarg"] == undefined ? "" : UI.bbcode[i]["rmarg"]));
                                 var inner = Utils.StripCharacters(outmsg.substring(start + 1, end), UI.bbcode[i]["rmin"] == undefined ? "" : UI.bbcode[i]["rmin"]);
                                 var replace = Utils.replaceAll(Utils.replaceAll(UI.bbcode[i]['swap'], "{1}", inner), "{0}", arg);
+                                if(UI.bbcode[i]['toggle'] && !Chat.bbEnable[UI.bbcode[i]['tag']]) replace = inner;
                                 outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
                                 at += replace.length;
                             } else break;

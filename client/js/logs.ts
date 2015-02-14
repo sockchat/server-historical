@@ -1,0 +1,5 @@
+class Logs {
+    static Main() {
+
+    }
+}

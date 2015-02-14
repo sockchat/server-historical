@@ -1,9 +1,10 @@
 var Cookie;
 (function (Cookie) {
-    Cookie[Cookie["Soundpack"] = 0] = "Soundpack";
-    Cookie[Cookie["Language"] = 1] = "Language";
-    Cookie[Cookie["Style"] = 2] = "Style";
-    Cookie[Cookie["Options"] = 3] = "Options";
+    Cookie[Cookie["Language"] = 0] = "Language";
+    Cookie[Cookie["Style"] = 1] = "Style";
+    Cookie[Cookie["Options"] = 2] = "Options";
+    Cookie[Cookie["Persist"] = 3] = "Persist";
+    Cookie[Cookie["BBEnable"] = 4] = "BBEnable";
 })(Cookie || (Cookie = {}));
 var Cookies = (function () {
     function Cookies() {
@@ -28,7 +29,7 @@ var Cookies = (function () {
         return undefined;
     };
     Cookies.prefix = "sockchat_";
-    Cookies.cookieList = ["soundpack", "lang", "style", "opts"];
+    Cookies.cookieList = ["lang", "style", "opts", "persist", "bbenable"];
     Cookies.defaultVals = [];
     return Cookies;
 })();

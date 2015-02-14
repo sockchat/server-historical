@@ -19,7 +19,11 @@
         "auth"      : "Authenticating login data ...",
         "term"      : "Connection terminated! Details: ",
         "back"      : "Click here to go back.",
-        "eot"       : "the end of time."
+        "eot"       : "the end of time.",
+        "enable"    : "Enable",
+        "persist"   : "Persist",
+        "bbprompt"  : "Enter the argument:",
+        "urlprompt" : "Enter the URL:"
     },
     "botText": {
         "say"       : "{0}",
@@ -55,11 +59,24 @@
         "rankerr"   : "Error: Cannot set channel privilege higher than your own!",
         "reconnect" : "Connection lost! Attempting to reconnect automatically...",
         "logerr"    : "Server uses the flat file database implementation and cannot serve logs to clients. To view chat logs, open the logs.txt file in the ffdb folder in the server's root directory.",
-        "generr"    : "An error has occurred!"
+        "generr"    : "An error has occurred!",
+        "logimper"  : "You are not allowed to view the logs."
     },
     "settingsText": {
         "bbcode"    : "Enable BBCode",
         "emotes"    : "Enable Emoticons",
-        "links"     : "Enable Hyperlinks"
+        "links"     : "Enable Hyperlinks",
+        "volume"    : "Sound Volume",
+        "spack"     : "Sound Pack"
+    },
+    "bbCodeText": {
+        "b"         : "Bold",
+        "i"         : "Italics",
+        "u"         : "Underline",
+        "quote"     : "Quote",
+        "code"      : "Code",
+        "url"       : "Link",
+        "img"       : "Image",
+        "video"     : "Video"
     }
 }

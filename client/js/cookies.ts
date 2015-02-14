@@ -1,8 +1,8 @@
-enum Cookie {Soundpack, Language, Style, Options}
+enum Cookie {Language, Style, Options, Persist, BBEnable}
 
 class Cookies {
     public static prefix = "sockchat_";
-    public static cookieList = ["soundpack","lang","style","opts"];
+    public static cookieList = ["lang","style","opts","persist","bbenable"];
     public static defaultVals = [];
 
     public static Set(cookie: Cookie, value: string) {

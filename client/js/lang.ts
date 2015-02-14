@@ -10,6 +10,7 @@ class Language {
     public botErrText = [];
     public settingsText = [];
     public helpText = [];
+    public bbCodeText = [];
 
     public constructor(blob: string[]) {
         var json = [];
@@ -51,6 +52,12 @@ class Language {
             if(json[file].helpText != undefined) {
                 for(var key in json[file].helpText) {
                     this.helpText[key] = json[file].helpText[key];
+                }
+            }
+
+            if(json[file].bbCodeText != undefined) {
+                for(var key in json[file].bbCodeText) {
+                    this.bbCodeText[key] = json[file].bbCodeText[key];
                 }
             }
         }

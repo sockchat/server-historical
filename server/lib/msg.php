@@ -72,7 +72,7 @@ class Message {
     }
 
     // NOTE: DOES NOT SANITIZE INPUT MESSAGE !! DO THIS ELSEWHERE
-    public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL) {
+    public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL, $format = "1001") {
         if(!is_string($channel)) $channel = $channel->name;
         $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId));
 

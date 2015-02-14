@@ -15,12 +15,12 @@ class Sounds {
         } catch(e) {}
     }
 
-    static ChangeVolume(vol: number) {
+    static ChangeVolume(vol: number, f = false) {
         try {
             if(vol <= 1 && vol >= 0) {
-                Sounds.volume = vol;
+                if(!f) Sounds.volume = vol;
 
-                if(Sounds.enabled) {
+                if(Sounds.enabled || f) {
                     var audioFiles = document.getElementsByTagName("audio");
 
                     for (var file in audioFiles) {
@@ -29,6 +29,11 @@ class Sounds {
                 }
             }
         } catch(e) {}
+    }
+
+    static Toggle(s: boolean) {
+        Sounds.ChangeVolume(s ? Sounds.volume : 0, true);
+        this.enabled = s;
     }
 
     static ChangePack(pack: string) {

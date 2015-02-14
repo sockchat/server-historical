@@ -20,7 +20,9 @@ function validateCookies($spacks, $langs, $styles) {
     $pre = $GLOBALS["chat"]["COOKIE_PREFIX"];
 
     if(!isset($_COOKIE["{$pre}opts"])) setcookie("{$pre}opts", "{}", time() + 31536000);
-    if(!isset($_COOKIE["{$pre}soundpack"]) || !in_array($_COOKIE["{$pre}soundpack"], $spacks)) setcookie("{$pre}soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
+    if(!isset($_COOKIE["{$pre}persist"])) setcookie("{$pre}persist", "{}", time() + 31536000);
+    if(!isset($_COOKIE["{$pre}bbenable"])) setcookie("{$pre}bbenable", "{}", time() + 31536000);
+    //if(!isset($_COOKIE["{$pre}soundpack"]) || !in_array($_COOKIE["{$pre}soundpack"], $spacks)) setcookie("{$pre}soundpack", $GLOBALS["chat"]["DEFAULT_SPACK"], time() + 31536000);
     if(!isset($_COOKIE["{$pre}style"]) || !in_array($_COOKIE["{$pre}style"], $styles)) setcookie("{$pre}style", $GLOBALS["chat"]["DEFAULT_STYLE"], time() + 31536000);
 
     $found = false;
@@ -124,7 +126,7 @@ class SoundPackHandler {
 
                 $fdata = glob("./sound/$pack/$file.*");
                 foreach($fdata as $dfatas)
-                    $retval .= "<source src='$dfatas' type='". finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dfatas) ."' />";
+                    $retval .= "<source src='{$dfatas}?a=". rand(1,100000000) ."' type='". finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dfatas) ."' />";
 
                 $retval .= "</audio>";
             }
