@@ -132,8 +132,8 @@ class Database {
 
                 Database::$statements = [
                     "logstore" => [
-                        "query" => "INSERT INTO {$pre}_logs (epoch, userid, username, color, channel, chrank, message) VALUES (:epoch, :uid, :uname, :color, :chan, :chrank, :msg)",
-                        "epoch" => "","uid" => "", "uname" => "", "color" => "", "chan" => "", "chrank" => "", "msg" => ""
+                        "query" => "INSERT INTO {$pre}_logs (epoch, userid, username, color, channel, chrank, message, flags) VALUES (:epoch, :uid, :uname, :color, :chan, :chrank, :msg, :flags)",
+                        "epoch" => "","uid" => "", "uname" => "", "color" => "", "chan" => "", "chrank" => "", "msg" => "", "flags" => ""
                     ],
                     "fetchbacklog" => [
                         "query" => "SELECT * FROM {$pre}_logs WHERE channel = :chan OR channel = '@all' ORDER BY epoch DESC LIMIT 0, ". Backlog::$loglen,
@@ -195,7 +195,7 @@ class Database {
             Database::$statements["fetchbacklog"]["chan"] = $chan;
             $logs = Database::Execute("fetchbacklog", true);
             foreach($logs as $log)
-                $ret->Log(new User($log["userid"], "", $log["username"], $log["color"], "", null), $log["message"], "rlbl", $log["epoch"]);
+                $ret->Log(new User($log["userid"], "", $log["username"], $log["color"], "", null), $log["message"], "rlbl", $log["epoch"], $log["flags"]);
             $ret->logs = array_reverse($ret->logs);
 
             return $ret;
@@ -223,7 +223,10 @@ class Database {
         }
     }
 
-    public static function Log($time, $user, $msg, $chan = null) {
+    public static function Log($time, $user, $msg, $chan = null, $flags = "10010") {
+        $chan == null ? $user->channel : $chan;
+        if($chan == $GLOBALS["chat"]["DEFAULT_CHANNEL"]) $chan = "@default";
+
         if(Database::$useFlatFile)
             FFDB::Log("(". date("m/d/Y H:i:s") . ") ". $user->username ." to ". ($chan == null ? $user->channel : $chan) .": ". $msg);
         else {
@@ -234,6 +237,7 @@ class Database {
             Database::$statements["logstore"]["chan"] = $chan == null ? $user->channel : $chan;
             Database::$statements["logstore"]["chrank"] = Context::GetChannel($user->channel)->permissionLevel;
             Database::$statements["logstore"]["msg"] = $msg;
+            Database::$statements["logstore"]["flags"] = substr($flags, 0, 4) ."0";
             Database::Execute("logstore");
         }
     }

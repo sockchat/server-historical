@@ -128,7 +128,7 @@ class Main extends GenericMod {
 
         self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip"], "handleModeratorCommands");
-        self::AddCommandHook(["whisper", "msg", "nick", "afk"], "handleUserCommands");
+        self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action"], "handleUserCommands");
     }
 
     public static function OnUserJoin($user) {
@@ -247,9 +247,10 @@ class Main extends GenericMod {
                         } else Message::PrivateBotMessage(MSG_ERROR, "kickna", [$args[0]], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
                     break;
+
                 case "pardon":
                 case "unban":
-                    // TODO write this
+
                     break;
 
                 case "silence":
@@ -307,7 +308,15 @@ class Main extends GenericMod {
                 break;
             case "whisper":
             case "msg":
-                // TODO how have i not written this command yet
+                if(isset($args[0]) && isset($args[1])) {
+                    if(($target = Context::GetUserByName($args[0])) != null) {
+                        if($target->id != $user->id) {
+                            $msg = implode(" ", array_slice($args, 1));
+                            Message::PrivateUserMessage($user, $target, $msg);
+                            Message::PrivateUserMessage($user, $user, $target->username . " " . $msg);
+                        }
+                    } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
+                } else Message::PrivateBotMessage(MSG_ERROR, "cmderr", [], $user);
                 break;
             case "afk":
                 $val = isset($args[0]) ? strtoupper(mb_substr($args[0], 0, self::$maxAfkTagLength)) : "AFK";
@@ -316,6 +325,12 @@ class Main extends GenericMod {
                     $user->username = "&lt;$val&gt;_". $user->username;
                     Context::ModifyUser($user);
                 }
+                break;
+            case "action":
+            case "me":
+                $msg = join(" ", $args);
+                if(trim($msg) != "")
+                    Message::BroadcastUserMessage($user, "<i>". $msg ."</i>", LOCAL_CHANNEL, "1100");
                 break;
         }
     }

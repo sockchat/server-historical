@@ -6,8 +6,8 @@ class Backlog {
     public static $loglen = 10;
     public $logs = array();
 
-    public function Log($user, $msg, $msgid, $time = null) {
-        array_push($this->logs, [$time == null ? gmdate("U") : $time, clone $user, $msg, $msgid]);
+    public function Log($user, $msg, $msgid, $time = null, $flags = "10010") {
+        array_push($this->logs, [$time == null ? gmdate("U") : $time, clone $user, $msg, $msgid, $flags]);
         if(count($this->logs) > Backlog::$loglen)
             $this->logs = array_slice($this->logs, 1);
     }
@@ -15,7 +15,7 @@ class Backlog {
     public function GetAllLogStrings() {
         $retval = array();
         foreach($this->logs as $msg)
-            array_push($retval, join(Utils::$separator, array($msg[0], $msg[1], $msg[2], $msg[3])));
+            array_push($retval, join(Utils::$separator, array($msg[0], $msg[1], $msg[2], $msg[3], "0", $msg[4])));
         //$retval = array_reverse($retval);
         return $retval;
     }

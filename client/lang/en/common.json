@@ -26,7 +26,9 @@
         "urlprompt" : "Enter the URL:",
         "chanpwd"   : "Enter the password for {0}:",
         "username"  : "Username",
-        "message"   : "Message"
+        "message"   : "Message",
+        "whisper"   : "(whispers)",
+        "whisperto" : "(whispers to {0})"
     },
     "botText": {
         "say"       : "{0}",

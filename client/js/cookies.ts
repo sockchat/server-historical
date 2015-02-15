@@ -11,7 +11,7 @@ class Cookies {
 
     public static SetRaw(cookie: string, value: string) {
         var expire = new Date(Date.now() + 31536000000);
-        document.cookie = Cookies.prefix + cookie +"="+ value +"; expires="+ expire.toUTCString();
+        document.cookie = Cookies.prefix + cookie +"="+ encodeURIComponent(value) +"; expires="+ expire.toUTCString();
     }
 
     public static Get(cookie: Cookie): string {

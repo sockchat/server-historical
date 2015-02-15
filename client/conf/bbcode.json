@@ -6,21 +6,30 @@
                 "arg": false,
                 "swap": "<b>{0}</b>",
                 "button": "b",
-                "bstyle": "font-weight: bold;"
+                "bstyle": "font-weight: bold;",
+                "persist": true,
+                "pdef": true,
+                "pstyle": "font-weight: bold;"
             },
             {
                 "tag": "i",
                 "arg": false,
                 "swap": "<i>{0}</i>",
                 "button": "i",
-                "bstyle": "font-style: italic;"
+                "bstyle": "font-style: italic;",
+                "persist": true,
+                "pdef": true,
+                "pstyle": "font-style: italic;"
             },
             {
                 "tag": "u",
                 "arg": false,
                 "swap": "<u>{0}</u>",
                 "button": "u",
-                "bstyle": "text-decoration: underline;"
+                "bstyle": "text-decoration: underline;",
+                "persist": true,
+                "pdef": true,
+                "pstyle": "text-decoration: underline;"
             },
             {
                 "tag": "quote",

@@ -127,6 +127,12 @@ var Chat = (function () {
             catch (e) {
                 opts = {};
             }
+            try {
+                var persist = JSON.parse(Cookies.Get(3 /* Persist */));
+            }
+            catch (e) {
+                persist = {};
+            }
             UI.bbcode.forEach(function (elt, i, arr) {
                 if (elt["toggle"] === true) {
                     if (Chat.bbEnable[elt["tag"]] === undefined) {
@@ -149,8 +155,36 @@ var Chat = (function () {
                         cnt++;
                     }
                 }
+                if (elt["persist"] === true && !logs) {
+                    if (Chat.Persist[elt["tag"]] === undefined) {
+                        Chat.Persist[elt["tag"]] = {
+                            "style": elt["pstyle"],
+                            "enable": persist[elt["tag"]] != undefined ? persist[elt["tag"]]["enable"] : (elt["pdef"] != undefined ? elt["pdef"] : false),
+                            "value": persist[elt["tag"]] != undefined ? persist[elt["tag"]]["value"] : false
+                        };
+                        var row = table.insertRow(cnt);
+                        row.className = cnt % 2 == 0 ? "rowOdd" : "rowEven";
+                        row.setAttribute("name", ";;" + elt["tag"]);
+                        var cell = row.insertCell(0);
+                        cell.innerHTML = "persist " + elt["tag"];
+                        cell = row.insertCell(1);
+                        cell.className = "setting";
+                        input = document.createElement("input");
+                        input.setAttribute("type", "checkbox");
+                        input.checked = Chat.Persist[elt["tag"]]["enable"];
+                        input.onchange = function (e) {
+                            Chat.Persist[elt['tag']]["enable"] = this.checked;
+                            Chat.Persist[elt['tag']]["value"] = false;
+                            Chat.BindPersist();
+                        };
+                        cell.appendChild(input);
+                        cnt++;
+                    }
+                }
             });
             Chat.BindBBEnable();
+            if (!logs)
+                Chat.BindPersist();
             Socket.args = Socket.args.slice(1);
             if (!logs) {
                 Sounds.ChangeVolume(Chat.Settings["volume"]);
@@ -181,6 +215,13 @@ var Chat = (function () {
     };
     Chat.BindPersist = function () {
         Cookies.Set(3 /* Persist */, JSON.stringify(Chat.Persist));
+        var style = "";
+        for (var i in Chat.Persist) {
+            if (Chat.Persist[i]["enable"] && Chat.Persist[i]["value"] != false) {
+                style += Utils.replaceAll(Chat.Persist[i]["style"], "{0}", Chat.Persist[i]["value"]);
+            }
+        }
+        document.getElementById("message").setAttribute("style", style);
     };
     Chat.HandleMessage = function (e) {
         var key = ('which' in e) ? e.which : e.keyCode;
@@ -214,7 +255,21 @@ var Chat = (function () {
     Chat.SendMessage = function () {
         var msg = document.getElementById("message").value;
         msg = msg.replace(/\t/g, "    ");
-        Chat.SendMessageWrapper(msg);
+        var ignore = false;
+        if (msg.trim() == "")
+            ignore = true;
+        if (msg.trim().charAt(0) != "/") {
+            for (var i in Chat.Persist) {
+                if (Chat.Persist[i]["enable"] && Chat.Persist[i]["value"] != false) {
+                    if (Chat.Persist[i]["value"] != true)
+                        msg = "[" + i + "=" + Chat.Persist[i]['value'] + "]" + msg + "[/" + i + "]";
+                    else
+                        msg = "[" + i + "]" + msg + "[/" + i + "]";
+                }
+            }
+        }
+        if (!ignore)
+            Chat.SendMessageWrapper(msg);
         document.getElementById("message").value = "";
         document.getElementById("message").focus();
     };
@@ -262,6 +317,19 @@ var Chat = (function () {
         Chat.Settings["sound"] = !Chat.Settings["sound"];
         Sounds.Toggle(Chat.Settings["sound"]);
         Chat.BindSettings();
+    };
+    Chat.InsertBBCode = function (tag, arg) {
+        if (arg === void 0) { arg = null; }
+        if (Chat.Persist[tag] != undefined && Chat.Persist[tag]["enable"]) {
+            Chat.Persist[tag]["value"] = arg == null ? !Chat.Persist[tag]["value"] : arg;
+            Chat.BindPersist();
+        }
+        else {
+            if (arg == null)
+                UI.InsertChatText("[" + tag + "]", "[/" + tag + "]");
+            else
+                UI.InsertChatText("[" + tag + "=" + arg + "]", "[/" + tag + "]");
+        }
     };
     Chat.Settings = {
         "sound": true,

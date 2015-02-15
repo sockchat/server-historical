@@ -63,12 +63,12 @@ var Socket = (function () {
             case 2:
                 if (+parts[1] != UserContext.self.id) {
                     if (+parts[1] != -1)
-                        UI.AddMessage(parts[3], +parts[0], UserContext.users[+parts[1]], parts[2]);
+                        UI.AddMessage(parts[3], +parts[0], UserContext.users[+parts[1]], parts[2], true, true, parts[4]);
                     else
-                        UI.AddMessage(parts[3], +parts[0], UI.ChatBot, parts[2]);
+                        UI.AddMessage(parts[3], +parts[0], UI.ChatBot, parts[2], true, true, parts[4]);
                 }
                 else
-                    UI.AddMessage(parts[3], +parts[0], UserContext.self, parts[2]);
+                    UI.AddMessage(parts[3], +parts[0], UserContext.self, parts[2], true, true, parts[4]);
                 break;
             case 3:
                 UI.AddMessage(parts[4], +parts[3], UI.ChatBot, Utils.formatBotMessage("0", parts[2], [parts[1]]), true, false);
@@ -126,7 +126,8 @@ var Socket = (function () {
                         }
                         break;
                     case 1:
-                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], parts[8] == "1", parts[8] == "1");
+                        console.log(parts);
+                        UI.AddMessage(parts[7], +parts[1], (+parts[2] != -1) ? new User(+parts[2], parts[3], parts[4], parts[5]) : UI.ChatBot, parts[6], parts[8] == "1", parts[8] == "1", parts[9]);
                         break;
                     case 2:
                         for (var i = 0; i < +parts[1]; i++)

@@ -14,7 +14,7 @@ var Cookies = (function () {
     };
     Cookies.SetRaw = function (cookie, value) {
         var expire = new Date(Date.now() + 31536000000);
-        document.cookie = Cookies.prefix + cookie + "=" + value + "; expires=" + expire.toUTCString();
+        document.cookie = Cookies.prefix + cookie + "=" + encodeURIComponent(value) + "; expires=" + expire.toUTCString();
     };
     Cookies.Get = function (cookie) {
         return Cookies.GetRaw(Cookies.cookieList[cookie]);

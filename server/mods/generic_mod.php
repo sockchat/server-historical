@@ -44,6 +44,9 @@ abstract class GenericMod {
     public static function OnChannelDelete($channel) {} // called when a channel is deleted
     public static function AfterChannelDelete($channel) {} // called after a channel is successfully deleted
 
+    public static function OnMessageLog($user, &$msg, $channel, &$flags) {}
+    public static function AfterMessageLog($user, $msg, $channel, $flags) {}
+
     protected static $cmdHooks = [];
 
     public static function GetModFolder($namespace) {

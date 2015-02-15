@@ -60,6 +60,7 @@ as an integer. The packet identifiers are as follows.
     - USER ID
     - MESSAGE (SANITIZED)
     - MESSAGE ID
+	- MESSAGE FLAGS
     
     If the message is sent by the chat bot, the USER ID will be set to -1,
     and the MESSAGE will be a series of strings concatenated by the form
@@ -141,6 +142,7 @@ as an integer. The packet identifiers are as follows.
 			- MESSAGE
 			- MESSAGE ID
 			- ALERT USER OF MESSAGE (bool)
+			- MESSAGE FLAGS
             
         If 2, the parameters are as follows:
             - A COUNT OF CHANNELS SENT IN PACKET (represented as N)

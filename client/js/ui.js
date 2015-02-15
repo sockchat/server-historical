@@ -82,7 +82,7 @@ var UI = (function () {
                 btn.setAttribute("name", typeof elem["button"] == "boolean" ? elem["tag"] : ";;");
                 if (!elem["arg"])
                     btn.onclick = function (e) {
-                        UI.InsertChatText("[" + elem['tag'] + "]", "[/" + elem['tag'] + "]");
+                        Chat.InsertBBCode(elem["tag"]);
                     };
                 else {
                     if (elem["bhandle"] != undefined)
@@ -93,7 +93,7 @@ var UI = (function () {
                         btn.onclick = function (e) {
                             var val = prompt(elem["bprompt"] != undefined ? (UI.langs[UI.currentLang].menuText[elem["bprompt"]] != undefined ? UI.langs[UI.currentLang].menuText[elem["bprompt"]] : UI.langs[UI.currentLang].menuText["bbprompt"]) : UI.langs[UI.currentLang].menuText["bbprompt"], "");
                             if (val != null && val != undefined)
-                                UI.InsertChatText("[" + elem['tag'] + "=" + val + "]", "[/" + elem['tag'] + "]");
+                                Chat.InsertBBCode(elem["tag"], val);
                         };
                     }
                 }
@@ -191,6 +191,8 @@ var UI = (function () {
         console.log(rows);
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].getAttribute("name").substr(0, 2) == ";;") {
+                var code = rows[i].getAttribute("name").substr(2);
+                rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].menuText["persist"].replace("{0}", UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code);
             }
             else if (rows[i].getAttribute("name").substr(0, 2) == "||") {
                 var code = rows[i].getAttribute("name").substr(2);
@@ -241,7 +243,15 @@ var UI = (function () {
         }
         catch (e) {
         }
-        if (strobe && mention && !document.hasFocus()) {
+        if (flags.charAt(4) == "1") {
+            if (u.id == UserContext.self.id) {
+                var p = outmsg.split(" ");
+                outmsg = "<i>" + UI.langs[UI.currentLang].menuText['whisperto'].replace('{0}', p[0]) + "</i> " + p.slice(1).join(" ");
+            }
+            else
+                outmsg = "<i>" + UI.langs[UI.currentLang].menuText['whisper'] + "</i> " + outmsg;
+        }
+        if (strobe && !document.hasFocus() && (flags.charAt(4) == "1" || mention)) {
             var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
             Notify.Show(u.username, strip, "img/alert.png");
         }
@@ -289,8 +299,9 @@ var UI = (function () {
         if (UI.enableLinks) {
             var tmp = outmsg.split(' ');
             for (var i = 0; i < tmp.length; i++) {
-                if (tmp[i].substr(0, 7) == "http://" || tmp[i].substr(0, 8) == "https://" || tmp[i].substr(0, 6) == "ftp://")
-                    tmp[i] = "<a href='" + tmp[i] + "' onclick='window.open(this.href);return false;'>" + tmp[i] + "</a>";
+                var text = tmp[i].replace(/(<([^>]+)>)/ig, "");
+                if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || text.substr(0, 6) == "ftp://")
+                    tmp[i] = "<a href='" + text + "' onclick='window.open(this.href);return false;'>" + tmp[i] + "</a>";
             }
             outmsg = tmp.join(" ");
         }
@@ -303,8 +314,10 @@ var UI = (function () {
                 outmsg = outmsg.replace(new RegExp("(" + args.join("|") + ")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
             });
         }
+        var namestyle = (flags.charAt(0) == "1" ? "font-weight: bold;" : "") + (flags.charAt(1) == "1" ? "font-style: italic;" : "") + (flags.charAt(2) == "1" ? "text-decoration: underline;" : "");
+        var colon = flags.charAt(3) == "1" ? ":" : "";
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
-        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='font-weight:bold;color:" + u.color + ";'>" + name + "</span><span class='msgColon'>: </span><span class='msgBreak'><br /></span>" + outmsg + "";
+        msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='" + namestyle + "color:" + u.color + ";'>" + name + "</span><span class='msgColon'>" + colon + " </span><span class='msgBreak'><br /></span>" + outmsg + "";
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         if (UI.autoscroll)
