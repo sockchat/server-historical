@@ -21,8 +21,11 @@ class Stack {
         } else $this->stack = [];
     }
 
-    public function Push($val) {
-        array_push($this->stack, $val);
+    public function Push($val, $id = -1) {
+        if($id == -1)
+            array_push($this->stack, $val);
+        else
+            $this->stack[$id] = $val;
         if(count($this->stack) > $this->size)
             $this->stack = array_slice($this->stack, 1);
     }
@@ -65,6 +68,9 @@ class Main extends GenericMod {
     protected static $floodFilerDuration = 10;
 
     protected static $folder;
+
+    protected static $logLength = 300;
+    protected static $messageLog;
 
     public static function Silence($user, $expires) {
         self::$silencedUsers[Utils::$chat["AUTOID"] ? $user->GetOriginalUsername() : $user->id] = $expires;
@@ -126,8 +132,10 @@ class Main extends GenericMod {
                 self::$silencedUsers[Utils::$chat["AUTOID"] ? $parts[2] : $parts[1]] = $parts[0];
         }
 
+        self::$messageLog = new Stack(self::$logLength);
+
         self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
-        self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip"], "handleModeratorCommands");
+        self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip", "delete", "unbanip", "pardonip", "bans", "banned"], "handleModeratorCommands");
         self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action"], "handleUserCommands");
     }
 
@@ -161,6 +169,10 @@ class Main extends GenericMod {
                     Context::KickUser($target, null, 0, false, "flood");
             }
         }
+    }
+
+    public static function AfterMessageLog($user, $msg, $channel, $flags) {
+        self::$messageLog->Push($user->id == -1 ? 999999999 : $user->GetRank(), Message::$msgId);
     }
 
     public static function handleChannelCommands($cmd, $user, $args) {
@@ -250,7 +262,25 @@ class Main extends GenericMod {
 
                 case "pardon":
                 case "unban":
+                    if(Context::Unban(null, null, $args[0], $user)) {
+                        Message::PrivateBotMessage(MSG_NORMAL, "unban", [$args[0]], $user);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "notban", [$args[0]], $user);
+                    break;
 
+                case "pardonip":
+                case "unbanip":
+                    if(Context::Unban(null, $args[0], null, $user)) {
+                        Message::PrivateBotMessage(MSG_NORMAL, "unban", [$args[0]], $user);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "notban", [$args[0]], $user);
+                    break;
+
+                case "bans":
+                case "banned":
+                    $list = [];
+                    foreach(Context::$bannedUsers as $bid => $ban) {
+                        array_push($list, $ban->username == null ? $ban->ip : $ban->username);
+                    }
+                    Message::PrivateBotMessage(MSG_NORMAL, "banlist", [implode(", ", $list)], $user);
                     break;
 
                 case "silence":
@@ -288,6 +318,16 @@ class Main extends GenericMod {
                     if(($tgt = Context::GetUserByName($args[0])) != null) {
                         Message::PrivateBotMessage(MSG_NORMAL, "ipaddr", [$args[0], $tgt->sock->remoteAddress], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
+                    break;
+
+                case "delete":
+                    if(isset($args[0])) {
+                        if(array_key_exists($args[0], self::$messageLog->Raw())) {
+                            if(self::$messageLog->Raw()[$args[0]] <= $user->GetRank()) {
+                                Message::DeleteMessage($args[0]);
+                            } else Message::PrivateBotMessage(MSG_ERROR, "delerr", [], $user);
+                        } else Message::PrivateBotMessage(MSG_ERROR, "delerr", [], $user);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "cmderr", [], $user);
                     break;
             }
         } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/{$cmd}"], $user);

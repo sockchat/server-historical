@@ -20,5 +20,6 @@ $chat["DB_DSN"]                 = "mysql:host=localhost;dbname=sockchat";
 $chat["DB_TABLE_PREFIX"]        = "sock";
 $chat["DB_USER"]                = "username";
 $chat["DB_PASS"]                = "password";
+$chat["DB_PERSIST"]             = false;
 
 $GLOBALS["chat"]                = $chat;

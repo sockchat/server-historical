@@ -28,7 +28,20 @@
         "username"  : "Username",
         "message"   : "Message",
         "whisper"   : "(whispers)",
-        "whisperto" : "(whispers to {0})"
+        "whisperto" : "(whispers to {0})",
+        "delmsg"    : "Are you sure you want to delete this message?",
+
+        "ctxlou"    : "List online users",
+        "ctxlchan"  : "List available channels",
+        "ctxda"     : "Describe action",
+        "ctxnick"   : "Change username",
+        "ctxcchan"  : "Create channel",
+        "ctxjchan"  : "Join a channel",
+
+        "ctxpm"     : "Send private message",
+        "ctxkick"   : "Kick user",
+        "ctxban"    : "Ban user",
+        "ctxwho"    : "Display IP Address"
     },
     "botText": {
         "say"       : "{0}",
@@ -42,7 +55,9 @@
         "delchan"   : "{0} has been deleted.",
         "cpwdchan"  : "Password changed successfully.",
         "cprivchan" : "Channel privilege changed successfully.",
-        "ipaddr"    : "User {0} - IP Address: {1}"
+        "ipaddr"    : "User {0} - IP Address: {1}",
+        "unban"     : "{0} has been unbanned.",
+        "banlist"   : "Banned Users/IPs: {0}"
     },
     "botErrText": {
         "nolang"    : "Error: Chatbot sent {1} id '{0}' with no definition in this language!",
@@ -65,7 +80,8 @@
         "reconnect" : "Connection lost! Attempting to reconnect automatically...",
         "logerr"    : "Server uses the flat file database implementation and cannot serve logs to clients. To view chat logs, open the logs.txt file in the ffdb folder in the server's root directory.",
         "generr"    : "An error has occurred!",
-        "logimper"  : "You are not allowed to view the logs."
+        "logimper"  : "You are not allowed to view the logs.",
+        "notban"    : "Error: {0} is not banned!"
     },
     "settingsText": {
         "bbcode"    : "Enable BBCode",

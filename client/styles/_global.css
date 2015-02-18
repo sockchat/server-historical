@@ -120,7 +120,7 @@ body {
     height: 22px;
 }
 
-#chat #optionsContainer img:hover {
+#chat #optionsContainer img:hover, .fakeLink:hover {
     cursor: pointer;
 }
 

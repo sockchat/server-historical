@@ -214,6 +214,14 @@ class Chat {
         } else return true;
     }
 
+    static LoadContextMenus() {
+        UI.contextMenus = { "self": [], "others": [] };
+        var tmp = JSON.parse(Utils.FetchPage("conf/context.json?a="+ Utils.Random(1000000000,9999999999)));
+        tmp.contextFields.forEach(function(elt, i, arr) {
+
+        });
+    }
+
     static LoadJSONFiles() {
         var tmp = JSON.parse(Utils.FetchPage("conf/bbcode.json?a="+ Utils.Random(1000000000,9999999999)));
         tmp.bbcode.forEach(function(elt, i, arr) {
@@ -316,6 +324,7 @@ class Chat {
         if(Chat.Persist[tag] != undefined && Chat.Persist[tag]["enable"]) {
             Chat.Persist[tag]["value"] = arg == null ? !Chat.Persist[tag]["value"] : arg;
             Chat.BindPersist();
+            document.getElementById("message").focus();
         } else {
             if (arg == null)
                 UI.InsertChatText("[" + tag + "]", "[/" + tag + "]");

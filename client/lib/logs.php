@@ -33,6 +33,12 @@ if(!$chat["DB_ENABLE"])
 $conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], [PDO::ATTR_PERSISTENT => true]);
 $pre = $chat["DB_TABLE_PREFIX"];
 $size = $chat["LOG_BATCH_SIZE"];
+$priv = $perms[1] == 1 ? "true" : "false";
+
+if(isset($_GET["channel"])) {
+    if($_GET["channel"] == "@priv" && $priv == "false")
+        die("n");
+}
 
 $queries = [
     "SELECT DISTINCT channel FROM {$pre}_logs WHERE (channel) IN (SELECT chname FROM {$pre}_channels)",
@@ -48,15 +54,15 @@ $queries = [
     "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND chrank <= :rank",
     "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND chrank <= :rank",
 
-    "SELECT * FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND userid <> -1 AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND userid <> -1 AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND userid <> -1 AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND userid <> -1 AND chrank <= :rank LIMIT :lim OFFSET :off",
 
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND userid <> -1 AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND userid <> -1 AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND userid <> -1 AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND userid <> -1 AND chrank <= :rank",
 
     "SELECT * FROM {$pre}_logs WHERE epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
     "SELECT * FROM {$pre}_logs WHERE username = :uname AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
@@ -68,16 +74,18 @@ $queries = [
     "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
     "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
 
-    "SELECT * FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
-    "SELECT * FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
+    "SELECT * FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank LIMIT :lim OFFSET :off",
 
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
-    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND :priv)) AND epoch >= :low AND epoch <= :high AND chrank <= :rank"
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank",
+    "SELECT COUNT(*) FROM {$pre}_logs WHERE username = :uname AND message LIKE :msg AND userid <> -1 AND (channel = :chan OR channel = '@all' OR (channel = '@priv' AND {$priv})) AND epoch >= :low AND epoch <= :high AND chrank <= :rank"
 ];
+
+//die(var_dump($queries));
 
 function escapeWildcard($str) {
     return $str;//str_replace(["[","_","%"], ["[[]","[_]","[%]"], $str);
@@ -107,7 +115,7 @@ if(isset($_GET["channels"])) {
         $query->bindValue(":rank", $rank, PDO::PARAM_INT);
         if(isset($_GET["channel"])) {
             $query->bindValue(":chan", $_GET["channel"], PDO::PARAM_STR);
-            $query->bindValue(":priv", $perms[1] == 1, PDO::PARAM_BOOL);
+            //$query->bindValue(":priv", /*$perms[1] == 1*/ false, PDO::PARAM_BOOL);
         }
         if(isset($_GET["high"])) $query->bindValue(":high", $_GET["high"], PDO::PARAM_INT);
         if(isset($_GET["low"]))  $query->bindValue(":low", $_GET["low"], PDO::PARAM_INT);

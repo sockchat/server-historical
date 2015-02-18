@@ -70,7 +70,7 @@ class Chat implements MessageComponentInterface {
                         if(substr($aparts, 0, 3) == "yes") {
                             $aparts = explode("\n", mb_substr($aparts, 3));
                             if(($reason = Context::AllowUser($aparts[1], $conn)) === 0) {
-                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? "NaN" : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
+                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? null : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
                                     $id = 0;
                                     if(Utils::$chat["AUTOID"]) {
                                         for($i = 1;; $i++) {
@@ -98,7 +98,7 @@ class Chat implements MessageComponentInterface {
                                     Message::BroadcastUserMessage($user, $out);
                                     Modules::ExecuteRoutine("AfterMessageReceived", [$user, $out]);
                                 } else {
-                                    Database::Log(gmdate("U"), $user, Utils::Sanitize(trim($parts[1])));
+                                    //Database::Log(gmdate("U"), $user, Utils::Sanitize(trim($parts[1])));
 
                                     $parts[1] = mb_substr(trim($parts[1]), 1);
                                     $cmdparts = explode(" ", $parts[1]);

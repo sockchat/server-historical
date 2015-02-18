@@ -209,6 +209,8 @@ var UI = (function () {
                 btns[i].value = UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] != undefined ? UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] : btns[i].getAttribute("name");
         }
     };
+    UI.GenerateContextMenu = function (u) {
+    };
     UI.AddMessage = function (msgid, date, u, msg, strobe, playsound, flags, fulldate) {
         if (strobe === void 0) { strobe = true; }
         if (playsound === void 0) { playsound = true; }
@@ -318,6 +320,21 @@ var UI = (function () {
         var colon = flags.charAt(3) == "1" ? ":" : "";
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
         msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='" + namestyle + "color:" + u.color + ";'>" + name + "</span><span class='msgColon'>" + colon + " </span><span class='msgBreak'><br /></span>" + outmsg + "";
+        if (UserContext.self != undefined && !isNaN(+msgid)) {
+            if (UserContext.self.canModerate() && u.id != -1 && u.getRank() <= UserContext.self.getRank()) {
+                var del = document.createElement("img");
+                del.src = "img/delete.png";
+                del.alt = "delete";
+                del.setAttribute("class", "fakeLink");
+                del.style.setProperty("float", "right");
+                del.style.setProperty("margin", "2px 0px 0px 0px");
+                del.onclick = function (e) {
+                    if (confirm(UI.langs[UI.currentLang].menuText["delmsg"]))
+                        Chat.SendMessageWrapper("/delete " + msgid);
+                };
+                msgDiv.insertBefore(del, msgDiv.childNodes[0]);
+            }
+        }
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         if (UI.autoscroll)
@@ -388,6 +405,7 @@ var UI = (function () {
     UI.currentLang = 0;
     UI.styles = Array();
     UI.currentStyle = 0;
+    UI.contextMenus = [];
     return UI;
 })();
 //# sourceMappingURL=ui.js.map

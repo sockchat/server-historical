@@ -121,9 +121,10 @@ class Database {
         Database::$conn = new PDO($chat["DB_DSN"], $chat["DB_USER"], $chat["DB_PASS"], Database::$persist ? [PDO::ATTR_PERSISTENT => true] : []);
     }
 
-    public static function Init($persist = true) {
+    public static function Init() {
         $chat = $GLOBALS["chat"];
         Database::$useFlatFile = !$chat["DB_ENABLE"];
+        $persist = $chat["DB_PERSIST"];
         if($chat["DB_ENABLE"]) {
             try {
                 self::$persist = $persist;
@@ -170,7 +171,7 @@ class Database {
                         "ip" => "", "id" => "", "uname" => "", "exp" => ""
                     ],
                     "unban" => [
-                        "query" => "DELETE FROM {$pre}_banned_users WHERE (ip IS NOT NULL AND ip LIKE :ip) OR (id IS NOT NULL AND id = :id) OR (username IS NOT NULL AND username = :uname)",
+                        "query" => "DELETE FROM {$pre}_banned_users WHERE (ip IS NOT NULL AND ip LIKE :ip) OR (uid IS NOT NULL AND uid = :id) OR (username IS NOT NULL AND username = :uname)",
                         "ip" => "", "id" => "", "uname" => ""
                     ],
                     "fetchbans" => [
@@ -279,10 +280,10 @@ class Database {
         if(Database::$useFlatFile)
             FFDB::Unban($ip, $id, $username);
         else {
-            Database::$statements["unbanuser"]["ip"] = $ip;
-            Database::$statements["unbanuser"]["id"] = $id;
-            Database::$statements["unbanuser"]["uname"] = $username;
-            Database::Execute("unbanuser");
+            Database::$statements["unban"]["ip"] = $ip;
+            Database::$statements["unban"]["id"] = $id;
+            Database::$statements["unban"]["uname"] = $username;
+            Database::Execute("unban");
         }
     }
 

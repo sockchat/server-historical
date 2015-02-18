@@ -17,6 +17,7 @@ class Ban {
     }
 
     public function Check($id, $ip, $username) {
+        if($GLOBALS["chat"]["AUTOID"]) $id = null;
         return (($this->id == null ? false : $id == $this->id) ||
                 ($this->ip == null ? false : Utils::CheckIPAddresses($ip, $this->ip)) ||
                 ($this->username == null ? false : $username == $this->username)) &&
@@ -197,6 +198,22 @@ class Context {
         }
 
         return false;
+    }
+
+    public static function Unban($id, $ip, $name, $by = null) {
+        if($by == null) $by = Message::$bot;
+        if(!Modules::ExecuteRoutine("OnUnban", [&$id, &$ip, &$name, $by])) return false;
+        $banned = false;
+        foreach(Context::$bannedUsers as $bid => $ban) {
+            if($ban->Check($id, $ip, $name)) {
+                unset(Context::$bannedUsers[$bid]);
+                $banned = true;
+            }
+        }
+        if($ip != null) $ip = str_replace("*", "%", $ip);
+        Database::Unban($ip, $id, $name);
+        Modules::ExecuteRoutine("AfterUnban", [$id, $ip, $name, $by]);
+        return $banned;
     }
 
     public static function ModifyUser($newuser) {

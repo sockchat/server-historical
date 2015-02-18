@@ -11,7 +11,7 @@ class Message {
     }
 
     protected static function LogToAll($user, $msg, $flags) {
-        Modules::ExecuteRoutine("OnMessageLog", [$user, &$msg, "@all", &$flags]);
+        if(!Modules::ExecuteRoutine("OnMessageLog", [$user, &$msg, "@all", &$flags])) return;
         foreach(Context::$channelList as $channel)
             $channel->log->Log($user, $msg, Message::$msgId, null, $flags);
         Database::Log(gmdate("U"), $user, $msg, "@all", $flags);
@@ -31,14 +31,18 @@ class Message {
 
     protected static function LogToChannel($user, $msg, $channel, $flags) {
         if(is_string($channel)) {
-            if(Context::ChannelExists($channel)) {
-                $channel = Context::GetChannel($channel);
-            } else return;
+            if($channel[0] != "@") {
+                if (Context::ChannelExists($channel)) {
+                    $channel = Context::GetChannel($channel);
+                } else return;
+            }
         }
 
         Modules::ExecuteRoutine("OnMessageLog", [$user, &$msg, $channel, &$flags]);
-        Database::Log(gmdate("U"), $user, $msg, $channel->name, $flags);
-        $channel->log->Log($user, $msg, Message::$msgId, null, $flags);
+        if(!is_string($channel)) {
+            Database::Log(gmdate("U"), $user, $msg, $channel->name, $flags);
+            $channel->log->Log($user, $msg, Message::$msgId, null, $flags);
+        } else Database::Log(gmdate("U"), $user, $msg, $channel, $flags);
         Modules::ExecuteRoutine("AfterMessageLog", [$user, $msg, $channel, $flags]);
     }
 
@@ -109,7 +113,7 @@ class Message {
         $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags));
         $to->sock->send($out);
         if($user->id != $to->id)
-            Message::LogToChannel($user, $msg, "@priv", $flags);
+            Message::LogToChannel($user, "(@". $to->username .") ". $msg, "@priv", $flags);
         Message::$msgId++;
     }
 
@@ -207,5 +211,9 @@ class Message {
         Message::SendToChannel(Utils::PackMessage(P_USER_LEAVE, array($user->id, $user->username, $method, gmdate("U"), Message::$msgId)), $user->channel);
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, $method, array($user->username)), $user->channel, "10010");
         Message::$msgId++;
+    }
+
+    public static function DeleteMessage($id) {
+        Message::SendToAll(Utils::PackMessage(P_MSG_DEL, [$id]));
     }
 }

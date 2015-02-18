@@ -18,6 +18,9 @@ abstract class GenericMod {
     public static function OnBanIP(&$ip, &$duration, $by) {} // called when an ip is banned
     public static function AfterBanIP($ip, $duration, $by) {} // called after an ip is successfully banned
 
+    public static function OnUnban(&$ip, &$id, &$name, $by) {}
+    public static function AfterUnban($ip, $id, $name, $by) {}
+
     public static function OnChannelSwitch($user, $to, $from) {} // called when a user switches channels
     public static function AfterChannelSwitch($user, $to, $from) {} // called after a successful channel switch
 

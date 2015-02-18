@@ -12,9 +12,17 @@
         "usilerr":  "Error: User is not silenced!",
         "silperr":  "Error: You are not allowed to silence this user!",
         "usilperr": "Error: You are not allowed to unsilence this user!",
-        "silself":  "Error: You cannot silence yourself!"
+        "silself":  "Error: You cannot silence yourself!",
+        "delerr":   "Error: Not allowed to delete this message!"
     },
     "helpText": {
-
+        "Send a Private Message": "/msg [target] [message]",
+        "Describe an Action": "/me [description]",
+        "Go Away From Keyboard": "/afk [reason]",
+        "Create a channel": "/create [permission level (optional)] [channel name]",
+        "Join a channel": "/join [channel name]",
+        "Set channel password": "/pwd [new password (optional)]",
+        "Set channel permission level": "/rank [new permission level (optional)]",
+        "Delete a channel": "/delete [channel name]"
     }
 }

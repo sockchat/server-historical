@@ -66,6 +66,8 @@ class UI {
     static styles = Array();
     static currentStyle = 0;
 
+    static contextMenus: any = [];
+
     static IsMobileView() {
         return window.innerWidth <= 800;
     }
@@ -225,6 +227,10 @@ class UI {
         }
     }
 
+    static GenerateContextMenu(u: User) {
+
+    }
+
     static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true, flags = "10010", fulldate = false) {
         var msgDiv = document.createElement("div");
         msgDiv.id = "sock_msg_"+ msgid;
@@ -330,6 +336,23 @@ class UI {
 
         var name = (u.id == -1)?"<span class='botName'>"+ u.username +"</span>": u.username;
         msgDiv.innerHTML = "<span class='date'>("+ datestr +")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='"+ namestyle +"color:"+ u.color +";'>"+ name +"</span><span class='msgColon'>"+ colon +" </span><span class='msgBreak'><br /></span>"+ outmsg +"";
+
+        if(UserContext.self != undefined && !isNaN(+msgid)) {
+            if (UserContext.self.canModerate() && u.id != -1 && u.getRank() <= UserContext.self.getRank()) {
+                var del = document.createElement("img");
+                del.src = "img/delete.png";
+                del.alt = "delete";
+                del.setAttribute("class", "fakeLink");
+                del.style.setProperty("float", "right");
+                del.style.setProperty("margin", "2px 0px 0px 0px");
+                del.onclick = function(e) {
+                    if(confirm(UI.langs[UI.currentLang].menuText["delmsg"]))
+                        Chat.SendMessageWrapper("/delete "+ msgid);
+                };
+                msgDiv.insertBefore(del, msgDiv.childNodes[0]);
+            }
+        }
+
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         if(UI.autoscroll)
