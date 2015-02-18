@@ -9,6 +9,13 @@
 /// <reference path="notify.ts" />
 /// <reference path="logs.ts" />
 
+interface ColorPicker {
+    fixIndicators(one: any, two: any);
+    positionIndicators(one: any, two: any, x: any, y: any);
+}
+declare var ColorPicker;
+//declare function ColorPicker(id: any, fuck: any, func: any);
+
 class Chat {
     static Settings: any = {
         "sound": true,
@@ -328,5 +335,24 @@ class Chat {
             else
                 UI.InsertChatText("[" + tag + "=" + arg + "]", "[/" + tag + "]");
         }
+    }
+
+    static pickerSpawned: boolean = false;
+    static color: string = "#000";
+    static ShowColorPicker(hide: boolean = false) {
+        if(!Chat.pickerSpawned) {
+            ColorPicker.fixIndicators(document.getElementById("pslideri"), document.getElementById("ppickeri"));
+            ColorPicker(document.getElementById("ppicker"), document.getElementById("pslider"), function(hex, hsv, rgb, p, s) {
+                if(p != undefined) p.x += 40;
+                ColorPicker.positionIndicators(document.getElementById("pslideri"), document.getElementById("ppickeri"), s, p);
+                Chat.color = hex;
+                document.getElementById("pok").style.color = hex;
+            });
+            Chat.pickerSpawned = true;
+        }
+        if(hide) {
+            Chat.InsertBBCode("color", Chat.color);
+        }
+        document.getElementById("picker").style.display = hide ? "none" : "block";
     }
 }

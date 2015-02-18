@@ -6,6 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 		<link href="./styles/{{{ DEFAULT_STYLE }}}.css" rel="stylesheet" type="text/css" />
         {{{ ALT_STYLES }}}
+		<link href="./styles/_picker.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="js/picker.js"></script>
 		<script type="text/javascript" src="js/notify.js"></script>
 		<script type="text/javascript" src="js/sound.js"></script>
 		<script type="text/javascript" src="js/lang.js"></script>
@@ -87,6 +89,15 @@
 			<div id="optionsContainer"></div>
 			<div id="hidden">
 				{{{ SOUND_PACK_HTML }}}
+			</div>
+			<div id="picker">
+				<div id="ppicker"></div>
+				<div id="pslider"></div>
+				<div id="ppickeri"></div>
+				<div id="pslideri"></div>
+				<div id="popts">
+					<input type="button" value="OK" id="pok" style="width: 100%;" onclick="Chat.ShowColorPicker(true);" />
+				</div>
 			</div>
 			<!--
 				Remove this if you want, I don't really care.

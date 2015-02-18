@@ -236,7 +236,7 @@ class Database {
             Database::$statements["logstore"]["uname"] = $user->username;
             Database::$statements["logstore"]["color"] = $user->color;
             Database::$statements["logstore"]["chan"] = $chan == null ? $user->channel : $chan;
-            Database::$statements["logstore"]["chrank"] = Context::GetChannel($user->channel)->permissionLevel;
+            Database::$statements["logstore"]["chrank"] = $chan[0] == "@" ? 0 : Context::GetChannel($user->channel)->permissionLevel;
             Database::$statements["logstore"]["msg"] = $msg;
             Database::$statements["logstore"]["flags"] = substr($flags, 0, 4) ."0";
             Database::Execute("logstore");

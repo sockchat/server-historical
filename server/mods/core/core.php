@@ -136,7 +136,7 @@ class Main extends GenericMod {
 
         self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip", "delete", "unbanip", "pardonip", "bans", "banned"], "handleModeratorCommands");
-        self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action"], "handleUserCommands");
+        self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action", "who"], "handleUserCommands");
     }
 
     public static function OnUserJoin($user) {
@@ -202,7 +202,7 @@ class Main extends GenericMod {
                             if($channel->channelType == CHANNEL_TEMP) Context::SwitchChannel($user, $channel->name, $channel->password);
                             Message::PrivateBotMessage(MSG_NORMAL, "crchan", [$channel->name], $user);
                         } else
-                            Message::PrivateUserMessage(Message::$bot, $user, $ret);
+                            Message::PrivateUserMessage(Message::$bot, $user, $ret, "1001", false);
                     } else Message::PrivateBotMessage(MSG_ERROR, "cmderr", [], $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/create"], $user);
                 break;
@@ -245,7 +245,7 @@ class Main extends GenericMod {
                 case "kick":
                     if(($target = Context::GetUserByName($args[0])) != null) {
                         if($target->getRank() < $user->getRank() && strtolower($args[0]) != strtolower($user->username)) {
-                            $length = (!isset($args[1]) || !is_numeric($args[1])) ? 0 : ($args[1] > 0 ? $args[1] : -1);
+                            $length = (!isset($args[1]) || !is_numeric($args[1])) ? 0 : ($args[1] > 0 ? $args[1]*60 : -1);
                             Context::KickUser($target, $user, $length);
                         } else Message::PrivateBotMessage(MSG_ERROR, "kickna", [$args[0]], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
@@ -254,7 +254,7 @@ class Main extends GenericMod {
                 case "ban":
                     if(($target = Context::GetUserByName($args[0])) != null) {
                         if($target->getRank() < $user->getRank() && strtolower($args[0]) != strtolower($user->username)) {
-                            $length = (!isset($args[1]) || !is_numeric($args[1])) ? -1 : ($args[1] > 0 ? $args[1] : -1);
+                            $length = (!isset($args[1]) || !is_numeric($args[1])) ? -1 : ($args[1] > 0 ? $args[1]*60 : -1);
                             Context::KickUser($target, $user, $length, true);
                         } else Message::PrivateBotMessage(MSG_ERROR, "kickna", [$args[0]], $user);
                     } else Message::PrivateBotMessage(MSG_ERROR, "usernf", [$args[0]], $user);
@@ -278,7 +278,11 @@ class Main extends GenericMod {
                 case "banned":
                     $list = [];
                     foreach(Context::$bannedUsers as $bid => $ban) {
-                        array_push($list, $ban->username == null ? $ban->ip : $ban->username);
+                        if($ban->username == null)
+                            $push = "<a href=\"javascript:void(0);\" onclick=\"Chat.SendMessageWrapper('/unbanip '+ this.innerHTML);\">". $ban->ip ."</a>";
+                        else
+                            $push = "<a href=\"javascript:void(0);\" onclick=\"Chat.SendMessageWrapper('/unban '+ this.innerHTML);\">". $ban->username ."</a>";
+                        array_push($list, $push);
                     }
                     Message::PrivateBotMessage(MSG_NORMAL, "banlist", [implode(", ", $list)], $user);
                     break;
@@ -288,7 +292,7 @@ class Main extends GenericMod {
                         if($target->id != $user->id) {
                             if($target->getRank() < $user->getRank()) {
                                 if (!self::IsSilenced($target)) {
-                                    $exp = isset($args[1]) ? (int)gmdate("U") + abs($args[1]) : -1;
+                                    $exp = isset($args[1]) ? (int)gmdate("U") + abs($args[1]*60) : -1;
                                     self::Silence($target, $exp);
                                     Message::PrivateBotMessage(MSG_NORMAL, "silence", [], $target);
                                     Message::PrivateBotMessage(MSG_NORMAL, "silok", [$target->username], $user);
@@ -371,6 +375,23 @@ class Main extends GenericMod {
                 $msg = join(" ", $args);
                 if(trim($msg) != "")
                     Message::BroadcastUserMessage($user, "<i>". $msg ."</i>", LOCAL_CHANNEL, "1100");
+                break;
+            case "who":
+                if(isset($args[0])) {
+                    if(($chan = Context::GetChannel($args[0])) != null) {
+                        if($chan->permissionLevel <= $user->GetRank() && ($chan->password != "" || $user->CanModerate())) {
+                            $arr = [];
+                            foreach ($chan->users as $u)
+                                array_push($arr, "<a href=\"javascript:void(0);\" onclick=\"UI.InsertChatText(this.innerHTML);\"". ($u->id == $user->id ? " style='font-weight: bold;'" : "") .">" . $u->username . "</a>");
+                            Message::PrivateBotMessage(MSG_NORMAL, "whochan", [$args[0], implode(", ", $arr)], $user);
+                        } else Message::PrivateBotMessage(MSG_ERROR, "whoerr", [$args[0]], $user);
+                    } else Message::PrivateBotMessage(MSG_ERROR, "nochan", [$args[0]], $user);
+                } else {
+                    $arr = [];
+                    foreach(Context::$onlineUsers as $u)
+                        array_push($arr, "<a href=\"javascript:void(0);\" onclick=\"UI.InsertChatText(this.innerHTML);\"". ($u->id == $user->id ? " style='font-weight: bold;'" : "") .">". $u->username ."</a>");
+                    Message::PrivateBotMessage(MSG_NORMAL, "who", [implode(", ", $arr)], $user);
+                }
                 break;
         }
     }

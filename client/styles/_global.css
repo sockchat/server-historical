@@ -146,3 +146,50 @@ body {
     margin: 5px 0px;
     padding-left: 20px;
 }
+
+#chat #picker {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width:200px;
+    height: 200px;
+    display: none;
+    border: 1px solid grey;
+}
+
+#chat #picker #ppicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 173px;
+}
+
+#chat #picker #pslider {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 180px;
+    height: 173px;
+}
+
+#chat #picker #popts {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+}
+
+#chat #picker #ppickeri {
+    width: 3px;
+    height: 3px;
+    position: absolute;
+    border: 1px solid white;
+}
+
+#chat #picker #pslideri {
+    width: 18px;
+    height: 10px;
+    position: absolute;
+    border: 1px solid black;
+}

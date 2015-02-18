@@ -105,7 +105,8 @@ class Context {
 
     public static function GetChannel($name) {
         if(array_key_exists($name, Context::$channelList)) return Context::$channelList[$name];
-        else return Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]];
+        else if($name == "@default") return Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]];
+        else return null;
     }
 
     public static function ChannelExists($name) {

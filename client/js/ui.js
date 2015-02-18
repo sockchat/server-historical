@@ -175,7 +175,7 @@ var UI = (function () {
         document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
         document.getElementsByClassName("top")[0].innerHTML = UI.langs[id].menuText["online"];
         document.getElementsByClassName("top")[1].innerHTML = UI.langs[id].menuText["sets"];
-        document.getElementsByClassName("top")[2].innerHTML = UI.langs[id].menuText["help"];
+        UI.RedrawHelpList();
         document.getElementById("sendmsg").value = UI.langs[id].menuText["submit"];
         try {
             document.getElementById("namelabel").innerHTML = UI.langs[id].menuText["username"];
@@ -435,6 +435,23 @@ var UI = (function () {
             if (UserContext.users[key].visible)
                 this.AddUser(UserContext.users[key], false);
         }
+    };
+    UI.RedrawHelpList = function () {
+        document.getElementById("helpList").innerHTML = '<div class="top">' + UI.langs[UI.currentLang].menuText["help"] + '</div>';
+        var table = document.createElement("table");
+        var rowEven = false;
+        for (var desc in UI.langs[UI.currentLang].helpText) {
+            console.log(desc);
+            var row = table.insertRow(-1);
+            row.className = rowEven ? "rowEven" : "rowOdd";
+            var cell = row.insertCell(0);
+            cell.style.width = "50%";
+            cell.innerHTML = desc + ":";
+            cell = row.insertCell(1);
+            cell.innerHTML = "<i>" + UI.langs[UI.currentLang].helpText[desc] + "</i>";
+            rowEven = !rowEven;
+        }
+        document.getElementById("helpList").appendChild(table);
     };
     UI.chatTitle = "";
     UI.rowEven = [true, false];

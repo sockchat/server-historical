@@ -5,7 +5,11 @@
         "usilok":   "{0} has been unsilenced.",
         "silok":    "{0} has been silenced.",
         "flood":    "{0} has been kicked for flood protection.",
-        "flwarn":   "[b]Warning! You will be kicked for flood protection if you continue.[/b]"
+        "flwarn":   "[b]Warning! You will be kicked for flood protection if you continue.[/b]",
+        "unban"     : "{0} has been unbanned.",
+        "banlist"   : "Banned Users/IPs: {0}",
+        "who"       : "Online Users: {0}",
+        "whochan"   : "Users in {0}: {1}"
     },
     "botErrText": {
         "silerr":   "Error: User is already silenced!",
@@ -13,16 +17,27 @@
         "silperr":  "Error: You are not allowed to silence this user!",
         "usilperr": "Error: You are not allowed to unsilence this user!",
         "silself":  "Error: You cannot silence yourself!",
-        "delerr":   "Error: Not allowed to delete this message!"
+        "delerr":   "Error: Not allowed to delete this message!",
+        "notban":   "Error: {0} is not banned!",
+        "whoerr":   "Error: Not allowed to look into channel {0}!"
     },
     "helpText": {
-        "Send a Private Message": "/msg [target] [message]",
-        "Describe an Action": "/me [description]",
-        "Go Away From Keyboard": "/afk [reason]",
-        "Create a channel": "/create [permission level (optional)] [channel name]",
-        "Join a channel": "/join [channel name]",
-        "Set channel password": "/pwd [new password (optional)]",
-        "Set channel permission level": "/rank [new permission level (optional)]",
-        "Delete a channel": "/delete [channel name]"
+        "Send Private Message": "/msg name message",
+        "Describe an Action": "/me description",
+        "Away From Keyboard": "/afk [reason]",
+        "List Users": "/who [channel]",
+        "Create a Channel": "/create [rank] name",
+        "Join a Channel": "/join name",
+        "Set Channel Password": "/pwd [password]",
+        "Set Channel Rank": "/rank [rank]",
+        "Kick User (moderator only)": "/kick user [time]",
+        "Ban User (moderator only)": "/ban user [time]",
+        "Unban User (moderator only)": "/unban user",
+        "Unban IP (moderator only)": "/unbanip ip",
+        "Silence User (moderator only)": "/silence user [time]",
+        "Unsilence User (moderator only)": "/unsilence user",
+        "Server-Wide Broadcast (moderator only)": "/say message",
+        "Get User IP (moderator only)": "/whois user",
+        "Delete Channel (moderator only)": "/delete name"
     }
 }

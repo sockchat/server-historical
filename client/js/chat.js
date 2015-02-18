@@ -8,6 +8,7 @@
 /// <reference path="utils.ts" />
 /// <reference path="notify.ts" />
 /// <reference path="logs.ts" />
+//declare function ColorPicker(id: any, fuck: any, func: any);
 var Chat = (function () {
     function Chat() {
     }
@@ -336,6 +337,24 @@ var Chat = (function () {
                 UI.InsertChatText("[" + tag + "=" + arg + "]", "[/" + tag + "]");
         }
     };
+    Chat.ShowColorPicker = function (hide) {
+        if (hide === void 0) { hide = false; }
+        if (!Chat.pickerSpawned) {
+            ColorPicker.fixIndicators(document.getElementById("pslideri"), document.getElementById("ppickeri"));
+            ColorPicker(document.getElementById("ppicker"), document.getElementById("pslider"), function (hex, hsv, rgb, p, s) {
+                if (p != undefined)
+                    p.x += 40;
+                ColorPicker.positionIndicators(document.getElementById("pslideri"), document.getElementById("ppickeri"), s, p);
+                Chat.color = hex;
+                document.getElementById("pok").style.color = hex;
+            });
+            Chat.pickerSpawned = true;
+        }
+        if (hide) {
+            Chat.InsertBBCode("color", Chat.color);
+        }
+        document.getElementById("picker").style.display = hide ? "none" : "block";
+    };
     Chat.Settings = {
         "sound": true,
         "volume": 0.5,
@@ -343,6 +362,8 @@ var Chat = (function () {
     };
     Chat.Persist = {};
     Chat.bbEnable = {};
+    Chat.pickerSpawned = false;
+    Chat.color = "#000";
     return Chat;
 })();
 //# sourceMappingURL=chat.js.map
