@@ -53,6 +53,7 @@ class UI {
     static enableEmotes = true;
     static enableLinks = true;
 
+    static contextMenuFields = Array();
     static bbcode = Array();
     static emotes = Array();
     static icons = Array();
@@ -65,8 +66,6 @@ class UI {
 
     static styles = Array();
     static currentStyle = 0;
-
-    static contextMenus: any = [];
 
     static IsMobileView() {
         return window.innerWidth <= 800;
@@ -225,10 +224,52 @@ class UI {
             if(btns[i].getAttribute("name") != ";;")
                 btns[i].value = UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] != undefined ? UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] : btns[i].getAttribute("name");
         }
+
+        if(UserContext.self != undefined)
+            UI.RedrawUserList();
     }
 
-    static GenerateContextMenu(u: User) {
-
+    static GenerateContextMenu(u: User): HTMLUListElement {
+        var ret = document.createElement("ul");
+        ret.id = "sock_menu_"+ u.id;
+        ret.className = "userMenu";
+        if(u.id != UserContext.self.id) ret.style.display = "none";
+        UI.contextMenuFields.forEach(function(elt, i, arr) {
+            if((u.id == UserContext.self.id && elt["self"]) || (elt["others"] && u.id != UserContext.self.id)) {
+                if((UserContext.self.canModerate() && elt["modonly"]) || !elt["modonly"]) {
+                    if(UI.langs[UI.currentLang].menuText[elt["langid"]] != undefined) {
+                        var li = document.createElement("li");
+                        var link = document.createElement("a");
+                        link.href = "javascript:void(0);";
+                        link.innerHTML = UI.langs[UI.currentLang].menuText[elt["langid"]];
+                        switch (elt["action"]) {
+                            default:
+                            case 0:
+                                var msg = Utils.replaceAll(Utils.replaceAll(elt["value"], "{0}", "{ {0} }"), "{1}", "{ {1} }");
+                                link.onclick = function (e) {
+                                    UI.InsertChatText(Utils.replaceAll(Utils.replaceAll(msg, "{ {0} }", UserContext.self.username), "{ {1} }", u.username) + " ");
+                                };
+                                break;
+                            case 1:
+                                var msg = Utils.replaceAll(Utils.replaceAll(elt["value"], "{0}", "{ {0} }"), "{1}", "{ {1} }");
+                                link.onclick = function (e) {
+                                    Chat.SendMessageWrapper(Utils.replaceAll(Utils.replaceAll(msg, "{ {0} }", UserContext.self.username), "{ {1} }", u.username));
+                                };
+                                break;
+                            case 2:
+                                link.onclick = function (e) {
+                                    var user = u;
+                                    eval(elt["value"]);
+                                };
+                                break;
+                        }
+                        li.appendChild(link);
+                        ret.appendChild(li);
+                    }
+                }
+            }
+        });
+        return ret;
     }
 
     static AddMessage(msgid: string, date: number, u: User, msg: string, strobe = true, playsound = true, flags = "10010", fulldate = false) {
@@ -361,12 +402,18 @@ class UI {
         if(strobe && u.id != UserContext.self.id) Title.Strobe(u.username);
     }
 
+    static ToggleUserMenu(id: number) {
+        var menu = document.getElementById("sock_menu_"+ id);
+        menu.style.display = menu.style.display == "none" ? "block" : "none";
+    }
+
     static AddUser(u: User, addToContext = true) {
         if(u.visible) {
             var msgDiv = document.createElement("div");
             msgDiv.className = (this.rowEven[1])?"rowEven":"rowOdd";
             msgDiv.id = "sock_user_"+ u.id;
-            msgDiv.innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
+            msgDiv.innerHTML = "<a style='color:"+ u.color +"; display: block;' href='javascript:UI.ToggleUserMenu("+ u.id +");'>"+ u.username +"</a>";
+            msgDiv.appendChild(UI.GenerateContextMenu(u));
             document.getElementById("userList").appendChild(msgDiv);
             this.rowEven[1] = !this.rowEven[1];
         }

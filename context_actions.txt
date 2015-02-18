@@ -1,0 +1,8 @@
+actions: 
+	0 - add to message box
+	1 - send message to server
+	2 - custom javascript action
+	
+replaced values:
+	{0} - logged in user
+	{1} - target user

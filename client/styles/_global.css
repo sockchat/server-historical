@@ -142,3 +142,7 @@ body {
 	visibility: hidden;
 }
 
+#chat .userMenu {
+    margin: 5px 0px;
+    padding-left: 20px;
+}

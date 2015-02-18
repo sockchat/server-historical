@@ -233,12 +233,6 @@ var Chat = (function () {
         else
             return true;
     };
-    Chat.LoadContextMenus = function () {
-        UI.contextMenus = { "self": [], "others": [] };
-        var tmp = JSON.parse(Utils.FetchPage("conf/context.json?a=" + Utils.Random(1000000000, 9999999999)));
-        tmp.contextFields.forEach(function (elt, i, arr) {
-        });
-    };
     Chat.LoadJSONFiles = function () {
         var tmp = JSON.parse(Utils.FetchPage("conf/bbcode.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.bbcode.forEach(function (elt, i, arr) {
@@ -251,6 +245,10 @@ var Chat = (function () {
         tmp = JSON.parse(Utils.FetchPage("conf/icons.json?a=" + Utils.Random(1000000000, 9999999999)));
         tmp.icons.forEach(function (elt, i, arr) {
             UI.icons.push(Array(elt["img"], elt["action"], elt["load"]));
+        });
+        tmp = JSON.parse(Utils.FetchPage("conf/context.json?a=" + Utils.Random(1000000000, 9999999999)));
+        tmp.contextFields.forEach(function (elt, i, arr) {
+            UI.contextMenuFields.push(elt);
         });
         tmp = UI.langs;
         UI.langs = [];

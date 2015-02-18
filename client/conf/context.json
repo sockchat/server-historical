@@ -1,0 +1,84 @@
+{
+    "contextFields": [
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxlou",
+            "action":   1,
+            "value":    "/who"
+        },
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxlchan",
+            "action":   1,
+            "value":    "/channels"
+        },
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxjchan",
+            "action":   0,
+            "value":    "/join"
+        },
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxcchan",
+            "action":   0,
+            "value":    "/create"
+        },
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxda",
+            "action":   0,
+            "value":    "/me"
+        },
+        {
+            "self":     true,
+            "others":   false,
+            "modonly":  false,
+            "langid":   "ctxnick",
+            "action":   0,
+            "value":    "/nick"
+        },
+        {
+            "self":     false,
+            "others":   true,
+            "modonly":  false,
+            "langid":   "ctxpm",
+            "action":   0,
+            "value":    "/msg {1}"
+        },
+        {
+            "self":     false,
+            "others":   true,
+            "modonly":  true,
+            "langid":   "ctxkick",
+            "action":   0,
+            "value":    "/kick {1}"
+        },
+        {
+            "self":     false,
+            "others":   true,
+            "modonly":  true,
+            "langid":   "ctxban",
+            "action":   0,
+            "value":    "/ban {1}"
+        },
+        {
+            "self":     false,
+            "others":   true,
+            "modonly":  true,
+            "langid":   "ctxwho",
+            "action":   1,
+            "value":    "/whois {1}"
+        }
+    ]
+}
