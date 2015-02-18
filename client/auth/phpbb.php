@@ -53,7 +53,7 @@ if(Auth::GetPageType() == AUTH_FETCH) {
         Auth::SetCommonPermissions(
             $auth->acl_get("a_") ? 2 : ($auth->acl_get("m_") ? 1 : 0),
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
-            $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "1",
+            $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "0",
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "1" : "1",
             $auth->acl_get("m_") || $auth->acl_get("a_") ? "2" : "1"
         );
