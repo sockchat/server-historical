@@ -22,7 +22,7 @@ body {
 }
 
 a, a:visited {
-	color: #22E;
+	color: #22E !important;
 	text-decoration: none;
 }
 
@@ -31,7 +31,7 @@ a:hover {
 }
 
 a:active {
-	color: #E22;
+	color: #E22 !important;
 }
 
 #chat #chatTitle, #chat #mobileChatTitle {
