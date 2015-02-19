@@ -9,14 +9,10 @@ use \Ratchet\WebSocket\WsServer;
 use React\Stream\Util;
 
 mb_internal_encoding("UTF-8");
+error_reporting(E_ERROR);
 
 require_once("lib/constants.php");
 require_once("config.php");
-
-/* TODO: GET RID OF THIS ON RELEASE !!! */
-require_once("dbinfo.php");
-/* TODO: GET RID OF THIS ON RELEASE !!! */
-
 require_once("lib/utils.php");
 require_once("lib/db.php");
 require_once("lib/user.php");

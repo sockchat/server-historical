@@ -46,7 +46,7 @@
             {
                 "tag": "color",
                 "arg": true,
-                "rmarg": ";:{}",
+                "rmarg": ";:{}<>",
                 "swap": "<span style='color:{0};'>{1}</span>",
                 "toggle": true,
                 "tdef": true,
