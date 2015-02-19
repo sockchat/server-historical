@@ -14,7 +14,7 @@ body {
 }
 
 #chat a, #chat a:visited {
-    color: #000000;
+    color: #000000 !important;
 }
 
 #chat #chatList a, #chat #chatList a:visited {
