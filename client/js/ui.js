@@ -344,11 +344,6 @@ var UI = (function () {
         if (UI.enableLinks) {
             var tmp = outmsg.split(' ');
             for (var i = 0; i < tmp.length; i++) {
-                if (tmp[i].indexOf("<") != -1 && tmp[i].indexOf(">") == -1) {
-                    tmp[i + 1] = tmp[i] + " " + tmp[i + 1];
-                    tmp[i] = "";
-                    continue;
-                }
                 var text = tmp[i].replace(/(<([^>]+)>)/ig, "");
                 if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || text.substr(0, 6) == "ftp://")
                     tmp[i] = "<a href='" + text + "' onclick='window.open(this.href);return false;'>" + tmp[i] + "</a>";
@@ -410,9 +405,7 @@ var UI = (function () {
         }
     };
     UI.ModifyUser = function (u) {
-        var tmp = document.getElementById("sock_user_" + u.id).getElementsByTagName("a")[0];
-        tmp.style.color = u.color;
-        tmp.innerHTML = u.username;
+        document.getElementById("sock_user_" + u.id).innerHTML = "<span style='color:" + u.color + ";'>" + u.username + "</span>";
     };
     UI.AddChannel = function (name, ispwd, istemp) {
         var opt = document.createElement("option");
@@ -421,6 +414,7 @@ var UI = (function () {
         document.getElementById("channeldd").add(opt);
     };
     UI.ModifyChannel = function (oldname, newname, ispwd, istemp) {
+        console.log("here");
         var opt = Utils.GetOptionByValue(document.getElementById("channeldd"), oldname);
         opt.value = newname;
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");

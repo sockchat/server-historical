@@ -351,11 +351,6 @@ class UI {
         if(UI.enableLinks) {
             var tmp = outmsg.split(' ');
             for (var i = 0; i < tmp.length; i++) {
-                if(tmp[i].indexOf("<") != -1 && tmp[i].indexOf(">") == -1) {
-                    tmp[i + 1] = tmp[i] + " " + tmp[i + 1];
-                    tmp[i] = "";
-                    continue;
-                }
                 var text = tmp[i].replace(/(<([^>]+)>)/ig, "");
 
                 if (text.substr(0, 7) == "http://" ||
@@ -429,9 +424,7 @@ class UI {
     }
 
     static ModifyUser(u: User) {
-        var tmp = document.getElementById("sock_user_"+ u.id).getElementsByTagName("a")[0];
-        tmp.style.color = u.color;
-        tmp.innerHTML = u.username;
+        document.getElementById("sock_user_"+ u.id).innerHTML = "<span style='color:"+ u.color +";'>"+ u.username +"</span>";
     }
 
     static AddChannel(name: string, ispwd: boolean, istemp: boolean) {
@@ -442,6 +435,7 @@ class UI {
     }
 
     static ModifyChannel(oldname: string, newname: string, ispwd: boolean, istemp: boolean) {
+        console.log("here");
         var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
         opt.value = newname;
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");

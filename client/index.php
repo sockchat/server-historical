@@ -7,6 +7,8 @@ include("lib/template.php");
 include("lib/auth.php");
 include("lib/constants.php");
 include("config.php");
+// todo remove on release
+include("lib/dbinfo.php");
 include("lib/system.php");
 
 $chat = $GLOBALS["chat"];

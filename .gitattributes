@@ -24,7 +24,12 @@
 # Release Excludes
 *.ts export-ignore
 *.js.map export-ignore
+lang/el/ export-ignore
+lang/in/ export-ignore
+lang/jp/ export-ignore
+lang/nl/ export-ignore
+lang/pl/ export-ignore
 install.php export-ignore
 protocol.txt export-ignore
 irc_idea.txt export-ignore
-/sockchat/server/composer.* export-ignore
+sockchat/server/composer.* export-ignore
