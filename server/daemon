@@ -29,8 +29,9 @@ then
 				echo "Server died unexpectedly! Restarting..."
 				spawn
 			fi
+			sleep 5
 		done
-
+		
 		/bin/kill -s SIGKILL $PID
 	fi
 elif [ $1 = "stop" ]
