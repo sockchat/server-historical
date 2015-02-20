@@ -351,7 +351,7 @@ var UI = (function () {
                 }
                 var text = tmp[i].replace(/(<([^>]+)>)/ig, "");
                 if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || text.substr(0, 6) == "ftp://")
-                    tmp[i] = "<a href='" + text + "' onclick='window.open(this.href);return false;'>" + tmp[i] + "</a>";
+                    tmp[i] = "<a href='" + text + "' onclick='window.open(this.href);return false;'>" + text + "</a>";
             }
             outmsg = tmp.join(" ");
         }

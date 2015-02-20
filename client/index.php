@@ -7,6 +7,9 @@ include("lib/template.php");
 include("lib/auth.php");
 include("lib/constants.php");
 include("config.php");
+// TODO REMOVE THIS ON RELEASE
+require_once("lib/dbinfo.php");
+// TODO REMOVE THIS ON RELEASE
 include("lib/system.php");
 
 $chat = $GLOBALS["chat"];

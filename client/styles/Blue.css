@@ -14,11 +14,11 @@ body {
 }
 
 #chat a, #chat a:visited {
-    color: #FFFFFF !important;
+    color: #FFFFFF;
 }
 
 #chat #chatList a, #chat #chatList a:visited {
-    color: #1E90FF !important;
+    color: #1E90FF;
 }
 
 a {
