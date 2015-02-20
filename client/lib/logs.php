@@ -13,7 +13,7 @@ mb_internal_encoding("UTF-8");
 
 $args = "";
 for($i = 1;; $i++) {
-    if($_GET["arg{$i}"] === null) break;
+    if(!isset($_GET["arg{$i}"])) break;
     $args .= "&arg{$i}=". $_GET["arg{$i}"];
 }
 

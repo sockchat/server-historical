@@ -228,7 +228,60 @@ var Chat = (function () {
         var key = ('which' in e) ? e.which : e.keyCode;
         if (key == 13 && !e.shiftKey) {
             Chat.SendMessage();
-            e.preventDefault();
+            if (e.preventDefault)
+                e.preventDefault();
+            return false;
+        }
+        else if (key == 9) {
+            var box = document.getElementById("message");
+            var pos = UI.GetCursorPosition();
+            if (pos > 0) {
+                for (var i = pos - 1; i >= 0; i--) {
+                    if (box.value.charAt(i) == " " || box.value.charAt(i) == "\n") {
+                        i++;
+                        break;
+                    }
+                }
+                var search = box.value.substring(i, pos);
+                if (search != "") {
+                    var matches = [];
+                    for (var user in UserContext.users) {
+                        var val = UserContext.users[user].username;
+                        if (val.substr(0, search.length).toLowerCase() == search.toLowerCase())
+                            matches.push(val);
+                    }
+                    val = UserContext.self.username;
+                    if (val.substr(0, search.length).toLowerCase() == search.toLowerCase())
+                        matches.push(val);
+                    var ret = search;
+                    if (matches.length == 1) {
+                        ret = matches[0];
+                    }
+                    else if (matches.length > 1) {
+                        var closest = "";
+                        for (var v in matches) {
+                            for (var m in matches) {
+                                var index = matches[v].length > matches[m].length ? matches[m].length : matches[v].length;
+                                for (; index >= 0; index--) {
+                                    if (matches[v].substr(0, index).toLowerCase() == matches[m].substr(0, index).toLowerCase()) {
+                                        if (closest == "" || closest.length > index)
+                                            closest = matches[v].substr(0, index).toLowerCase();
+                                        break;
+                                    }
+                                }
+                                if (closest.toLowerCase() == search.toLowerCase())
+                                    break;
+                            }
+                            if (closest.toLowerCase() == search.toLowerCase())
+                                break;
+                        }
+                        ret = closest;
+                    }
+                    UI.InsertChatText(ret.substr(search.length));
+                }
+            }
+            if (e.preventDefault)
+                e.preventDefault();
             return false;
         }
         else

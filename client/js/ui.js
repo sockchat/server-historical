@@ -70,6 +70,23 @@ var UI = (function () {
             element.focus();
         }
     };
+    UI.GetCursorPosition = function () {
+        var element = document.getElementById("message");
+        if (document.selection) {
+            var c = "\001", sel = document.selection.createRange(), dul = sel.duplicate(), len = 0;
+            dul.moveToElementText(element);
+            sel.text = c;
+            len = dul.text.indexOf(c);
+            sel.moveStart('character', -1);
+            sel.text = "";
+            return len;
+        }
+        else if (element.selectionStart || element.selectionStart === 0) {
+            return element.selectionStart;
+        }
+        else
+            return 0;
+    };
     UI.RenderButtons = function () {
         document.getElementById("bbCodeContainer").innerHTML = "";
         UI.bbcode.forEach(function (elem, i, arr) {

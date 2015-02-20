@@ -3,6 +3,8 @@
 namespace sockchat;
 use \sockchat\Auth;
 
+error_reporting(E_ERROR);
+
 include("lib/template.php");
 include("lib/auth.php");
 include("lib/constants.php");
