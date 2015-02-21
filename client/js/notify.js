@@ -16,7 +16,11 @@ var Notify = (function () {
     };
     Notify.Show = function (title, body, icon) {
         if (Notify.enabled) {
-            var test = new Notification(title, { "body": body, "icon": icon });
+            try {
+                var test = new Notification(title, { "body": body, "icon": icon });
+            }
+            catch (e) {
+            }
         }
     };
     Notify.enabled = false;

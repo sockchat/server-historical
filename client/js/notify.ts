@@ -21,7 +21,9 @@ class Notify {
 
     public static Show(title: string, body: string, icon: string) {
         if(Notify.enabled) {
-            var test = new Notification(title, {"body": body, "icon": icon});
+            try {
+                var test = new Notification(title, {"body": body, "icon": icon});
+            } catch(e) {}
         }
     }
 }
