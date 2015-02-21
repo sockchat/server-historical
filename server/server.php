@@ -40,6 +40,7 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onOpen(ConnectionInterface $conn) {
+        Modules::ExecuteRoutine("OnConnectionOpen", [$conn]);
         Context::CheckPings();
     }
 
@@ -125,6 +126,7 @@ class Chat implements MessageComponentInterface {
 
     public function onClose(ConnectionInterface $conn) {
         echo $conn->remoteAddress ." has disconnected\n";
+        Modules::ExecuteRoutine("OnConnectionClose", [$conn]);
         foreach(Context::$onlineUsers as $user) {
             if($user->sock == $conn) {
                 echo "found user ". $user->username .", dropped\n";

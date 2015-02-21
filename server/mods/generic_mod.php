@@ -9,6 +9,9 @@ abstract class GenericMod {
     public static function OnUserJoin($user) {} // called when a user attempts to join the chat
     public static function AfterUserJoin($user) {} // called after a user successfully joins the chat
 
+    public static function OnConnectionOpen($conn) {}
+    public static function OnConnectionClose($conn) {}
+
     public static function OnUserLeave($user) {} // called when a user leaves the chat
     public static function OnUserModify($user) {} // called when a user is modified
 

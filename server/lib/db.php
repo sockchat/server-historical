@@ -103,7 +103,7 @@ class Database {
     protected static $useFlatFile;
 
     protected static function Execute($stmt, $fetch = false) {
-        Database::SpawnConnection();
+        //Database::SpawnConnection();
         $tmp = Database::$conn->prepare(Database::$statements[$stmt]["query"]);
         foreach(Database::$statements[$stmt] as $param => $value) {
             if($param != "query") $tmp->bindValue(":{$param}", $value);
@@ -112,7 +112,6 @@ class Database {
         $ret = [];
         if ($fetch) $ret = $tmp->fetchAll(PDO::FETCH_BOTH);
         $tmp = null;
-        Database::$conn = null;
         return $ret;
     }
 
