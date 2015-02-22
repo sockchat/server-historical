@@ -6,6 +6,7 @@ SockChat is a new, rewritten version of AJAX chat that utilizes the WebSocket pr
 While using the WebSocket protocol, it streamlines communication between the client and the server using a single protocol and makes chatting more efficient.
 
 For more information and an archive download, please go to http://sockch.at/
+
 For a demo, check out http://aroltd.com/chat (which currently features phpBB 3.x tie in).
 
 e
