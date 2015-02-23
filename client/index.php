@@ -16,7 +16,6 @@ include("lib/system.php");
 
 $chat = $GLOBALS["chat"];
 $inthref[0] = $chat["CINT_FILE"];
-include("auth/". $inthref[$chat['INTEGRATION']]);
 
 $tpl = new Template();
 
@@ -26,6 +25,8 @@ $styles = StyleSheetHandler::getAllStyles();
 
 validateDefaults($spacks, $langs, $styles);
 validateCookies($spacks, $langs, $styles);
+
+include("auth/". $inthref[$chat['INTEGRATION']]);
 
 $tpl->SetVariables(array_slice($chat, 0, count($chat)-4));
 

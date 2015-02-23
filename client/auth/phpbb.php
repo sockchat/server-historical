@@ -20,6 +20,9 @@ include($phpbb_root_path . 'common.' . $phpEx);
 
 use sockchat\Auth;
 
+if(isset($request))
+    $request->enable_super_globals();
+
 if(Auth::GetPageType() == AUTH_FETCH) {
     $user->session_begin();
     $auth->acl($user->data);
@@ -31,10 +34,16 @@ if(Auth::GetPageType() == AUTH_FETCH) {
     } else
         Auth::Deny();
 } else {
-    $qdata = array(
-        "user_id" => request_var("arg1", -1),
-        "user_password" => request_var("arg2", "e")
-    );
+    if(Auth::GetPageType() == AUTH_CONFIRM) {
+        $qdata = array(
+            "user_id" => request_var("arg1", -1),
+            "user_password" => request_var("arg2", "e")
+        );
+    } else {
+        $qdata = array(
+            "user_id" => request_var("uid", -1)
+        );
+    }
 
     if($db->sql_fetchrow($db->sql_query("SELECT COUNT(*) FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)))["COUNT(*)"] > 0) {
         $udata = $db->sql_fetchrow($db->sql_query("SELECT * FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)));

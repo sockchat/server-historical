@@ -46,7 +46,7 @@ class Chat implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $conn, $msg) {
         Context::CheckPings();
-        if(mb_substr(Utils::GetHeader($conn, "Origin"), -strlen(Utils::$chat["HOST"])) == Utils::$chat["HOST"]) {
+        if(true) {
             $parts = explode(Utils::$separator, $msg);
             $id = $parts[0];
             $parts = array_slice($parts, 1);

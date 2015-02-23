@@ -12,7 +12,6 @@
 // the filename containing the main class must have the same name as the folder
 
 namespace sockchat\mods\Greeter; // the third portion of the namespace must be the same as the folder name
-use sockchat\cmds\join;
 use \sockchat\mods\GenericMod; // necessary for the implementation (detailed below)
 
 // some common static classes you may deal with

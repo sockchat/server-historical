@@ -4,6 +4,7 @@ namespace sockchat;
 
 define("AUTH_FETCH", 1);
 define("AUTH_CONFIRM", 2);
+define("AUTH_VALIDATE", 3);
 
 define("USER_NORMAL", "0");
 define("USER_MODERATOR", "1");
@@ -26,7 +27,7 @@ class Auth {
     public static $out = "";
 
     public static function GetPageType() {
-        return isset($_GET["arg1"]) ? AUTH_CONFIRM : AUTH_FETCH;
+        return isset($_GET["arg1"]) ? AUTH_CONFIRM : (isset($_GET["uid"]) ? AUTH_VALIDATE : AUTH_FETCH);
     }
 
     public static function AppendArguments($in) {

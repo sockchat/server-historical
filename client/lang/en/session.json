@@ -1,0 +1,14 @@
+{
+    "botText": {
+        "generate":     "Session key generated."
+    },
+    "botErrText": {
+        "sesscmderr":   "Error: Incorrect format! Either use `/session set password' or `/session delete'",
+        "gencmderr":    "Error: You must specify a password to generate a session key!",
+        "delkeyerr":    "Error: You do not have a session key!"
+    },
+    "helpText": {
+        "Generate Session Key": "/session set password",
+        "Delete Session Key": "/session delete"
+    }
+}

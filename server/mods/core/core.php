@@ -134,7 +134,7 @@ class Main extends GenericMod {
 
         self::$messageLog = new Stack(self::$logLength);
 
-        self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
+        self::AddCommandHook(["join", "create", "close", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip", "delete", "unbanip", "pardonip", "bans", "banned"], "handleModeratorCommands");
         self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action", "who"], "handleUserCommands");
     }
