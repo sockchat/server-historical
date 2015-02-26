@@ -28,12 +28,25 @@ body {
 	left: 20px;
 	top: 50px;
 }
+#chat #channelList {
+	position: absolute;
+	overflow: auto;
+	top: 85px;
+	left: 20px;
+	width: 200px;
+	bottom: 150px;
+}
 #chat #chatList {
 	position: absolute;
 	overflow: auto;
 	top: 85px;
 	bottom: 150px;
+}
+#chat .channelListHidden {
 	left: 20px;
+}
+#chat .channelListVisible {
+	left: 230px;
 }
 #chat .userListVisible {
 	right: 230px;
@@ -128,7 +141,7 @@ body {
 		right: 10px;
 	}
 
-	#chat .sidebar, #chat .widebar {
+	#chat .sidebar, #chat .widebar, #chat #channelList {
 		right: 15px;
 		top: 45px;
 		bottom: 45px;

@@ -40,7 +40,7 @@ class Socket {
         UserContext.users = {};
         UI.rowEven[0] = true;
         document.getElementById("chatList").innerHTML = "";
-        document.getElementById("channeldd").innerHTML = "";
+        //document.getElementById("channeldd").innerHTML = "";
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     }
 
@@ -113,7 +113,7 @@ class Socket {
                         }
                         break;
                     case 2:
-                        (<HTMLSelectElement>document.getElementById("channeldd")).value = parts[1];
+                        //(<HTMLSelectElement>document.getElementById("channeldd")).value = parts[1];
                         break;
                 }
                 break;
@@ -138,7 +138,7 @@ class Socket {
                     case 2:
                         for(var i = 0; i < +parts[1]; i++)
                             UI.AddChannel(parts[2+3*i], parts[3+3*i] == "1", parts[4+3*i] == "1");
-                        (<HTMLSelectElement>document.getElementById("channeldd")).value = UserContext.self.channel;
+                        //(<HTMLSelectElement>document.getElementById("channeldd")).value = UserContext.self.channel;
                         break;
                 }
                 break;
@@ -153,9 +153,9 @@ class Socket {
                     UI.RedrawUserList();
                 }
                 if(+parts[0] == 2 || +parts[0] == 4) {
-                    var tmp = <HTMLSelectElement> document.getElementById("channeldd");
+                    /*var tmp = <HTMLSelectElement> document.getElementById("channeldd");
                     for(var i = tmp.length-1; i >= 0; i++)
-                        tmp.remove(i);
+                        tmp.remove(i);*/
                 }
                 break;
             case 9:

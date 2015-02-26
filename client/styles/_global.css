@@ -62,7 +62,7 @@ body {
     width: 100px;
 }
 
-#chat #chatList, #chat .sidebar, #chat .widebar {
+#chat #chatList, #chat .sidebar, #chat .widebar, #chat #channelList {
     -webkit-overflow-scrolling: touch;
     -ms-scroll-chaining: none;
     -ms-touch-action: pan-y;
@@ -80,7 +80,7 @@ body {
     font-style: italic;
 }
 
-#chat .sidebar .top, #chat .widebar .top {
+#chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     width: auto;
     padding: 4px 10px;
     word-wrap: break-word;

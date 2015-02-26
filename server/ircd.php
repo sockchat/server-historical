@@ -69,7 +69,7 @@ class SockChat {
     }
 
     public static function InterpretMessage($msg, &$id) {
-        $args = explode($msg, "\t");
+        $args = explode("\t", $msg);
         $id = $args[0];
         return array_slice($args, 1);
     }
@@ -77,18 +77,28 @@ class SockChat {
     public static function Send($data) {
         socket_write(self::$sock, self::EncodeFrame("IRCD\t{$data}"));
     }
+
+    public static function GetResponse($data) {
+        socket_set_block(self::$sock);
+        self::Send($data);
+        $get = self::Recv();
+        socket_set_nonblock(self::$sock);
+        return $get;
+    }
 }
 
 class User {
     public $sock;
     public $channels = [];
+    public $id;
     public $username = null;
     public $hostname = "localhost";
     public $nick = null;
-    public $desc = null;
+    public $verified = false;
 
-    public function __construct($conn) {
+    public function __construct($conn, $id = null) {
         $this->sock = $conn;
+        $this->id = $id;
     }
 
     public function Send($data) {
@@ -111,6 +121,16 @@ class User {
     public function GetRepresentation() {
         return $this->nick ."!". $this->username ."@". $this->hostname;
     }
+
+    public function Register() {
+        socket_getpeername($this->sock, $ip);
+        $data = explode("\t", SockChat::GetResponse(PackMsg([4, $this->username, $ip])));
+        if($data[1] == "yes") {
+            $this->id = $data[2];
+            $this->username = $this->nick = $data[3];
+            self::Join("#@default");
+        } else socket_close($this);
+    }
 }
 
 class IRC {
@@ -131,7 +151,10 @@ class IRC {
     public static function Accept() {
         if(($conn = @socket_accept(self::$sock)) !== false) {
             socket_set_nonblock($conn);
-            array_push(self::$users, new User($conn));
+            for($i = -2;;$i--) {
+                if(self::GetUserById($i) == null) break;
+            }
+            array_push(self::$users, new User($conn, $i));
             return true;
         } else return false;
     }
@@ -141,33 +164,86 @@ class IRC {
         foreach(self::$users as $user) {
             if(@socket_recv($user->sock, $data, 2048, 0) !== false) {
                 array_push($ret, [$user, $data]);
+            } else {
+                $err = socket_last_error($user->sock);
+                if($err != 0 && $err != 11 && $err != 115)
+                    self::HandleLeave($user);
             }
+        }
+        return $ret;
+    }
+
+    public static function Broadcast($msg, $channel, $global = false) {
+        foreach(self::$users as $user) {
+            if(in_array($channel, $user->channels)) {
+                if(!$global)
+                    $user->Send($msg);
+                else
+                    $user->SendGlobal($msg);
+            }
+        }
+    }
+
+    public static function HandleLeave($user) {
+        SockChat::Send("5\t". $user->id);
+        foreach(self::$users as $k => $u) {
+            if($u->id == $user->id) {
+                socket_close($u->sock);
+                unset(self::$users[$k]);
+                break;
+            }
+        }
+    }
+
+    public static function GetUserById($id) {
+        foreach(self::$users as $user) {
+            if($user->id == $id) return $user;
+        }
+        return null;
+    }
+
+    public static function GetUsersInChannel($channel) {
+        $ret = [];
+        foreach(self::$users as $user) {
+            if(in_array($channel, $user->channels))
+                array_push($ret, $user);
         }
         return $ret;
     }
 
     public static function Join(User $user, $channel) {
         $created = false;
-        if(!array_key_exists($channel, IRC::$channels)) {
-            // TODO add creating channels
-            $user->Notice("Channel {$channel} does not exist!");
-            return false;
-        }
         if(in_array($channel, $user->channels)) {
             $user->Notice("You are already in {$channel}!");
             return false;
         }
-        $chan = IRC::$channels[$channel];
-        $chan->Add($user);
-        $chan->Broadcast(":". $user->GetRepresentation() ." JOIN {$channel}");
+
+        if(explode("\t", SockChat::GetResponse(PackMsg([2, $user->id, $user->username, $channel])))[1] == "no") {
+            $user->Notice("Could not join channel.");
+            return false;
+        }
+
+        $user->Send(":". $user->GetRepresentation() ." JOIN {$channel}", $channel);
         if($created)
             $user->SendGlobal("MODE {$channel} +nt");
-        $user->SendGlobal(($chan->topic == null ? "331" : "332") ." ". $user->nick ." {$channel} :". ($chan->topic == null ? "No topic is set." : $chan->topic));
-        foreach($chan->users as $u)
-            $user->SendGlobal("353 ". $user->nick ." = {$channel} :". $u->nick);
+        $user->SendGlobal("332 ". $user->nick ." {$channel} :Discuss stuff.");
+
+        echo SockChat::GetResponse(PackMsg([3, $channel]));
+        $users = array_slice(explode("\t", SockChat::GetResponse(PackMsg([3, $channel]))), 1);
+        foreach($users as $u) {
+            if(trim($u) != "") {
+                $data = explode("\n", $u);
+                $user->SendGlobal("353 " . $user->nick . " = {$channel} :" . $data[0]);
+            }
+        }
+
         $user->SendGlobal("366 ". $user->nick ." {$channel} :End of /NAMES list");
         return true;
     }
+}
+
+function PackMsg($arr) {
+    return implode("\t", $arr);
 }
 
 SockChat::Init("127.0.0.1", 12120);
@@ -178,10 +254,14 @@ IRC::Init("SircChat", 6667);
 
 while(true) {
     if(($data = SockChat::Recv()) != null) {
+        echo $data;
         $args = SockChat::InterpretMessage($data, $id);
         switch($id) {
-            case 1:
-
+            case 2:
+                var_dump($args);
+                if(($to = IRC::GetUserById($args[1])) != null) {
+                    $to->Send(":". $args[0] ." PRIVMSG ". $args[2] ." :". $args[3]);
+                }
                 break;
         }
     }
@@ -231,6 +311,19 @@ function CleanNick($nick) {
 
 function ParseLine(User $user, $prefix, $cmd, $args) {
     switch($cmd) {
+        case "auth":
+            if(!CheckArgs($user, 1, 1, $args)) break;
+            if(!$user->verified) {
+                $data = explode("\t", SockChat::GetResponse(PackMsg([1, $user->username, $args[0]])));
+                if ($data[1] == "yes") {
+                    $user->id = $data[2];
+                    $user->verified = true;
+                    $user->Notice("Welcome to the chat, " . $data[3] . "!");
+                    $user->Register();
+                    //$user->SendGlobal("221 ". $user->nick ." ". $user->nick);
+                } else $user->Notice("Your authentication was rejected.");
+            } else $user->Notice("You are already authenticated!");
+            break;
         case "ping":
             if(!CheckArgs($user, 1, 1, $args)) break;
             $user->SendGlobal("PONG ". IRC::$server ." :". $args[0]);
@@ -238,30 +331,48 @@ function ParseLine(User $user, $prefix, $cmd, $args) {
         case "nick":
             if(!CheckArgs($user, 1, 1, $args)) break;
             if($user->nick == null)
-                $user->nick = CleanNick($args[0]);
+                null;
+                //$user->nick = CleanNick($args[0]);
             else {
                 // TODO on change after first join
             }
             break;
         case "user":
             if(!CheckArgs($user, 1, 4, $args)) break;
-            if($user->username != null) {
+            /*if($user->username != null) {
                 $user->Send("NOTICE AUTH :User info cannot be changed while logged in.");
                 break;
             }
             $user->username = $args[0];
-            $user->desc = count($args) > 3 ? $args[3] : "(no description)";
+            $user->desc = count($args) > 3 ? $args[3] : "(no description)";*/
+
+            $user->username = $user->nick = $args[0];
 
             $user->SendGlobal("001 ". $user->nick ." :Welcome to ". IRC::$server ."!");
             $user->SendGlobal("004 ". $user->nick ." ". IRC::$server ." SircChat");
             $user->SendGlobal("375 ". $user->nick ." :- ". IRC::$server ." Message of the Day -");
             $user->SendGlobal("372 ". $user->nick ." :Welcome to ". IRC::$server ."!");
+            /**/
             $user->SendGlobal("376 ". $user->nick ." :End of MOTD.");
+
+            echo SockChat::GetResponse(PackMsg([0, $args[0]]));
+            $response = explode("\t", SockChat::GetResponse(PackMsg([0, $args[0]])))[1];
+            if($response == "yes") {
+                $user->Notice("NOTE: You must authenticate yourself before performing any chat functions.");
+                $user->Notice("You must have generated a session key on the web chat client to authenticate.");
+                $user->Notice("To authenticate, use '/auth password' where the password is your session key password.");
+            } else if($response == "no") {
+                $user->verified = true;
+                $user->Notice("Welcome to the chat, " . $user->nick . "!");
+                $user->Register();
+            } else {
+                $user->Notice("Username ". $user->username ." is not recognized by this server!");
+                socket_close($user->sock);
+            }
             break;
         case "join":
             if(!CheckArgs($user, 1, 2, $args)) break;
-            if(count($args) == 2)
-                $user->Notice("This server does not support channel keys. Ignoring...");
+            if(!CheckValid($user)) break;
             $channels = explode(",", $args[0]);
             foreach($channels as $channel) {
                 if($channel[0] == "#")
@@ -271,7 +382,7 @@ function ParseLine(User $user, $prefix, $cmd, $args) {
             }
             break;
         case "who":
-            if(!CheckArgs($user, 0, 2, $args)) break;
+            /*if(!CheckArgs($user, 0, 2, $args)) break;
             if(count($args) > 1) $user->Notice("Filtering by operator in WHO is not supported. Ignoring...");
 
             $search = (count($args) > 0) ? $args[0] : "";
@@ -279,7 +390,7 @@ function ParseLine(User $user, $prefix, $cmd, $args) {
                 foreach(IRC::$channels[$search]->users as $u)
                     $user->SendGlobal("352 ". $user->nick ." {$search} ". $u->username ." ". $u->hostname ." ". IRC::$server ." ". $u->nick ." H :0 ". $u->desc);
             } else $user->Notice("WHO with nonchannel arguments is not supported. Ignoring...");
-            $user->Send("315 ". $user->nick ." {$search} :End of /WHO list");
+            $user->Send("315 ". $user->nick ." {$search} :End of /WHO list");*/
             break;
         case "mode":
             if(!CheckArgs($user, 0, 2, $args)) break;
@@ -330,7 +441,7 @@ function ParseLine(User $user, $prefix, $cmd, $args) {
             break;
         default:
             // TODO sock chat passthrough
-            $user->Notice("Command not recognized.");
+            //$user->Notice("Command not recognized.");
             break;
     }
 }
@@ -339,6 +450,14 @@ function CheckArgs($user, $min, $max, $args) {
     if (count($args) >= $min && count($args) <= $max) return true;
     else {
         $user->Notice("You fucked up.");
+        return false;
+    }
+}
+
+function CheckValid(User $user) {
+    if($user->verified) return true;
+    else {
+        $user->Notice("You must authenticate yourself to do this!");
         return false;
     }
 }

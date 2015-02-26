@@ -19,7 +19,7 @@ class Utils {
     }
 
     public static function SanitizeName($name) {
-        return str_replace([" ","\n","\t","\f"], ["_","","",""], htmlspecialchars($name, ENT_QUOTES));
+        return str_replace([" ","\n","\t","\f",":","!","@","#"], ["_","","","","","","",""], htmlspecialchars($name, ENT_QUOTES));
     }
 
     public static function GetHeader($sock, $name) {

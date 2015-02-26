@@ -208,12 +208,13 @@ class UI {
 
         Cookies.Set(Cookie.Language, UI.langs[id].code);
 
-        document.getElementById("tchan").innerHTML = UI.langs[id].menuText["chan"];
+        (<HTMLInputElement>document.getElementById("chanbtn")).value = UI.langs[id].menuText["chan"];
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText["style"];
         document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
 
-        (<HTMLElement>document.getElementsByClassName("top")[0]).innerHTML = UI.langs[id].menuText["online"];
-        (<HTMLElement>document.getElementsByClassName("top")[1]).innerHTML = UI.langs[id].menuText["sets"];
+        (<HTMLElement>document.getElementsByClassName("top")[0]).innerHTML = UI.langs[id].menuText["channels"];
+        (<HTMLElement>document.getElementsByClassName("top")[1]).innerHTML = UI.langs[id].menuText["online"];
+        (<HTMLElement>document.getElementsByClassName("top")[2]).innerHTML = UI.langs[id].menuText["sets"];
         UI.RedrawHelpList();
         (<HTMLInputElement>document.getElementById("sendmsg")).value = UI.langs[id].menuText["submit"];
 
@@ -458,18 +459,18 @@ class UI {
         var opt = document.createElement("option");
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + name + (istemp ? "]" : "");
         opt.value = name;
-        (<HTMLSelectElement>document.getElementById("channeldd")).add(opt);
+        //(<HTMLSelectElement>document.getElementById("channeldd")).add(opt);
     }
 
     static ModifyChannel(oldname: string, newname: string, ispwd: boolean, istemp: boolean) {
-        var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
+        /*var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
         opt.value = newname;
-        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");*/
     }
 
     static RemoveChannel(name: string) {
-        var cdd = <HTMLSelectElement>document.getElementById("channeldd");
-        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));
+        /*var cdd = <HTMLSelectElement>document.getElementById("channeldd");
+        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));*/
     }
 
     static RemoveUser(id: number) {

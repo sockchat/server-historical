@@ -67,7 +67,7 @@ a:hover {
     color: #F00;
 }
 
-.rowEven, #chat .sidebar .top, #chat .widebar .top {
+.rowEven, #chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     background: #505050;
 }
 
@@ -79,12 +79,12 @@ a:hover {
     font-size: .7em;
 }
 
-#chat .sidebar, #chat .widebar {
+#chat .sidebar, #chat .widebar, #chat #channelList {
     border: 1px solid #565656;
 	background: #383838;
 }
 
-#chat .sidebar .top, #chat .widebar .top {
+#chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;

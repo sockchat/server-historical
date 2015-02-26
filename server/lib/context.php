@@ -67,13 +67,15 @@ class Context {
         return $channel->name == Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->name;
     }
 
-    public static function AddInvisibleUser($name, $color) {
-        for($id = -2;;$id--) {
-            if(!array_key_exists($id, Context::$onlineUsers) && !array_key_exists($id, Context::$invisibleUsers)) break;
+    public static function AddInvisibleUser($name, $color, $invisible = true, $id = null) {
+        if($id == null) {
+            for ($id = -2; ; $id--) {
+                if (!array_key_exists($id, Context::$onlineUsers) && !array_key_exists($id, Context::$invisibleUsers)) break;
+            }
         }
-        Context::$invisibleUsers[$id] = new User($id, "", $name, $color, "6770\f1\f1\f1\f1\f1", null, false);
+        Context::$invisibleUsers[$id] = new User($id, "", $name, $color, "6770\f1\f1\f1\f1\f1", null, !$invisible);
         foreach(Context::$onlineUsers as $user) {
-            $user->sock->send(Utils::PackMessage(7, ["1", $id, $name, $color, "6770\f1\f1\f1\f1\f1", ]));
+            $user->sock->send(Utils::PackMessage(7, ["1", $id, $name, $color, "6770\f1\f1\f1\f1\f1", $invisible ? "0" : "1"]));
         }
         return Context::$invisibleUsers[$id];
     }

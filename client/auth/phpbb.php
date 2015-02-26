@@ -33,16 +33,22 @@ if(Auth::GetPageType() == AUTH_FETCH) {
         Auth::Accept();
     } else
         Auth::Deny();
-} else {
+} else if(Auth::GetPageType() != AUTH_RESERVED) {
     if(Auth::GetPageType() == AUTH_CONFIRM) {
         $qdata = array(
             "user_id" => request_var("arg1", -1),
             "user_password" => request_var("arg2", "e")
         );
     } else {
-        $qdata = array(
-            "user_id" => request_var("uid", -1)
-        );
+        if(isset($_GET["uid"])) {
+            $qdata = array(
+                "user_id" => request_var("uid", -1)
+            );
+        } else {
+            $qdata = array(
+                "username" => request_var("username", "e")
+            );
+        }
     }
 
     if($db->sql_fetchrow($db->sql_query("SELECT COUNT(*) FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)))["COUNT(*)"] > 0) {
@@ -71,6 +77,7 @@ if(Auth::GetPageType() == AUTH_FETCH) {
 
         //$user->session_kill();
     } else Auth::Deny();
-}
+} else
+    Auth::Reserved();
 
 Auth::Serve();

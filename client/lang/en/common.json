@@ -2,10 +2,11 @@
     "name": "English",
     "dir": "ltr",
     "menuText": {
-        "chan"      : "Channel",
+        "chan"      : "Channels",
         "style"     : "Style",
         "lang"      : "Language",
         "online"    : "Online Users",
+        "channels"  : "Channel List",
         "sets"      : "Settings",
         "help"      : "Help",
         "submit"    : "Submit",

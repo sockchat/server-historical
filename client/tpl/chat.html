@@ -45,8 +45,9 @@
 			<div id="chatTitle">{{{ CHAT_TITLE }}}</div>
 			<div id="mobileChatTitle">{{{ M_CHAT_TITLE }}}</div>
 			<div id="userData">
-				<label id="tchan" for="channeldd">Channel</label>:
-				<select id="channeldd" onchange="Chat.ChangeChannel();"></select>
+				<!--<label id="tchan" for="channeldd">Channel</label>:
+				<select id="channeldd" onchange="Chat.ChangeChannel();"></select>-->
+				<input type="button" id="chanbtn" value="Channels" />
 				<label id="tstyle" for="styledd">Style</label>:
 				<select id="styledd" onchange="UI.ChangeStyle();">
 					{{{ STYLES }}}
@@ -54,7 +55,12 @@
 				<label id="tlang" for="langdd">Language</label>:
 				<select id="langdd" onchange="UI.RenderLanguage();"></select>
 			</div>
-			<div id="chatList" class="userListVisible">
+			<div id="channelList">
+				<div class="top">
+
+				</div>
+			</div>
+			<div id="chatList" class="userListVisible channelListVisible">
 
 			</div>
 			<div class="sidebar" id="userList">

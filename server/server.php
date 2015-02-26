@@ -19,6 +19,7 @@ require_once("dbinfo.php");
 require_once("lib/utils.php");
 require_once("lib/db.php");
 require_once("lib/user.php");
+require_once("lib/auth.php");
 require_once("lib/context.php");
 require_once("lib/channel.php");
 require_once("lib/msg.php");

@@ -31,7 +31,7 @@ var Socket = (function () {
         UserContext.users = {};
         UI.rowEven[0] = true;
         document.getElementById("chatList").innerHTML = "";
-        document.getElementById("channeldd").innerHTML = "";
+        //document.getElementById("channeldd").innerHTML = "";
         Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
     };
     Socket.onMessageRecv = function (e) {
@@ -105,7 +105,6 @@ var Socket = (function () {
                         }
                         break;
                     case 2:
-                        document.getElementById("channeldd").value = parts[1];
                         break;
                 }
                 break;
@@ -132,7 +131,6 @@ var Socket = (function () {
                     case 2:
                         for (var i = 0; i < +parts[1]; i++)
                             UI.AddChannel(parts[2 + 3 * i], parts[3 + 3 * i] == "1", parts[4 + 3 * i] == "1");
-                        document.getElementById("channeldd").value = UserContext.self.channel;
                         break;
                 }
                 break;
@@ -147,9 +145,6 @@ var Socket = (function () {
                     UI.RedrawUserList();
                 }
                 if (+parts[0] == 2 || +parts[0] == 4) {
-                    var tmp = document.getElementById("channeldd");
-                    for (var i = tmp.length - 1; i >= 0; i++)
-                        tmp.remove(i);
                 }
                 break;
             case 9:

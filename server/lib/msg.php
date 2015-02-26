@@ -85,7 +85,7 @@ class Message {
     public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL, $flags = "1001") {
         if(!is_string($channel)) $channel = $channel->name;
         $flags = substr($flags, 0, 4) ."0";
-        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags));
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags, "0", ($channel == LOCAL_CHANNEL) ? $user->channel : $channel));
 
         if($channel == ALL_CHANNELS) {
             Message::SendToAll($out);
@@ -110,7 +110,7 @@ class Message {
 
     public static function PrivateUserMessage($user, $to, $msg, $flags = "1001", $pm = true) {
         $flags = substr($flags, 0, 4) . ($pm ? "1" : "0");
-        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags));
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags, "1"));
         $to->sock->send($out);
         if($user->id != $to->id)
             Message::LogToChannel($user, "(@". $to->username .") ". $msg, "@priv", $flags);

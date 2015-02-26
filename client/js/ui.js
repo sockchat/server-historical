@@ -187,11 +187,12 @@ var UI = (function () {
         var id = document.getElementById("langdd").selectedIndex;
         this.currentLang = id;
         Cookies.Set(0 /* Language */, UI.langs[id].code);
-        document.getElementById("tchan").innerHTML = UI.langs[id].menuText["chan"];
+        document.getElementById("chanbtn").value = UI.langs[id].menuText["chan"];
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText["style"];
         document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
-        document.getElementsByClassName("top")[0].innerHTML = UI.langs[id].menuText["online"];
-        document.getElementsByClassName("top")[1].innerHTML = UI.langs[id].menuText["sets"];
+        document.getElementsByClassName("top")[0].innerHTML = UI.langs[id].menuText["channels"];
+        document.getElementsByClassName("top")[1].innerHTML = UI.langs[id].menuText["online"];
+        document.getElementsByClassName("top")[2].innerHTML = UI.langs[id].menuText["sets"];
         UI.RedrawHelpList();
         document.getElementById("sendmsg").value = UI.langs[id].menuText["submit"];
         try {
@@ -435,16 +436,16 @@ var UI = (function () {
         var opt = document.createElement("option");
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + name + (istemp ? "]" : "");
         opt.value = name;
-        document.getElementById("channeldd").add(opt);
+        //(<HTMLSelectElement>document.getElementById("channeldd")).add(opt);
     };
     UI.ModifyChannel = function (oldname, newname, ispwd, istemp) {
-        var opt = Utils.GetOptionByValue(document.getElementById("channeldd"), oldname);
+        /*var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
         opt.value = newname;
-        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");
+        opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");*/
     };
     UI.RemoveChannel = function (name) {
-        var cdd = document.getElementById("channeldd");
-        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));
+        /*var cdd = <HTMLSelectElement>document.getElementById("channeldd");
+        cdd.remove(Utils.GetOptionIndexByValue(cdd, name));*/
     };
     UI.RemoveUser = function (id) {
         delete UserContext.users["" + id];

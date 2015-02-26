@@ -326,8 +326,8 @@ class Chat {
     }
 
     static ChangeChannel() {
-        var dd = <HTMLSelectElement>document.getElementById("channeldd");
-        Chat.SendMessageWrapper("/join "+ dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " "+ prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", dd.value)) : ""));
+        //var dd = <HTMLSelectElement>document.getElementById("channeldd");
+        //Chat.SendMessageWrapper("/join "+ dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " "+ prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", dd.value)) : ""));
     }
 
     static HideSidebars() {

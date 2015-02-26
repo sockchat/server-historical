@@ -5,6 +5,7 @@ class User {
     public $id;
     public $channel;
     public $originalData = [];
+    public $dirtyname;
     public $username;
     public $color;
     public $permissions;
@@ -13,7 +14,7 @@ class User {
     public $ping;
     protected $customParams = [];
 
-    public function __construct($id, $channel, $username, $color, $permissions, $sock) {
+    public function __construct($id, $channel, $username, $color, $permissions, $sock, $dirty = null) {
         $this->id = $id;
         $this->channel = $channel;
         $this->originalData = [$username, $color, $permissions];
@@ -23,6 +24,7 @@ class User {
         $this->permissions = explode("\f", $permissions);
         $this->sock = $sock;
         $this->ping = gmdate("U");
+        $this->dirty = ($dirty == null) ? $this->username : $dirty;
     }
 
     public function SetParameter($key, $value) {
