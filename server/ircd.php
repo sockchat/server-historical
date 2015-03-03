@@ -311,6 +311,9 @@ function CleanNick($nick) {
 
 function ParseLine(User $user, $prefix, $cmd, $args) {
     switch($cmd) {
+        case "nickserv":
+            $args = array_slice($args, 1);
+        case "pass":
         case "auth":
             if(!CheckArgs($user, 1, 1, $args)) break;
             if(!$user->verified) {

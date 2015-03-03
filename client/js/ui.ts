@@ -6,6 +6,7 @@
 /// <reference path="sock.ts" />
 /// <reference path="notify.ts" />
 /// <reference path="chat.ts" />
+/// <reference path="channel.ts" />
 
 class Title {
     static username = "";
@@ -67,6 +68,49 @@ class UI {
     static styles = Array();
     static currentStyle = 0;
 
+    static chatFlags = [false, "userList"];
+    private static GetChatListClass(): string {
+        var sidebar = UI.chatFlags[1] == null ? "fullWidth" : (document.getElementById(<string>UI.chatFlags[1]).className == "sidebar" ? "userListVisible" : "wideSideVisible");
+        return "chatList "+ (UI.chatFlags[0] ? "channelListVisible" : "channelListHidden") +" "+ sidebar;
+    }
+    private static UpdateChatLists() {
+        var chats = document.getElementsByName("chatList");
+        for(var i in chats) {
+            try {
+                (<HTMLElement>chats[i]).className = UI.GetChatListClass();
+            } catch(e) {}
+        }
+    }
+    static ChangeSidebar(id: string) {
+        if(UI.chatFlags[1] != null)
+            document.getElementById(<string>UI.chatFlags[1]).style.display = "none";
+
+        if(id == UI.chatFlags[1] || id == null)
+            UI.chatFlags[1] = null;
+        else {
+            document.getElementById(id).style.display = "block";
+            UI.chatFlags[1] = id;
+        }
+        UI.UpdateChatLists();
+    }
+    static ToggleChannelMenu(val: boolean = null) {
+        if(val == null) UI.chatFlags[0] = !UI.chatFlags[0];
+        else UI.chatFlags[0] = val;
+        document.getElementById("channelList").style.display = UI.chatFlags[0] ? "block" : "none";
+        UI.UpdateChatLists();
+    }
+    static SpawnChatList(channel: string) {
+        var div = <HTMLDivElement>document.createElement("div");
+        div.id = "chat."+ channel;
+        div.className = UI.GetChatListClass();
+        div.setAttribute("name", "chatList");
+        document.getElementById("chat").appendChild(div);
+    }
+    static DeleteChatList(channel: string) {
+        var self = document.getElementById("chat."+ channel);
+        self.parentElement.removeChild(self);
+    }
+
     static IsMobileView() {
         return window.innerWidth <= 800;
     }
@@ -92,6 +136,17 @@ class UI {
             element.value += before + after;
             element.focus();
         }
+    }
+
+    static ChangeActiveChat(name: string = null) {
+        var chats = document.getElementsByName("chatList");
+        for(var i in chats) {
+            try {
+                (<HTMLElement>chats[i]).style.display = "none";
+            } catch(e) {}
+        }
+        if(name != null)
+            document.getElementById("chat."+ name).style.display = "block";
     }
 
     static GetCursorPosition(): number {
@@ -504,5 +559,45 @@ class UI {
             rowEven = !rowEven;
         }
         document.getElementById("helpList").appendChild(table);
+    }
+
+    private static GenerateChannelDiv(c: Channel, row: boolean, open: boolean = false): HTMLDivElement {
+        var ret = document.createElement("div");
+        ret.className = row ? 'rowEven' : 'rowOdd';
+        if(open) {
+            var l = <HTMLAnchorElement>document.createElement("a");
+            l.href = 'javascript: ChannelContext.Leave("'+ Utils.replaceAll(c.name, '"', '\\"') +'");';
+            var img = <HTMLImageElement>document.createElement("img");
+            img.src = "img/delete.png";
+            img.style.setProperty("float", "right");
+            img.style.padding = "2px 0 0 0";
+            l.appendChild(img);
+            ret.appendChild(l);
+        }
+        var link = <HTMLAnchorElement>document.createElement("a");
+        var name = (c.istmp ? "[" : "") + Utils.replaceAll(c.name, '"', '\\"') + (c.istmp ? "]" : "") + (c.ispwd ? " *" : "");
+        link.href = 'javascript: ChannelContext.Join("'+ name +'");';
+        link.innerHTML = (c.istmp ? "[" : "") + c.name + (c.istmp ? "]" : "") + (c.ispwd ? " *" : "");
+        ret.appendChild(link);
+        return ret;
+    }
+    static RedrawChannelList() {
+        var list = document.getElementById("channelList");
+        list.innerHTML = '<div class="top">'+ UI.langs[UI.currentLang].menuText["channels"] +'</div>';
+        var rowEven = false;
+        for(var name in ChannelContext.openChannels) {
+            list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven, true));
+            rowEven = !rowEven;
+        }
+
+        list.innerHTML += "<div class='"+ (rowEven ? 'rowEven' : 'rowOdd') +"'>&nbsp;</div>";
+        rowEven = !rowEven;
+
+        for(var name in ChannelContext.channels) {
+            if(ChannelContext.openChannels[name] == undefined) {
+                list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven));
+                rowEven = !rowEven;
+            }
+        }
     }
 }

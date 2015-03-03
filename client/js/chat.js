@@ -20,11 +20,14 @@ var Chat = (function () {
             UI.ChangeStyle();
             UI.RedrawDropDowns();
             document.getElementById("langdd").value = Cookies.Get(0 /* Language */);
-            Chat.HideSidebars();
+            //Chat.HideSidebars();
+            UI.ChangeSidebar(null);
+            console.log("a");
+            UI.ToggleChannelMenu(false);
             if (!UI.IsMobileView() && !logs)
-                document.getElementById("userList").style.display = "block";
+                UI.ChangeSidebar("userList");
             if (!UI.IsMobileView() && logs)
-                document.getElementById("settingsList").style.display = "block";
+                UI.ChangeSidebar("settingsList");
             var tmp = JSON.parse(Utils.FetchPage("conf/settings.json?a=" + Utils.Random(1000000000, 9999999999)));
             var table = document.getElementById("settingsList").getElementsByTagName("table")[0];
             var cnt = 0;
@@ -333,30 +336,15 @@ var Chat = (function () {
     };
     Chat.SendMessageWrapper = function (msg) {
         if (msg.trim() != "")
-            Socket.Send(Message.Pack(2, "" + UserContext.self.id, msg));
+            Socket.Send(Message.Pack(2, ChannelContext.activeChannel, "" + UserContext.self.id, msg));
     };
     Chat.ChangeChannel = function () {
         //var dd = <HTMLSelectElement>document.getElementById("channeldd");
-        //Chat.SendMessageWrapper("/join "+ dd.value + (dd.options[dd.selectedIndex].text[0] == "*" && !UserContext.self.canModerate() ? " "+ prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", dd.value)) : ""));
+        //
     };
-    Chat.HideSidebars = function () {
-        var sidebars = document.getElementsByClassName("sidebar");
-        for (var i = 0; i < sidebars.length; i++)
-            sidebars[i].style.display = "none";
-        var sidebars = document.getElementsByClassName("widebar");
-        for (var i = 0; i < sidebars.length; i++)
-            sidebars[i].style.display = "none";
-    };
-    Chat.ToggleSidebar = function (id, wide) {
-        if (wide === void 0) { wide = true; }
-        var open = document.getElementById(id).style.display != "none";
-        Chat.HideSidebars();
-        if (!open) {
-            document.getElementById(id).style.display = "block";
-            document.getElementById("chatList").className = wide ? "wideSideVisible" : "userListVisible";
-        }
-        else
-            document.getElementById("chatList").className = "fullWidth";
+    Chat.JoinChannel = function (name, pwd) {
+        if (pwd === void 0) { pwd = false; }
+        Chat.SendMessageWrapper("/join " + name + (pwd && !UserContext.self.canModerate() ? " " + prompt(UI.langs[UI.currentLang].menuText["chanpwd"].replace("{0}", name)) : ""));
     };
     Chat.Clear = function () {
         document.getElementById("chatList").innerHTML = "";

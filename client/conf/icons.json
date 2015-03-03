@@ -3,15 +3,15 @@
         [
             {
                 "img"    : "help.png",
-                "action" : "Chat.ToggleSidebar('helpList');"
+                "action" : "UI.ChangeSidebar('helpList');"
             },
             {
                 "img"    : "settings.png",
-                "action" : "Chat.ToggleSidebar('settingsList');"
+                "action" : "UI.ChangeSidebar('settingsList');"
             },
             {
                 "img"    : "users.png",
-                "action" : "Chat.ToggleSidebar('userList', false);"
+                "action" : "UI.ChangeSidebar('userList');"
             },
             {
                 "img"    : "audio.png",

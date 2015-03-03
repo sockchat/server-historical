@@ -36,7 +36,7 @@ body {
 	width: 200px;
 	bottom: 150px;
 }
-#chat #chatList {
+#chat .chatList {
 	position: absolute;
 	overflow: auto;
 	top: 85px;
@@ -57,7 +57,7 @@ body {
 #chat .fullWidth {
 	right: 20px;
 }
-#chat #chatList .msgBreak {
+#chat .chatList .msgBreak {
 	display: none;
 }
 #chat .sidebar, .widebar {
@@ -188,7 +188,7 @@ body {
 		margin: 0;
 	}
 
-	#chat #chatList {
+	#chat .chatList {
 		top: 40px;
 		right: 10px;
 		left: 10px;
@@ -198,10 +198,10 @@ body {
 }
 
 @media screen and (max-width: 500px), (device-width: 500px) {
-	#chat #chatList .msgBreak {
+	#chat .chatList .msgBreak {
 		display: inline;
 	}
-	#chat #chatList .msgColon {
+	#chat .chatList .msgColon {
 		display: none;
 	}
 }

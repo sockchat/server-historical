@@ -152,13 +152,12 @@ class Message {
 
         $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user, Utils::$chat["DEFAULT_CHANNEL"])));
         Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "join", array($user->username)), Utils::$chat["DEFAULT_CHANNEL"], "10010");
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
 
+        Message::SendAllChannelsToUser($user);
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
         $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
         foreach($msgs as $msg)
             $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("1", $msg)));
-
-        Message::SendAllChannelsToUser($user);
 
         Message::$msgId++;
     }

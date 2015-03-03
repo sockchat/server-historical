@@ -6,6 +6,7 @@
 /// <reference path="sock.ts" />
 /// <reference path="notify.ts" />
 /// <reference path="chat.ts" />
+/// <reference path="channel.ts" />
 var Title = (function () {
     function Title() {
     }
@@ -42,6 +43,51 @@ var Title = (function () {
 var UI = (function () {
     function UI() {
     }
+    UI.GetChatListClass = function () {
+        var sidebar = UI.chatFlags[1] == null ? "fullWidth" : (document.getElementById(UI.chatFlags[1]).className == "sidebar" ? "userListVisible" : "wideSideVisible");
+        return "chatList " + (UI.chatFlags[0] ? "channelListVisible" : "channelListHidden") + " " + sidebar;
+    };
+    UI.UpdateChatLists = function () {
+        var chats = document.getElementsByName("chatList");
+        for (var i in chats) {
+            try {
+                chats[i].className = UI.GetChatListClass();
+            }
+            catch (e) {
+            }
+        }
+    };
+    UI.ChangeSidebar = function (id) {
+        if (UI.chatFlags[1] != null)
+            document.getElementById(UI.chatFlags[1]).style.display = "none";
+        if (id == UI.chatFlags[1] || id == null)
+            UI.chatFlags[1] = null;
+        else {
+            document.getElementById(id).style.display = "block";
+            UI.chatFlags[1] = id;
+        }
+        UI.UpdateChatLists();
+    };
+    UI.ToggleChannelMenu = function (val) {
+        if (val === void 0) { val = null; }
+        if (val == null)
+            UI.chatFlags[0] = !UI.chatFlags[0];
+        else
+            UI.chatFlags[0] = val;
+        document.getElementById("channelList").style.display = UI.chatFlags[0] ? "block" : "none";
+        UI.UpdateChatLists();
+    };
+    UI.SpawnChatList = function (channel) {
+        var div = document.createElement("div");
+        div.id = "chat." + channel;
+        div.className = UI.GetChatListClass();
+        div.setAttribute("name", "chatList");
+        document.getElementById("chat").appendChild(div);
+    };
+    UI.DeleteChatList = function (channel) {
+        var self = document.getElementById("chat." + channel);
+        self.parentElement.removeChild(self);
+    };
     UI.IsMobileView = function () {
         return window.innerWidth <= 800;
     };
@@ -69,6 +115,19 @@ var UI = (function () {
             element.value += before + after;
             element.focus();
         }
+    };
+    UI.ChangeActiveChat = function (name) {
+        if (name === void 0) { name = null; }
+        var chats = document.getElementsByName("chatList");
+        for (var i in chats) {
+            try {
+                chats[i].style.display = "none";
+            }
+            catch (e) {
+            }
+        }
+        if (name != null)
+            document.getElementById("chat." + name).style.display = "block";
     };
     UI.GetCursorPosition = function () {
         var element = document.getElementById("message");
@@ -477,6 +536,44 @@ var UI = (function () {
         }
         document.getElementById("helpList").appendChild(table);
     };
+    UI.GenerateChannelDiv = function (c, row, open) {
+        if (open === void 0) { open = false; }
+        var ret = document.createElement("div");
+        ret.className = row ? 'rowEven' : 'rowOdd';
+        if (open) {
+            var l = document.createElement("a");
+            l.href = 'javascript: ChannelContext.Leave("' + Utils.replaceAll(c.name, '"', '\\"') + '");';
+            var img = document.createElement("img");
+            img.src = "img/delete.png";
+            img.style.setProperty("float", "right");
+            img.style.padding = "2px 0 0 0";
+            l.appendChild(img);
+            ret.appendChild(l);
+        }
+        var link = document.createElement("a");
+        var name = (c.istmp ? "[" : "") + Utils.replaceAll(c.name, '"', '\\"') + (c.istmp ? "]" : "") + (c.ispwd ? " *" : "");
+        link.href = 'javascript: ChannelContext.Join("' + name + '");';
+        link.innerHTML = (c.istmp ? "[" : "") + c.name + (c.istmp ? "]" : "") + (c.ispwd ? " *" : "");
+        ret.appendChild(link);
+        return ret;
+    };
+    UI.RedrawChannelList = function () {
+        var list = document.getElementById("channelList");
+        list.innerHTML = '<div class="top">' + UI.langs[UI.currentLang].menuText["channels"] + '</div>';
+        var rowEven = false;
+        for (var name in ChannelContext.openChannels) {
+            list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven, true));
+            rowEven = !rowEven;
+        }
+        list.innerHTML += "<div class='" + (rowEven ? 'rowEven' : 'rowOdd') + "'>&nbsp;</div>";
+        rowEven = !rowEven;
+        for (var name in ChannelContext.channels) {
+            if (ChannelContext.openChannels[name] == undefined) {
+                list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven));
+                rowEven = !rowEven;
+            }
+        }
+    };
     UI.chatTitle = "";
     UI.rowEven = [true, false];
     UI.currentView = 0;
@@ -495,6 +592,7 @@ var UI = (function () {
     UI.currentLang = 0;
     UI.styles = Array();
     UI.currentStyle = 0;
+    UI.chatFlags = [false, "userList"];
     return UI;
 })();
 //# sourceMappingURL=ui.js.map

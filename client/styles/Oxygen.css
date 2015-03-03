@@ -20,7 +20,7 @@ body {
     color: #0066B9;
 }
 
-#chat #chatList a, #chat #chatList a:visited {
+#chat .chatList a, #chat .chatList a:visited {
     color: #0066B9;
 }
 
@@ -52,15 +52,15 @@ a:hover {
     border: 1px solid #0066B9;
 }
 
-#chat #chatList {
+#chat .chatList {
     border: 1px solid #0066B9;
 }
 
-#chat #chatList .botName {
+#chat .chatList .botName {
     color: #0066B9;
 }
 
-#chat #chatList .botError {
+#chat .chatList .botError {
     color: #F00;
 }
 

@@ -24,7 +24,7 @@ class User {
         $this->permissions = explode("\f", $permissions);
         $this->sock = $sock;
         $this->ping = gmdate("U");
-        $this->dirty = ($dirty == null) ? $this->username : $dirty;
+        $this->dirtyname = ($dirty == null) ? $this->username : $dirty;
     }
 
     public function SetParameter($key, $value) {
