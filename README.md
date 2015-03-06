@@ -1,6 +1,8 @@
 SockChat
 ========
 
+Version 1.0 is out _NOW_! Check it out: https://github.com/flashii/sockchat/releases/tag/v1.0
+
 SockChat is a new, rewritten version of AJAX chat that utilizes the WebSocket protocol.
 
 While using the WebSocket protocol, it streamlines communication between the client and the server using a single protocol and makes chatting more efficient.
