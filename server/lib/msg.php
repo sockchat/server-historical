@@ -70,22 +70,23 @@ class Message {
         Message::PrivateSilentMessage(Message::$bot, Utils::FormatBotMessage($type, $langid, $params), $to, $msgid, $time, $alert, "1001", false);
     }
 
-    public static function ClearUserContext($user, $type = CLEAR_ALL) {
-        $user->sock->send(Utils::PackMessage(P_CTX_CLR, array($type)));
+    public static function ClearUserContext($user, $channel, $type = CLEAR_ALL) {
+        if(!is_string($channel)) $channel = $channel->name;
+        $user->sock->send(Utils::PackMessage(P_CTX_CLR, array($type, $channel)));
     }
 
-    public static function ClearUserContexts($channel = ALL_CHANNELS, $type = CLEAR_ALL) {
-        $out = Utils::PackMessage(P_CTX_CLR, array($type));
+    public static function ClearUserContexts($channel, $to = ALL_CHANNELS, $type = CLEAR_ALL) {
+        $out = Utils::PackMessage(P_CTX_CLR, array($type, $channel));
 
         if($channel == ALL_CHANNELS) Message::SendToAll($out);
         else Message::SendToChannel($out, ($channel == LOCAL_CHANNEL) ? Utils::$chat["DEFAULT_CHANNEL"] : $channel);
     }
 
     // NOTE: DOES NOT SANITIZE INPUT MESSAGE !! DO THIS ELSEWHERE
-    public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL, $flags = "1001") {
+    public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL, $flags = "1001", $alert = true) {
         if(!is_string($channel)) $channel = $channel->name;
-        $flags = substr($flags, 0, 4) ."0";
-        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags, "0", ($channel == LOCAL_CHANNEL) ? $user->channel : $channel));
+        $flags = substr($flags, 0, 4);
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user, $msg, Message::$msgId, $flags, $alert ? "1" : "0", ($channel == LOCAL_CHANNEL) ? "@local" : $channel));
 
         if($channel == ALL_CHANNELS) {
             Message::SendToAll($out);

@@ -38,7 +38,6 @@ class Chat {
 
             //Chat.HideSidebars();
             UI.ChangeSidebar(null);
-            console.log("a");
             UI.ToggleChannelMenu(false);
             if(!UI.IsMobileView() && !logs) UI.ChangeSidebar("userList");
             if(!UI.IsMobileView() && logs) UI.ChangeSidebar("settingsList");

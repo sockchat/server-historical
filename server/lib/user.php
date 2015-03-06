@@ -3,7 +3,7 @@ namespace sockchat;
 
 class User {
     public $id;
-    public $channel;
+    public $channels = [];
     public $originalData = [];
     public $dirtyname;
     public $username;
@@ -16,7 +16,6 @@ class User {
 
     public function __construct($id, $channel, $username, $color, $permissions, $sock, $dirty = null) {
         $this->id = $id;
-        $this->channel = $channel;
         $this->originalData = [$username, $color, $permissions];
         $this->username = $username;
         $this->color = $color;
@@ -25,6 +24,22 @@ class User {
         $this->sock = $sock;
         $this->ping = gmdate("U");
         $this->dirtyname = ($dirty == null) ? $this->username : $dirty;
+        $this->Join($channel);
+    }
+
+    public function Join($channel) {
+        if(!is_string($channel)) $channel = $channel->name;
+        $this->channels[$channel] = $channel;
+    }
+
+    public function InChannel($channel) {
+        if(!is_string($channel)) $channel = $channel->name;
+        return array_key_exists($channel, $this->channels);
+    }
+
+    public function Leave($channel) {
+        if(!is_string($channel)) $channel = $channel->name;
+        if(array_key_exists($channel, $this->channels)) unset($this->channels[$channel]);
     }
 
     public function SetParameter($key, $value) {

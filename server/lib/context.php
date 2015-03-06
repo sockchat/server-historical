@@ -31,35 +31,58 @@ class Context {
     public static $bannedUsers = [];
     public static $invisibleUsers = [];
 
-    public static function ForceChannelSwitch($user, $to) {
+    public static function ForceJoinChannel($user, $to) {
+        if(!is_string($to)) $to = $to->name;
         if(Context::ChannelExists($to)) {
-            $oldchan = $user->channel;
+            //$oldchan = $user->channel;
 
-            if(!Modules::ExecuteRoutine("OnChannelDelete", [$user, Context::GetChannel($to), Context::GetChannel($oldchan)])) return;
-            Message::HandleChannelSwitch($user, $to, $user->channel);
-            unset(Context::GetChannel($user->channel)->users[$user->id]);
+            if(!Modules::ExecuteRoutine("OnChannelJoin", [$user, Context::GetChannel($to)])) return;
+            //Message::HandleChannelSwitch($user, $to, $user->channel);
+            //unset(Context::GetChannel($user->channel)->users[$user->id]);
+
             Context::GetChannel($to)->users[$user->id] = Context::$onlineUsers[$user->id];
-            Context::$onlineUsers[$user->id]->channel = $to;
+            $user->Join($to);
+            $user->sock->send(Utils::PackMessage(P_CHANGE_CHANNEL, ["0", $to]));
+            Message::HandleChannelJoin($user, $to);
 
-            if(Context::GetChannel($oldchan)->channelType == CHANNEL_TEMP && Context::GetChannel($oldchan)->GetOwner()->id == $user->id)
-                Context::DeleteChannel($oldchan);
+            /*if(Context::GetChannel($oldchan)->channelType == CHANNEL_TEMP && Context::GetChannel($oldchan)->GetOwner()->id == $user->id)
+                Context::DeleteChannel($oldchan);*/
 
-            Modules::ExecuteRoutine("AfterChannelSwitch", [$user, Context::GetChannel($to), Context::GetChannel($oldchan)]);
+            Modules::ExecuteRoutine("AfterChannelJoin", [$user, Context::GetChannel($to)]);
         }
     }
 
-    public static function SwitchChannel($user, $to, $pwd = "") {
-        if($user->channel != $to) {
+    public static function JoinChannel($user, $to, $pwd = "") {
+        if(!is_string($to)) $to = $to->name;
+        if(!$user->InChannel($to)) {
             if(Context::ChannelExists($to)) {
                 if($pwd == Context::GetChannel($to)->password || $user->canModerate() || Context::GetChannel($to)->GetOwner()->id == $user->id) {
                     if(Context::GetChannel($to)->permissionLevel <= $user->getRank()) {
-                        Context::ForceChannelSwitch($user, $to);
+                        Context::ForceChannelJoin($user, $to);
                         return;
                     } else Message::PrivateBotMessage(MSG_ERROR, "ipchan", array($to), $user);
                 } else Message::PrivateBotMessage(MSG_ERROR, "ipwchan", array($to), $user);
             } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($to), $user);
-        } // else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user); // kind of extraneous
-        $user->sock->send(Utils::PackMessage(5, ["2", $user->channel]));
+        } else Message::PrivateBotMessage(MSG_ERROR, "samechan", array($to), $user); // kind of extraneous
+    }
+
+    public static function LeaveChannel(User $user, $channel) {
+        if(!is_string($channel)) $channel = $channel->name;
+        if(Context::ChannelExists($channel)) {
+            if ($user->InChannel($channel)) {
+                if(!Modules::ExecuteRoutine("OnChannelLeave", [$user, Context::GetChannel($channel)])) return;
+
+                $user->sock->send(Utils::PackMessage(P_CHANGE_CHANNEL, ["1", $channel]));
+                unset(Context::GetChannel($channel)->users[$user->id]);
+                $user->Leave($channel);
+                Message::HandleChannelLeave($user, $channel);
+
+                if(Context::GetChannel($channel)->channelType == CHANNEL_TEMP && Context::GetChannel($channel)->GetOwner()->id == $user->id)
+                    Context::DeleteChannel($channel);
+
+                Modules::ExecuteRoutine("AfterChannelLeave", [$user, Context::GetChannel($channel)]);
+            } else Message::PrivateBotMessage(MSG_ERROR, "notinchan", array($channel), $user);
+        } else Message::PrivateBotMessage(MSG_ERROR, "nochan", array($channel), $user);
     }
 
     public static function IsLobby($channel) {
@@ -68,7 +91,7 @@ class Context {
     }
 
     public static function AddInvisibleUser($name, $color, $invisible = true, $id = null) {
-        if($id == null) {
+        /*if($id == null) {
             for ($id = -2; ; $id--) {
                 if (!array_key_exists($id, Context::$onlineUsers) && !array_key_exists($id, Context::$invisibleUsers)) break;
             }
@@ -77,7 +100,7 @@ class Context {
         foreach(Context::$onlineUsers as $user) {
             $user->sock->send(Utils::PackMessage(7, ["1", $id, $name, $color, "6770\f1\f1\f1\f1\f1", $invisible ? "0" : "1"]));
         }
-        return Context::$invisibleUsers[$id];
+        return Context::$invisibleUsers[$id];*/
     }
 
     public static function GetUserByID($id) {
@@ -165,10 +188,12 @@ class Context {
         Modules::ExecuteRoutine("AfterChannelModify", [$tmp[1], $channel]);
     }
 
-    public static function DeleteChannel($channel) {
+    public static function DeleteChannel(Channel $channel) {
         if(is_string($channel)) $channel = Context::GetChannel($channel);
+        if($channel->name == Utils::$chat["DEFAULT_CHANNEL"]) return;
         if(!Modules::ExecuteRoutine("OnChannelDelete", [$channel]));
-        foreach($channel->users as $user) Context::SwitchChannel($user, Utils::$chat["DEFAULT_CHANNEL"]);
+        foreach($channel->users as $user)
+            $user->Leave($channel->name);
         Message::HandleChannelDeletion($channel);
         Database::RemoveChannel($channel->name);
         unset(Context::$channelList[$channel->name]);
@@ -177,9 +202,9 @@ class Context {
 
     public static function Join($user) {
         if(!Modules::ExecuteRoutine("OnUserJoin", [$user])) return;
-        Message::HandleJoin($user);
         Context::$onlineUsers[$user->id] = $user;
         Context::$channelList[Utils::$chat["DEFAULT_CHANNEL"]]->users[$user->id] = Context::$onlineUsers[$user->id];
+        Message::HandleJoin($user);
         Database::Login($user);
         Modules::ExecuteRoutine("AfterUserJoin", [$user]);
     }
@@ -279,8 +304,11 @@ class Context {
     }
 
     public static function Leave($user, $type = LEAVE_NORMAL) {
-        if(Context::GetChannel($user->channel)->channelType == CHANNEL_TEMP && Context::GetChannel($user->channel)->GetOwner()->id == $user->id)
-            Context::DeleteChannel($user->channel);
+        foreach($user->channels as $channel) {
+            $channel = Context::GetChannel($channel);
+            if ($channel->channelType == CHANNEL_TEMP && $channel->GetOwner()->id == $user->id)
+                Context::DeleteChannel($channel);
+        }
 
         Database::Logout($user);
         Message::HandleLeave($user, $type);

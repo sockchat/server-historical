@@ -22,7 +22,6 @@ var Chat = (function () {
             document.getElementById("langdd").value = Cookies.Get(0 /* Language */);
             //Chat.HideSidebars();
             UI.ChangeSidebar(null);
-            console.log("a");
             UI.ToggleChannelMenu(false);
             if (!UI.IsMobileView() && !logs)
                 UI.ChangeSidebar("userList");
