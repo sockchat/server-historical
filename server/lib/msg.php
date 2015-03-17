@@ -46,6 +46,7 @@ class Message {
         Modules::ExecuteRoutine("AfterMessageLog", [$user, $msg, $channel, $flags]);
     }
 
+    /*
     public static function BroadcastSilentMessage($user, $msg, $channel = ALL_CHANNELS, $msgid = null, $time = null, $alert = false, $flags = "1001") {
         if(!is_string($channel)) $channel = $channel->name;
         $msgid = $msgid == null ? Message::$msgId : $msgid;
@@ -69,6 +70,7 @@ class Message {
     public static function PrivateSilentBotMessage($type, $langid, $params, $to, $msgid = null, $time = null, $alert = false) {
         Message::PrivateSilentMessage(Message::$bot, Utils::FormatBotMessage($type, $langid, $params), $to, $msgid, $time, $alert, "1001", false);
     }
+    */
 
     public static function ClearUserContext($user, $channel, $type = CLEAR_ALL) {
         if(!is_string($channel)) $channel = $channel->name;
@@ -83,18 +85,16 @@ class Message {
     }
 
     // NOTE: DOES NOT SANITIZE INPUT MESSAGE !! DO THIS ELSEWHERE
-    public static function BroadcastUserMessage($user, $msg, $channel = LOCAL_CHANNEL, $flags = "1001", $alert = true) {
+    public static function BroadcastUserMessage($user, $msg, $channel = ALL_CHANNELS, $flags = "1001", $alert = true) {
         if(!is_string($channel)) $channel = $channel->name;
         $flags = substr($flags, 0, 4);
-        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user, $msg, Message::$msgId, $flags, $alert ? "1" : "0", ($channel == LOCAL_CHANNEL) ? "@local" : $channel));
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user, $msg, Message::$msgId, $flags, $alert ? "1" : "0", $channel));
 
         if($channel == ALL_CHANNELS) {
             Message::SendToAll($out);
             Message::LogToAll($user, $msg, $flags);
             Message::$msgId++;
         } else {
-            $channel = ($channel == LOCAL_CHANNEL) ? $user->channel : $channel;
-
             if(Context::ChannelExists($channel)) {
                 Message::SendToChannel($out, Context::GetChannel($channel));
                 Message::LogToChannel($user, $msg, $channel, $flags);
@@ -103,25 +103,24 @@ class Message {
         }
     }
 
-    public static function BroadcastBotMessage($type, $langid, $params, $channel = ALL_CHANNELS) {
+    public static function BroadcastBotMessage($type, $langid, $params, $channel = ALL_CHANNELS, $alert = true) {
         $msg = Utils::FormatBotMessage($type, $langid, $params);
         $channel = ($channel == LOCAL_CHANNEL) ? Utils::$chat["DEFAULT_CHANNEL"] : $channel;
-        Message::BroadcastUserMessage(Message::$bot, $msg, $channel);
+        Message::BroadcastUserMessage(Message::$bot, $msg, $channel, "1101", $alert);
     }
 
-    public static function PrivateUserMessage($user, $to, $msg, $flags = "1001", $pm = true) {
-        $flags = substr($flags, 0, 4) . ($pm ? "1" : "0");
-        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user->id, $msg, Message::$msgId, $flags, "1"));
+    public static function PrivateUserMessage($user, $to, $msg, $flags = "1001", $channel = "@priv", $alert = true) {
+        $flags = substr($flags, 0, 4);
+        $out = Utils::PackMessage(P_SEND_MESSAGE, array(gmdate("U"), $user, $msg, Message::$msgId, $flags, $alert ? "1" : "0", $channel));
         $to->sock->send($out);
-        if($user->id != $to->id)
+        if($user->id != $to->id && $channel == "@priv")
             Message::LogToChannel($user, "(@". $to->username .") ". $msg, "@priv", $flags);
         Message::$msgId++;
     }
 
     public static function PrivateBotMessage($type, $langid, $params, $to) {
         $msg = Utils::FormatBotMessage($type, $langid, $params);
-        Message::PrivateUserMessage(Message::$bot, $to, $msg, "1001", false);
-        Message::$msgId++;
+        Message::PrivateUserMessage(Message::$bot, $to, $msg, "1001", "@local");
     }
 
     public static function SendChannelToUser($user, $channel) {
@@ -134,7 +133,7 @@ class Message {
         foreach(Context::$channelList as $channel) {
             if($user->getRank() >= $channel->permissionLevel) array_push($arr, $channel);
         }
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, ["2", count($arr), join(Utils::$separator, $arr)]));
+        $user->sock->send(Utils::PackMessage(P_CTX_DATA, ["1", count($arr), join(Utils::$separator, $arr)]));
     }
 
     public static function HandleKick($user, $length = 0) {
@@ -145,22 +144,31 @@ class Message {
     }
 
     public static function HandleUserModification($user) {
-        Message::SendToChannel(Utils::PackMessage(P_USER_CHANGE, [$user]), $user->channel);
+        Message::SendToAll(Utils::PackMessage(P_USER_CHANGE, [$user]));
     }
 
-    public static function HandleJoin($user) {
-        Message::SendToChannel(Utils::PackMessage(P_USER_JOIN, array(gmdate("U"), $user, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
+    public static function HandleJoin($user, $reconn = false) {
+        //Message::SendToChannel(Utils::PackMessage(P_USER_JOIN, array(gmdate("U"), $user, Message::$msgId)), Utils::$chat["DEFAULT_CHANNEL"]);
 
-        $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user, Utils::$chat["DEFAULT_CHANNEL"])));
-        Message::LogToChannel(Message::$bot, Utils::FormatBotMessage(MSG_NORMAL, "join", array($user->username)), Utils::$chat["DEFAULT_CHANNEL"], "10010");
+        $user->sock->send(Utils::PackMessage(P_USER_JOIN, array("y", $user, Utils::$chat["DEFAULT_CHANNEL"], Utils::$chat["MAX_MSG_LEN"])));
+
+        if(!$reconn)
+            Message::BroadcastBotMessage(MSG_NORMAL, "join", [$user->name], Utils::$chat["DEFAULT_CHANNEL"]);
 
         Message::SendAllChannelsToUser($user);
-        $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
-        $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
-        foreach($msgs as $msg)
-            $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("1", $msg)));
+        if(!$reconn) {
+            $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->GetAllUsers())));
+            $msgs = Context::GetChannel(Utils::$chat["DEFAULT_CHANNEL"])->log->GetAllLogStrings();
+            foreach ($msgs as $msg)
+                $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("1", $msg)));
+        } else {
+            foreach($user->channels as $channel) {
+                if(($channel = Context::GetChannel($channel)) != null)
+                    $user->sock->send(Utils::PackMessage(P_CTX_DATA, array("0", $channel->GetAllUsers())));
+            }
+        }
 
-        Message::$msgId++;
+        //Message::$msgId++;
     }
 
     public static function HandleChannelCreation($channel) {
@@ -181,11 +189,30 @@ class Message {
         Database::ModifyChannel($oldname == "" ? $channel->name : $oldname, $channel->name, $channel->password, $channel->permissionLevel);
         foreach(Context::$onlineUsers as $user) {
             if($user->getRank() >= $channel->permissionLevel) {
-                $user->sock->send(Utils::PackMessage(4, ["1", $oldname == "" ? $channel->name : $oldname, $channel]));
-                if($user->channel == $oldname && $oldname != "") {
-                    $user->sock->send(Utils::PackMessage(5, ["2", $channel->name]));
+                $user->sock->send(Utils::PackMessage(P_CHANNEL_INFO, ["2", $oldname == "" ? $channel->name : $oldname, $channel]));
+                if($user->InChannel())
+                if($user->channel == $oldname && $oldname != "")
                     $user->channel = $channel->name;
-                }
+            }
+        }
+    }
+
+    public static function HandleChannelJoin($user, $channel) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        if($channel != null) {
+            if(!$user->InChannel($channel)) {
+                $user->Join($channel);
+                $user->sock->send(Utils::PackMessage(P_CHANGE_CHANNEL, [$channel->name]));
+                self::SendToChannel(Utils::PackMessage(P_CTX_DATA, [$channel->name, 1, $user]), $channel);
+            }
+        }
+    }
+
+    public static function HandleChannelLeave($user, $channel) {
+        if(is_string($channel)) $channel = Context::GetChannel($channel);
+        if($channel != null) {
+            if($user->InChannel($channel)) {
+                $user->Leave($channel);
             }
         }
     }

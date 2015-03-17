@@ -40,6 +40,7 @@ as an integer. The packet identifiers are as follows.
             - 2: SOCKET SESSION ALREADY STARTED
             - 3: BANNED
                 - followed by unban timestamp
+                    - standard unix timestamp, or -1 if permanent
                 
 2 - Chat message to be parsed. Takes a general form but has a special case
     for bot messages.
