@@ -35,6 +35,10 @@ void sc::Library::Unload() {
 	}
 }
 
+sc::Library::~Library() {
+	this->Unload();
+}
+
 #else // Shared Library (ELF or whatever) loading
 
 sc::Library::Library(char *file) {
@@ -66,6 +70,10 @@ void sc::Library::Unload() {
 		dlclose(this->lib);
 		this->lib = NULL;
 	}
+}
+
+sc::Library::~Library() {
+	this->Unload();
 }
 
 #endif

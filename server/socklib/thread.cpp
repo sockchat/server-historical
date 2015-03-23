@@ -17,7 +17,7 @@ void sc::Thread::Set(sc::Thread::threadFunc f) {
 
 bool sc::Thread::Spawn(void *args) {
 	if(!sc::Thread::IsRunning()) {
-		this->thread = (HANDLE)_beginthreadex(NULL, 0, &this->func, args, 0, NULL);
+		this->thread = (HANDLE)_beginthreadex(NULL, 0, this->func, args, 0, NULL);
 		return this->thread == 0;
 	} else return false;
 }
@@ -36,7 +36,7 @@ void sc::Thread::Join() {
 
 void sc::Thread::Kill() {
 	if(this->IsRunning()) {
-		TerminateThread(this->thread, 0);
+		TerminateThread(this->thread, -1);
 		this->thread = 0;
 	}
 }
@@ -56,25 +56,24 @@ void sc::Thread::Set(sc::Thread::threadFunc f) {
 
 bool sc::Thread::Spawn(void *args) {
 	if(!sc::Thread::IsRunning()) {
-		return pthread_create(&this->thread, 0, &this->func, NULL, args) == 0;
+		return pthread_create(&this->thread, 0, this->func, NULL, args) == 0;
 	} else return false;
 }
 
 bool sc::Thread::IsRunning() {
-	return this->thread == 0 ? false : WaitForSingleObject(this->thread, 0) == WAIT_TIMEOUT;
+	return this->thread == 0 ? false : pthread_kill(this->thread, 0) == 0;
 }
 
 void sc::Thread::Join() {
 	if(this->IsRunning()) {
-		WaitForSingleObject(this->thread, INFINITE);
-		CloseHandle(this->thread);
+		pthread_join(this->thread, NULL);
 		this->thread = 0;
 	}
 }
 
 void sc::Thread::Kill() {
 	if(this->IsRunning()) {
-		TerminateThread(this->thread, 0);
+		pthread_kill(this->thread, SIGTERM);
 		this->thread = 0;
 	}
 }

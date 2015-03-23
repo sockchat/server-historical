@@ -23,6 +23,7 @@ namespace sc {
 		LIBPUB bool IsLoaded();
 		LIBPUB FUNCPTR GetSymbol(char *sym);
 		LIBPUB void Unload();
+		LIBPUB ~Library();
 	};
 }
 
