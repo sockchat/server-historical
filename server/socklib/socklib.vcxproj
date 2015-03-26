@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SOCKLIB_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SOCKLIB_EXPORT;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -58,7 +58,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SOCKLIB_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SOCKLIB_EXPORT;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,14 +68,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="base64.cpp" />
     <ClCompile Include="library.cpp" />
+    <ClCompile Include="sha1.cpp" />
     <ClCompile Include="socket.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="websocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="socklib\base64.h" />
     <ClInclude Include="socklib\library.hpp" />
+    <ClInclude Include="socklib\sha1.h" />
     <ClInclude Include="socklib\socket.hpp" />
     <ClInclude Include="socklib\stdcc.hpp" />
+    <ClInclude Include="socklib\utf8.h" />
+    <ClInclude Include="socklib\utf8\checked.h" />
+    <ClInclude Include="socklib\utf8\core.h" />
+    <ClInclude Include="socklib\utf8\unchecked.h" />
+    <ClInclude Include="socklib\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

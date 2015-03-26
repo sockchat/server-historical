@@ -5,7 +5,6 @@
 #ifdef _WIN32 // winsock implementation
 
 sc::Socket::Socket() {
-	this->ready = false;
 	this->blocking = true;
 	this->type = ESOCKTYPE::UNINIT;
 }
@@ -51,7 +50,6 @@ bool sc::Socket::Init(short port) {
 	}
 
 	this->type = ESOCKTYPE::SERVER;
-	this->ready = true;
 	return true;
 }
 
@@ -61,7 +59,6 @@ bool sc::Socket::Init(char *addr, short port) {
 	// TODO: client socket
 
 	this->type = ESOCKTYPE::CLIENT;
-	this->ready = true;
 	return true;
 }
 
@@ -72,13 +69,12 @@ bool sc::Socket::Init(HSOCKET sock, HADDR addr, int addrlen) {
 	this->addr = addr;
 	this->addrlen = addrlen;
 
-	this->type = ESOCKTYPE::CLIENT;
-	this->ready = true;
+	this->type = ESOCKTYPE::SERVERSPAWN;
 	return true;
 }
 
 void sc::Socket::SetBlocking(bool block) {
-	if(!this->ready) return;
+	if(this->type == ESOCKTYPE::UNINIT) return;
 	u_long blocking = block ? 0 : 1;
 	ioctlsocket(this->sock, FIONBIO, &blocking);
 	this->blocking = block;
@@ -89,7 +85,7 @@ bool sc::Socket::GetBlocking() {
 }
 
 int sc::Socket::Accept(Socket &conn) {
-	if(!this->ready || this->type != ESOCKTYPE::SERVER) return -1;
+	if(this->type != ESOCKTYPE::SERVER) return -1;
 
 	HSOCKET newsock; SOCKADDR_IN newaddr = {0}; int newlen = sizeof(newaddr);
 	newsock = accept(this->sock, (struct sockaddr *)&newaddr, &newlen);
@@ -107,7 +103,7 @@ int sc::Socket::Accept(Socket &conn) {
 }
 
 int sc::Socket::Recv(std::string &str) {
-	if(!this->ready || this->type != ESOCKTYPE::CLIENT) return -1;
+	if(this->type == ESOCKTYPE::UNINIT || this->type == ESOCKTYPE::SERVER) return -1;
 
 	int get = recv(this->sock, this->recvbuf, SOCK_BUFLEN-1, 0);
 	if(WSAGetLastError() == WSAEWOULDBLOCK)
@@ -122,7 +118,7 @@ int sc::Socket::Recv(std::string &str) {
 }
 
 int sc::Socket::Send(std::string str) {
-	if(!this->ready || this->type != ESOCKTYPE::CLIENT) return -1;
+	if(this->type == ESOCKTYPE::UNINIT || this->type == ESOCKTYPE::SERVER) return -1;
 
 	int sent = send(this->sock, str.c_str(), str.length(), 0);
 	if(sent == SOCKET_ERROR) {
@@ -140,10 +136,10 @@ int sc::Socket::GetLastError() {
 void sc::Socket::Close() {
 	shutdown(this->sock, SD_SEND);
 	closesocket(this->sock);
+	this->type = ESOCKTYPE::UNINIT;
 }
 
 sc::Socket::~Socket() {
-	this->Close();
 	//delete[] this->recvbuf;
 }
 

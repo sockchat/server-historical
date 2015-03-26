@@ -27,7 +27,7 @@
 namespace sc {
 	class Socket {
 	public:
-		LIBPUB enum ESOCKTYPE { SERVER, CLIENT, UNINIT };
+		LIBPUB enum ESOCKTYPE { SERVER, SERVERSPAWN, CLIENT, UNINIT };
 
 		LIBPUB Socket();
 
@@ -59,13 +59,17 @@ namespace sc {
 	};
 
 	class WebSocket : public Socket {
+		bool handshaked;
+	public:
+		LIBPUB WebSocket();
+		LIBPUB WebSocket(Socket sock);
 
+		LIBPUB int Handshake();
 	};
 
 	class HTTPRequest {
 		Socket sock;
-	public:
-
+		bool ready;
 	};
 }
 
