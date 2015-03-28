@@ -22,8 +22,9 @@ public:
 	LIBPUB static std::string fix(std::string str);
 	LIBPUB static std::string substr(std::string str, int start, int end = -1);
 	LIBPUB static std::string substring(std::string str, int start, int length = -1);
-	LIBPUB static std::vector<std::string> split(std::string str, char delim);
-	LIBPUB static std::vector<std::string> split(std::string str, std::string delim);
+	LIBPUB static std::vector<std::string> split(std::string str, char delim, int count = -1);
+	LIBPUB static std::vector<std::string> split(std::string str, std::string delim, int count = -1);
+	LIBPUB static std::string join(std::vector<std::string> arr, std::string delim, int count = -1);
 	LIBPUB static std::string trim(std::string str);
 	LIBPUB static std::string ftrim(std::string str);
 	LIBPUB static std::string btrim(std::string str);

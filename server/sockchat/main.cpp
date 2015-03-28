@@ -8,8 +8,6 @@
 #include "socklib/socket.hpp"
 #include "socklib/library.hpp"
 #include "socklib/utils.h"
-#include "socklib/sha1.h"
-#include "socklib/base64.h"
 
 typedef void(*modfunc)();
 
@@ -19,13 +17,11 @@ struct Connection {
 	enum TYPE { UNINIT, WEBSOCK, RAWSOCK };
 
 	sc::Socket sock;
-	std::map<std::string, std::string> headers;
 	TYPE type;
 	time_t conn;
 
 	Connection(sc::Socket sock) {
 		this->sock = sock;
-		this->headers = std::map<std::string, std::string>();
 		time(&this->conn);
 		this->type = TYPE::UNINIT;
 	}
@@ -51,7 +47,7 @@ int main() {
 	sc::Socket sock = sc::Socket();
 	sc::Socket client;
 	if(!sock.Init(6770)) {
-		std::cout << "Could not open socket on port 6770!" << std::endl;
+		std::cout << "Could not open socket on port 6770! Error: " << std::endl;
 		return -1;
 	}
 	sock.SetBlocking(false);
@@ -61,7 +57,7 @@ int main() {
 	int status;
 	while(true) {
 		if((status = sock.Accept(client)) == 0) {
-			conns.push_back(Connection(client));
+			conns.push_front(Connection(client));
 			/*std::cout << client.Recv(in);
 			std::cout << in << std::endl;
 			client.Send("negroid");
@@ -77,16 +73,21 @@ int main() {
 			if((status = i->sock.Recv(in)) == 0) {
 				if(i->type == Connection::TYPE::UNINIT) {
 					if(in.compare(0, 3, "GET") == 0) {
-						auto headers = str::split(in, "\r\n");
-
-					} else if(in.compare(0, 3, "TCP") == 0) {
-						i->type = 
-					} else {
+						i->sock = sc::WebSocket(i->sock);
+						if(((sc::WebSocket)i->sock).Handshake(in))
+							i->type = Connection::TYPE::WEBSOCK;
+						else {
+							i = conns.erase(i);
+							continue;
+						}
+					} else if(in.compare(0, 3, "TCP") == 0)
+						i->type = Connection::TYPE::RAWSOCK;
+					else {
 						i = conns.erase(i);
 						continue;
 					}
 				} else {
-
+					std::cout << in << std::endl;
 				}
 				i++;
 			} else if(status == -1)
@@ -96,11 +97,4 @@ int main() {
 
 	WSACleanup();
 	return 0;
-}
-
-std::string calculateConnectionHash(std::string in) {
-	in += "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-	unsigned char hash[20];
-	sha1::calc(in.c_str(), in.length(), hash);
-	return std::string(base64_encode(hash, 20));
 }

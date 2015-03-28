@@ -10,7 +10,7 @@ sc::Socket::Socket() {
 }
 
 bool sc::Socket::Init(short port) {
-	if(this->ready) return false;
+	if(this->type != ESOCKTYPE::UNINIT) return false;
 
 	WSADATA wdata;
 	if(WSAStartup(MAKEWORD(2, 2), &wdata) != 0)
@@ -56,6 +56,8 @@ bool sc::Socket::Init(short port) {
 bool sc::Socket::Init(char *addr, short port) {
 	return false;
 
+	if(this->type != ESOCKTYPE::UNINIT) return false;
+
 	// TODO: client socket
 
 	this->type = ESOCKTYPE::CLIENT;
@@ -63,7 +65,7 @@ bool sc::Socket::Init(char *addr, short port) {
 }
 
 bool sc::Socket::Init(HSOCKET sock, HADDR addr, int addrlen) {
-	if(this->ready) return false;
+	if(this->type != ESOCKTYPE::UNINIT) return false;
 
 	this->sock = sock;
 	this->addr = addr;

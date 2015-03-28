@@ -73,19 +73,25 @@ std::string str::substring(std::string str, int start, int length) {
 	}
 }
 
-std::vector<std::string> str::split(std::string str, char delim) {
+std::vector<std::string> str::split(std::string str, char delim, int count) {
+	count--;
 	std::stringstream ss(str);
 	auto ret = std::vector<std::string>();
 	std::string buffer;
-	while(std::getline(ss, buffer, delim))
+	while(count != 0) {
+		if(!std::getline(ss, buffer, delim)) break;
 		ret.push_back(buffer);
+		count--;
+	}
+	if(std::getline(ss, buffer)) ret.push_back(buffer);
 	return ret;
 }
 
-std::vector<std::string> str::split(std::string str, std::string delim) {
+std::vector<std::string> str::split(std::string str, std::string delim, int count) {
+	count-=1;
 	auto ret = std::vector<std::string>();
 	std::size_t pos = 0, lastpos = 0;
-	while((pos = str.find(delim, pos)) != std::string::npos) {
+	while((pos = str.find(delim, pos)) != std::string::npos && count != 0) {
 		if(pos - lastpos > 0)
 			ret.push_back(str.substr(lastpos, pos - lastpos));
 		else
@@ -93,8 +99,19 @@ std::vector<std::string> str::split(std::string str, std::string delim) {
 
 		pos += delim.length();
 		lastpos = pos;
+		count--;
 	}
 	ret.push_back(str.substr(lastpos, std::string::npos));
+	return ret;
+}
+
+std::string str::join(std::vector<std::string> arr, std::string delim, int count) {
+	std::string ret;
+	for(int i = 0; i < arr.size(); i++) {
+		if(count == 0) break;
+		ret += (i == 0 ? "" : delim) + arr[i];
+		count--;
+	}
 	return ret;
 }
 

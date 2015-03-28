@@ -9,7 +9,6 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
-#include <string>
 #pragma comment (lib, "ws2_32.lib")
 #define HSOCKET SOCKET
 #define HADDR SOCKADDR_IN
@@ -22,7 +21,13 @@
 #include <netinet/in.h>
 #define HSOCKET int
 #endif
+
+#include <map>
+#include <string>
 #include "stdcc.hpp"
+#include "utils.h"
+#include "socklib/sha1.h"
+#include "socklib/base64.h"
 
 namespace sc {
 	class Socket {
@@ -53,18 +58,51 @@ namespace sc {
 		HADDR addr;
 		int addrlen;
 		bool blocking;
-		bool ready;
 		char recvbuf[SOCK_BUFLEN];
 		ESOCKTYPE type;
 	};
 
 	class WebSocket : public Socket {
 		bool handshaked;
+		std::map<const std::string, std::string> headers;
+		std::string fragment;
+
+		LIBPRIV std::string CalculateConnectionHash(std::string in);
 	public:
 		LIBPUB WebSocket();
 		LIBPUB WebSocket(Socket sock);
 
 		LIBPUB int Handshake();
+		LIBPUB bool Handshake(std::string headers);
+
+		LIBPUB int Recv(std::string &str);
+		LIBPUB int Send(std::string str);
+
+		class Frame {
+		public:
+			LIBPUB enum Opcode { CONTINUATION = 0x0, TEXT = 0x1, BINARY = 0x2, CLOSE = 0x8, PING = 0x9, PONG = 0xA };
+
+			LIBPUB Frame(std::string data, bool mask = false, Opcode type = Opcode::TEXT, bool fin = true);
+			
+			LIBPUB void SetType(Opcode type);
+			LIBPUB Opcode GetType();
+			
+			LIBPUB void SetData(std::string data);
+			LIBPUB std::string GetData();
+			
+			LIBPUB void SetMasked(bool mask);
+			LIBPUB bool IsMasked();
+			
+			LIBPUB std::string Get();
+
+			LIBPUB static Frame FromRaw(std::string raw);
+			LIBPUB static std::vector<Frame> GenerateFrameset(std::vector<std::string> data, bool mask = false, Opcode type = Opcode::TEXT);
+		private:
+			Opcode type;
+			std::string data;
+			bool mask;
+			bool fin;
+		};
 	};
 
 	class HTTPRequest {
