@@ -87,7 +87,8 @@ int main() {
 						continue;
 					}
 				} else {
-					std::cout << in << std::endl;
+					auto frame = sc::WebSocket::Frame::FromRaw(in);
+					std::cout << frame.GetData() << std::endl;
 				}
 				i++;
 			} else if(status == -1)
