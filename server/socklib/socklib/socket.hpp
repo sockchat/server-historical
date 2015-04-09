@@ -45,11 +45,11 @@ namespace sc {
 		LIBPUB bool GetBlocking();
 
 		// all of the following return -1 on error, 0 on success, and 1 if the nonblocking process would block
-		LIBPUB int Accept(Socket &conn);
-		LIBPUB int Recv(std::string &str);
-		LIBPUB int Send(std::string str);
+		LIBPUB virtual int Accept(Socket &conn);
+		LIBPUB virtual int Recv(std::string &str);
+		LIBPUB virtual int Send(std::string str);
 
-		LIBPUB void Close();
+		LIBPUB virtual void Close();
 
 		LIBPUB int GetLastError();
 
