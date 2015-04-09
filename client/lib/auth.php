@@ -4,6 +4,8 @@ namespace sockchat;
 
 define("AUTH_FETCH", 1);
 define("AUTH_CONFIRM", 2);
+define("AUTH_VALIDATE", 3);
+define("AUTH_RESERVED", 4);
 
 define("USER_NORMAL", "0");
 define("USER_MODERATOR", "1");
@@ -26,7 +28,10 @@ class Auth {
     public static $out = "";
 
     public static function GetPageType() {
-        return isset($_GET["arg1"]) ? AUTH_CONFIRM : AUTH_FETCH;
+        if(isset($_GET["arg1"])) return AUTH_CONFIRM;
+        else if(isset($_GET["validate"])) return AUTH_VALIDATE;
+        else if(isset($_GET["reserve"])) return AUTH_RESERVED;
+        else return AUTH_FETCH;
     }
 
     public static function AppendArguments($in) {
@@ -50,14 +55,24 @@ class Auth {
         Auth::$accept = true;
     }
 
+    public static function Reserved() {
+        self::Accept();
+    }
+
     public static function Deny() {
         Auth::$accept = false;
+    }
+
+    public static function Free() {
+        self::Deny();
     }
 
     public static function Serve() {
         if(Auth::GetPageType() == AUTH_FETCH)
             Auth::$out = Auth::$accept ? "yes\f". implode("\f", Auth::$args) : "no";
-        else
+        else if(Auth::GetPageType() != AUTH_RESERVED)
             Auth::$out = Auth::$accept ? "yes" . implode("\n", Auth::$user) . "\n" . implode("\f", Auth::$perms[0]) . (Auth::$perms[1] == [] ? "" : "\f". implode("\f", Auth::$perms[1])) : "no";
+        else
+            Auth::$out = Auth::$accept ? "yes" : "no";
     }
 }

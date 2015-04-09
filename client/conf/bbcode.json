@@ -40,7 +40,7 @@
             {
                 "tag": "code",
                 "arg": false,
-                "swap": "<code style='font-size: 1.2em;'>{0}</code>",
+                "swap": "<span style='white-space: pre-wrap; font-family: monospace; font-size: 1.2em;'>{0}</span>",
                 "button": true
             },
             {

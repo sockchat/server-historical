@@ -15,7 +15,7 @@ as an integer. The packet identifiers are as follows.
     into the authentication script associated with the chat.
     
 2 - User message. The first parameter is the user id, the second parameter
-    is the message.
+    is the channel, the third parameter is the message.
                               
                               --- CLIENT ---
                               
@@ -23,19 +23,7 @@ as an integer. The packet identifiers are as follows.
     eive it. Maybe do something with this later, I dunno. First and only 
     parameter is always the string 'pong'.
 
-1 - User joining message. Takes two different forms depending on the recip-
-    ient.
-    
-    If the recipient is not the joining user, the arguments are as follows:
-        - TIMESTAMP
-        - USER ID
-        - USER NAME
-        - USER COLOR
-        - PERMISSION STRING
-        - MESSAGE ID
-        
-    If the recipient is the joining user, the arguments depend on the first
-    parameter of the message.
+1 - User joining message. Sent to incoming connections.
     
     If 'y' (connection accepted), the parameters are as follows:
         - USER ID
@@ -52,15 +40,31 @@ as an integer. The packet identifiers are as follows.
             - 2: SOCKET SESSION ALREADY STARTED
             - 3: BANNED
                 - followed by unban timestamp
+                    - standard unix timestamp, or -1 if permanent
                 
 2 - Chat message to be parsed. Takes a general form but has a special case
     for bot messages.
     
     - TIMESTAMP
     - USER ID
+    - USER NAME
+    - USER COLOR
+    - PERMISSION STRING
     - MESSAGE (SANITIZED)
     - MESSAGE ID
-	- MESSAGE FLAGS
+	- MESSAGE FLAGS [SET OF BOOLEANS ('1'/'0')]
+        - BOLD USERNAME
+        - ITALICIZED USERNAME
+        - UNDERLINED USERNAME
+        - COLON AFTER MESSAGE
+    - ALERT [BOOLEAN '1'/'0']
+    - CHANNEL
+    
+    If the channel begins with an @, it's a special condition. Two special
+    conditions can arise with the channel.
+        - IF CHANNEL IS @all, WRITE MESSAGE TO ALL OPEN CHATS
+        - IF CHANNEL IS @priv, MESSAGE IS A PRIVATE MESSAGE
+        - IF CHANNEL IS @local, WRITE MESSAGE TO ACTIVE CHAT
     
     If the message is sent by the chat bot, the USER ID will be set to -1,
     and the MESSAGE will be a series of strings concatenated by the form
@@ -73,7 +77,16 @@ as an integer. The packet identifiers are as follows.
         - PARAMETERS
             - the additional parameters as fed into the lang string
             
-3 - User disconnect notification.
+3 - Informs clients (usually in same channel) that data on a specific user 
+    has been changed. Used for things like changing nicknames or temporary
+    privilege elevation.
+    
+    The first argument is the user ID of the affected user (which can never
+    change). Following are the details of the user:
+    
+        - USER NAME
+        - USER COLOR
+        - PERMISSION STRING
 
 4 - Channel creation/deletion/update notification to clients. First parame-
     ter is either a 0, a 1 or a 2, 0 indicating creation, 1 indicating del-
@@ -96,27 +109,27 @@ as an integer. The packet identifiers are as follows.
 5 - User changing channel information for clients. First parameter is 0 or 
     1 to indicate whether the user is joining or leaving, the following pa-
     rameters depend on the first:
-    
-        Both will start with a message ID representing the ID of the bot
-        message associated with the action.
-    
-        If 0, the parameters are as follows:
-            - USER ID
-            - USER NAME
-            - USER COLOR
-            - PERMISSION STRING
-        And indicates a user joining a channel.
-            
-        If 1, the parameters are as follows:
-            - USER ID
-        And indicates a user leaving a channel.
         
-        If 2, the parameters are as follows:
+        If 0, the parameters are as follows:
             - CHANNEL NAME
         And indicates the current channel a user has joined.
         
-6 - Indicates forceful message deletion. The first parameter is the message
-    ID as it is represented in Message::$msgid.
+        If 1, the parameters are as follows:
+            - CHANNEL NAME
+        And indicates the current channel a user has left.
+        
+6 - Indicates deletion of specific context data. The first parameter is
+    either a 0 or 1 to enumerate what is to be deleted. The following par-
+    ameters depend on the first:
+    
+        If 0, the following parameter is a message id, and represents a
+        message to be deleted.
+        
+        If 1, the parameters are as follows:
+            - USER ID
+            - CHANNEL NAME
+                - If @all, remove user from all channels.
+        And indicates a user being dropped from a channel context.
     
 7 - Indicates the sending of miscellaneous data to clients for context inf-
     ormation. First parameter is 0, 1, or 2 to indicate whether the data is
@@ -124,27 +137,16 @@ as an integer. The packet identifiers are as follows.
     on the first:
     
         If 0, the parameters are as follows:
+            - CHANNEL NAME USERS BELONG TO
             - A COUNT OF USERS SENT IN PACKET (represented as N)
             - N REPETITIONS OF
                 - USER ID
                 - USER NAME
                 - USER COLOR
                 - PERMISSION STRING
-				- VISIBLE (bool)
               WHICH EACH REPRESENT A SINGLE USER
             
         If 1, the parameters are as follows:
-			- TIMESTAMP
-			- USER ID
-			- USER NAME
-			- USER COLOR
-			- PERMISSION STRING
-			- MESSAGE
-			- MESSAGE ID
-			- ALERT USER OF MESSAGE (bool)
-			- MESSAGE FLAGS
-            
-        If 2, the parameters are as follows:
             - A COUNT OF CHANNELS SENT IN PACKET (represented as N)
             - N REPETITIONS OF
                 - CHANNEL NAME
@@ -161,20 +163,11 @@ as an integer. The packet identifiers are as follows.
         3 represents clearing both the message and user list.
         4 represents clearing all three lists.
         
+        If first parameter is anything other than 2, then 
+        
 9 - Tells a client that they are about to have their socket session forcef-
     ully terminated. Used to indicate either a kick or a ban.
     
     First argument is a 0, representing a kick, or a 1, representing a ban.
     If the first argument is 1, then the following argument is a length sp-
     ecifier for the ban duration in unix epoch time.
-    
-10- Informs clients (usually in same channel) that data on a specific user 
-    has been changed. Used for things like changing nicknames or temporary
-    privilege elevation.
-    
-    The first argument is the user ID of the affected user (which can never
-    change). Following are the details of the user:
-    
-        - USER NAME
-        - USER COLOR
-        - PERMISSION STRING

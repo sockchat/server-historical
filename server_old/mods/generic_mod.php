@@ -24,8 +24,11 @@ abstract class GenericMod {
     public static function OnUnban(&$ip, &$id, &$name, $by) {}
     public static function AfterUnban($ip, $id, $name, $by) {}
 
-    public static function OnChannelSwitch($user, $to, $from) {} // called when a user switches channels
-    public static function AfterChannelSwitch($user, $to, $from) {} // called after a successful channel switch
+    public static function OnChannelJoin($user, $channel) {} // called when a user joins a channel
+    public static function AfterChannelJoin($user, $channel) {} // called after a successful channel join
+
+    public static function OnChannelLeave($user, $channel) {} // called when a user leaves a channel
+    public static function AfterChannelLeave($user, $channel) {} // called after a successful channel leave
 
     public static function OnMessageReceive($user, &$msg) {} // called when a message is received by the server
     public static function AfterMessageReceived($user, $msg) {} // called after a message is successfully processed by the server

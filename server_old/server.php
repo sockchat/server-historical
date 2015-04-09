@@ -19,6 +19,7 @@ require_once("dbinfo.php");
 require_once("lib/utils.php");
 require_once("lib/db.php");
 require_once("lib/user.php");
+require_once("lib/auth.php");
 require_once("lib/context.php");
 require_once("lib/channel.php");
 require_once("lib/msg.php");
@@ -46,7 +47,7 @@ class Chat implements MessageComponentInterface {
 
     public function onMessage(ConnectionInterface $conn, $msg) {
         Context::CheckPings();
-        if(mb_substr(Utils::GetHeader($conn, "Origin"), -strlen(Utils::$chat["HOST"])) == Utils::$chat["HOST"]) {
+        if(true) {
             $parts = explode(Utils::$separator, $msg);
             $id = $parts[0];
             $parts = array_slice($parts, 1);
@@ -62,29 +63,22 @@ class Chat implements MessageComponentInterface {
                     break;
                 case 1:
                     if(!Context::DoesSockExist($conn)) {
-                        $arglist = "";
-                        for($i = 0; $i < count($parts); $i++)
-                            $arglist .= "&arg". ($i+1) ."=". urlencode($parts[$i]);
-                        $aparts = file_get_contents(Utils::$chat['CHATROOT'] ."/?view=auth". $arglist);
-
-                        if(substr($aparts, 0, 3) == "yes") {
-                            $aparts = explode("\n", mb_substr($aparts, 3));
-                            if(($reason = Context::AllowUser($aparts[1], $conn)) === 0) {
-                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? null : $aparts[0], $conn->remoteAddress, Utils::SanitizeName($aparts[1]))) === false) {
-                                    $id = 0;
+                        if(($user = Auth::Confirm($parts)) != null) {
+                            if(($reason = Context::AllowUser($user->id, $conn)) === 0) {
+                                if(($length = Context::CheckBan(Utils::$chat["AUTOID"] ? null : $user->id, $conn->remoteAddress, $user->username)) === false) {
                                     if(Utils::$chat["AUTOID"]) {
                                         for($i = 1;; $i++) {
                                             if(Context::GetUserByID($i) == null) {
-                                                $id = "".$i;
+                                                $user->id = $i;
                                                 break;
                                             }
                                         }
-                                    } else $id = $aparts[0];
-
-                                    Context::Join(new User($id, Utils::$chat["DEFAULT_CHANNEL"], Utils::SanitizeName($aparts[1]), $aparts[2], $aparts[3], $conn));
-                                } else $conn->send(Utils::PackMessage(1, array("n", "joinfail", $length)));
-                            } else $conn->send(Utils::PackMessage(1, array("n", $reason)));
-                        } else $conn->send(Utils::PackMessage(1, array("n", "authfail")));
+                                    }
+                                    $user->sock = $conn;
+                                    Context::Join($user);
+                                } else $conn->send(Utils::PackMessage(P_USER_JOIN, array("n", "joinfail", $length)));
+                            } else $conn->send(Utils::PackMessage(P_USER_JOIN, array("n", $reason)));
+                        } else $conn->send(Utils::PackMessage(P_USER_JOIN, array("n", "authfail")));
                     }
                     break;
                 case 2:

@@ -56,20 +56,20 @@ a:active {
 	border: 1px solid #CCC;
 }
 
-#chat #chatList {
+#chat .chatList {
     border: 1px solid #9475B2;
 	box-shadow: 0px 0px 3px #9475B2;
 }
 
-#chat #chatList .botName {
+#chat .chatList .botName {
     color: #9E8DA7;
 }
 
-#chat #chatList .botError {
+#chat .chatList .botError {
     color: #F00;
 }
 
-.rowEven, #chat .sidebar .top, #chat .widebar .top {
+.rowEven, #chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     background: #D3BFFF;
 }
 
@@ -81,12 +81,12 @@ a:active {
     font-size: .7em;
 }
 
-#chat .sidebar, #chat .widebar {
+#chat .sidebar, #chat .widebar, #chat #channelList {
     border: 1px solid #9475B2;
 	box-shadow: 0px 0px 3px #9475B2;
 }
 
-#chat .sidebar .top, #chat .widebar .top {
+#chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;

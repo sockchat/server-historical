@@ -20,7 +20,7 @@ body {
     color: #B84623;
 }
 
-#chat #chatList a, #chat #chatList a:visited {
+#chat .chatList a, #chat .chatList a:visited {
     color: #B84623;
 }
 
@@ -52,19 +52,19 @@ a:hover {
     border: 1px solid #B84623;
 }
 
-#chat #chatList {
+#chat .chatList {
     border: 1px solid #B84623;
 }
 
-#chat #chatList .botName {
+#chat .chatList .botName {
     color: #B84623;
 }
 
-#chat #chatList .botError {
+#chat .chatList .botError {
     color: #F00;
 }
 
-.rowEven, #chat .sidebar .top, #chat .widebar .top {
+.rowEven, #chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     background: #F1F1F1;
 }
 
@@ -76,12 +76,12 @@ a:hover {
     font-size: .7em;
 }
 
-#chat .sidebar, #chat .widebar {
+#chat .sidebar, #chat .widebar, #chat #channelList {
     background: #F1F1F1;
     border: 1px solid #B84623;
 }
 
-#chat .sidebar .top, #chat .widebar .top {
+#chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     font-size: 1em;
     text-align: center;
     font-weight: bold;

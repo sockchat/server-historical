@@ -134,7 +134,7 @@ class Main extends GenericMod {
 
         self::$messageLog = new Stack(self::$logLength);
 
-        self::AddCommandHook(["join", "create", "delete", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
+        self::AddCommandHook(["join", "create", "close", "pwd", "password", "priv", "privilege", "rank"], "handleChannelCommands");
         self::AddCommandHook(["kick", "ban", "pardon", "unban", "silence", "unsilence", "say", "whois", "ip", "delete", "unbanip", "pardonip", "bans", "banned"], "handleModeratorCommands");
         self::AddCommandHook(["whisper", "msg", "nick", "afk", "me", "action", "who"], "handleUserCommands");
     }
@@ -143,13 +143,24 @@ class Main extends GenericMod {
         if(($time = self::IsSilencedFromList($user)) != 0) $user->SetParameter("silence", $time);
     }
 
-    public static function OnMessageReceive($user, &$msg) {
+    public static function CheckAFK($user) {
         if(($val = $user->GetParameter("afk")) != null) {
-            $user->username = mb_substr($user->username, strlen("&lt;$val&gt;_"));
+            $user->username = mb_substr($user->username, mb_strlen("&lt;$val&gt;_"));
             $user->SetParameter("afk", null);
             Context::ModifyUser($user);
         }
+    }
+
+    public static function OnMessageReceive($user, &$msg) {
+        self::CheckAFK($user);
         if(self::IsSilenced($user)) return false;
+    }
+
+    public static function OnCommandReceive($user, &$cmd, &$args) {
+        self::CheckAFK($user);
+        if(self::IsSilenced($user) && !in_array($cmd, self::$allowedCmds)) {
+            return false;
+        }
     }
 
     public static function OnPacketReceive($conn, &$pid, &$data) {
@@ -394,27 +405,5 @@ class Main extends GenericMod {
                 }
                 break;
         }
-    }
-
-    public static function OnCommandReceive($user, &$cmd, &$args) {
-        if(!self::IsSilenced($user) || (self::IsSilenced($user) && in_array($cmd, self::$allowedCmds))) {
-            if($cmd == "afk")  {
-                $val = isset($args[0]) ? strtoupper(mb_substr($args[0], 0, self::$maxAfkTagLength)) : "AFK";
-                if($user->GetParameter("afk") == null && $val != "") {
-                    $user->SetParameter("afk", $val);
-                    $user->username = "&lt;$val&gt;_". $user->username;
-                    Context::ModifyUser($user);
-                }
-                return false;
-            } else if($cmd == "silence") {
-                if($user->canModerate()) {
-                } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/silence"], $user);
-                return false;
-            } else if($cmd == "unsilence") {
-                if($user->canModerate()) {
-                } else Message::PrivateBotMessage(MSG_ERROR, "cmdna", ["/unsilence"], $user);
-                return false;
-            }
-        } else return false;
     }
 }

@@ -26,14 +26,13 @@ define("CTX_CHANNEL", "2");
 
 define("P_USER_JOIN", 1);
 define("P_SEND_MESSAGE", 2);
-define("P_USER_LEAVE", 3);
+define("P_USER_CHANGE", 3);
 define("P_CHANNEL_INFO", 4);
 define("P_CHANGE_CHANNEL", 5);
-define("P_MSG_DEL", 6);
+define("P_CTX_DEL", 6);
 define("P_CTX_DATA", 7);
 define("P_CTX_CLR", 8);
 define("P_BAKA", 9);
-define("P_USER_CHANGE", 10);
 
 define("LEAVE_NORMAL", "leave");
 define("LEAVE_KICK", "kick");

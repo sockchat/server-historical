@@ -36,7 +36,7 @@ body {
     background: url(../img/load.gif);
 }
 
-#chat #chatList .insertImage {
+#chat .chatList .insertImage {
     /*max-width: 1080px;
     max-height: 180px;*/
     max-width: 70vw;
@@ -62,31 +62,31 @@ body {
     width: 100px;
 }
 
-#chat #chatList, #chat .sidebar, #chat .widebar {
+#chat .chatList, #chat .sidebar, #chat .widebar, #chat #channelList {
     -webkit-overflow-scrolling: touch;
     -ms-scroll-chaining: none;
     -ms-touch-action: pan-y;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-#chat #chatList iframe {
+#chat .chatList iframe {
     vertical-align: top;
     overflow: auto;
 }
 
-#chat #chatList .botError,
-#chat #chatList .botMessage,
-#chat #chatList .botName {
+#chat .chatList .botError,
+#chat .chatList .botMessage,
+#chat .chatList .botName {
     font-style: italic;
 }
 
-#chat .sidebar .top, #chat .widebar .top {
+#chat .sidebar .top, #chat .widebar .top, #chat #channelList .top {
     width: auto;
     padding: 4px 10px;
     word-wrap: break-word;
 }
 
-#chat .sidebar div, #chat .widebar div, #chat #chatList div {
+#chat .sidebar div, #chat .widebar div, #chat .chatList div, #chat #channelList div {
     width: auto;
     padding: 2px 10px;
     word-wrap: break-word;

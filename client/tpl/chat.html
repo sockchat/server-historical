@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="js/user.js"></script>
 		<script type="text/javascript" src="js/msg.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/channel.js"></script>
 		<script type="text/javascript" src="js/sock.js"></script>
 		<script type="text/javascript" src="js/chat.js"></script>
 		<script type="text/javascript">
@@ -45,8 +46,9 @@
 			<div id="chatTitle">{{{ CHAT_TITLE }}}</div>
 			<div id="mobileChatTitle">{{{ M_CHAT_TITLE }}}</div>
 			<div id="userData">
-				<label id="tchan" for="channeldd">Channel</label>:
-				<select id="channeldd" onchange="Chat.ChangeChannel();"></select>
+				<!--<label id="tchan" for="channeldd">Channel</label>:
+				<select id="channeldd" onchange="Chat.ChangeChannel();"></select>-->
+				<input type="button" id="chanbtn" value="Channels" onclick="UI.ToggleChannelMenu();" />
 				<label id="tstyle" for="styledd">Style</label>:
 				<select id="styledd" onchange="UI.ChangeStyle();">
 					{{{ STYLES }}}
@@ -54,7 +56,12 @@
 				<label id="tlang" for="langdd">Language</label>:
 				<select id="langdd" onchange="UI.RenderLanguage();"></select>
 			</div>
-			<div id="chatList" class="userListVisible">
+			<div id="channelList">
+				<div class="top">
+
+				</div>
+			</div>
+			<div id="chat.Lobby" name="chatList" class="chatList userListVisible channelListVisible">
 
 			</div>
 			<div class="sidebar" id="userList">

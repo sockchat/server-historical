@@ -18,9 +18,8 @@ class Modules {
                     $cmds = call_user_func_array("\\sockchat\\mods\\{$name}\\Main::Init", []);
                     $cmds = call_user_func_array("\\sockchat\\mods\\{$name}\\Main::GetCommands", []);
                     foreach($cmds as $cmd) {
-                        if(array_key_exists($cmd, self::$cmds))
-                            echo "Error loading module $name: Command $cmd has already been defined by module ". self::$cmds[$cmd] ."!\n";
-                        else self::$cmds[$cmd] = $name;
+                        if(!array_key_exists($cmd, self::$cmds))
+                            self::$cmds[$cmd] = $name;
                     }
                 }
             }

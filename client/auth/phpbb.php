@@ -20,6 +20,9 @@ include($phpbb_root_path . 'common.' . $phpEx);
 
 use sockchat\Auth;
 
+if(isset($request))
+    $request->enable_super_globals();
+
 if(Auth::GetPageType() == AUTH_FETCH) {
     $user->session_begin();
     $auth->acl($user->data);
@@ -30,11 +33,23 @@ if(Auth::GetPageType() == AUTH_FETCH) {
         Auth::Accept();
     } else
         Auth::Deny();
-} else {
-    $qdata = array(
-        "user_id" => request_var("arg1", -1),
-        "user_password" => request_var("arg2", "e")
-    );
+} else if(Auth::GetPageType() != AUTH_RESERVED) {
+    if(Auth::GetPageType() == AUTH_CONFIRM) {
+        $qdata = array(
+            "user_id" => request_var("arg1", -1),
+            "user_password" => request_var("arg2", "e")
+        );
+    } else {
+        if(isset($_GET["uid"])) {
+            $qdata = array(
+                "user_id" => request_var("uid", -1)
+            );
+        } else {
+            $qdata = array(
+                "username" => request_var("username", "e")
+            );
+        }
+    }
 
     if($db->sql_fetchrow($db->sql_query("SELECT COUNT(*) FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)))["COUNT(*)"] > 0) {
         $udata = $db->sql_fetchrow($db->sql_query("SELECT * FROM `". USERS_TABLE ."` WHERE ". $db->sql_build_array('SELECT', $qdata)));
@@ -62,6 +77,7 @@ if(Auth::GetPageType() == AUTH_FETCH) {
 
         //$user->session_kill();
     } else Auth::Deny();
-}
+} else
+    Auth::Reserved();
 
 Auth::Serve();
