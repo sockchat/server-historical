@@ -61,7 +61,12 @@ bool sc::WebSocket::Handshake(std::string headers) {
 	return true;
 }
 
+int sc::WebSocket::Send(std::string str) {
+	return 0;
+}
+
 int sc::WebSocket::Recv(std::string &str) {
+	std::cout << "wowowowowowow" << std::endl;
 	if(!this->handshaked) return -1;
 
 	std::string buffer;
