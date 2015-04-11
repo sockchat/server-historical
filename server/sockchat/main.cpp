@@ -11,21 +11,19 @@
 
 typedef void(*modfunc)();
 
-std::string calculateConnectionHash(std::string in);
-
 struct Connection {
-	enum TYPE { UNINIT, WEBSOCK, RAWSOCK };
-
-	sc::Socket sock;
-	TYPE type;
+	sc::Socket *sock;
 	time_t conn;
+	bool init;
 
-	Connection(sc::Socket sock) {
+	Connection(sc::Socket *sock) {
 		this->sock = sock;
 		time(&this->conn);
-		this->type = TYPE::UNINIT;
+		this->init = false;
 	}
 };
+
+void CloseConnection(std::list<Connection>::iterator &i, std::list<Connection> &l);
 
 int main() {
 	/*int c = 0;
@@ -57,45 +55,45 @@ int main() {
 	int status;
 	while(true) {
 		if((status = sock.Accept(client)) == 0) {
-			conns.push_front(Connection(client));
-			/*std::cout << client.Recv(in);
-			std::cout << in << std::endl;
-			client.Send("negroid");
-			client.Close();*/
+			client.SetBlocking(false);
+			conns.push_front(Connection(new sc::Socket(client)));
 		} else if(status == -1) break;
 
-		/*for(int i = 0; i < conns.size(); i++) {
-			//if((status = conns[i]))
-			conns.
-		}*/
-
 		for(auto i = conns.begin(); i != conns.end();) {
-			if((status = i->sock.Recv(in)) == 0) {
-				if(i->type == Connection::TYPE::UNINIT) {
+			if((status = i->sock->Recv(in)) == 0) {
+				if(!i->init) {
 					if(in.compare(0, 3, "GET") == 0) {
-						i->sock = sc::WebSocket(i->sock);
-						if(((sc::WebSocket)i->sock).Handshake(in))
-							i->type = Connection::TYPE::WEBSOCK;
+						auto tmp = new sc::WebSocket(*(i->sock));
+						delete i->sock;
+						i->sock = tmp;
+
+						if(((sc::WebSocket*)i->sock)->Handshake(in))
+							i->init = true;
 						else {
-							i = conns.erase(i);
+							CloseConnection(i, conns);
 							continue;
 						}
 					} else if(in.compare(0, 3, "TCP") == 0)
-						i->type = Connection::TYPE::RAWSOCK;
+						i->init = true;
 					else {
-						i = conns.erase(i);
+						CloseConnection(i, conns);
 						continue;
 					}
 				} else {
-					auto frame = sc::WebSocket::Frame::FromRaw(in);
-					std::cout << frame.GetData() << std::endl;
+
 				}
 				i++;
 			} else if(status == -1)
-				i = conns.erase(i);
+				CloseConnection(i, conns);
 		}
 	}
 
 	WSACleanup();
 	return 0;
+}
+
+void CloseConnection(std::list<Connection>::iterator &i, std::list<Connection> &l) {
+	i->sock->Close();
+	delete i->sock;
+	i = l.erase(i);
 }

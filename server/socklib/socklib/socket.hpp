@@ -53,7 +53,7 @@ namespace sc {
 
 		LIBPUB int GetLastError();
 
-		LIBPUB ~Socket();
+		LIBPUB virtual ~Socket();
 	protected:
 		HSOCKET sock;
 		HADDR addr;
@@ -92,14 +92,16 @@ namespace sc {
 			LIBPUB Frame(std::string data, bool mask = false, int type = Opcode::TEXT, bool fin = true, uint8_t rsv = 0x0);
 			LIBPUB Frame(std::string data, uint8_t maskdata[4], bool mask = false, int type = Opcode::TEXT, bool fin = true, uint8_t rsv = 0x0);
 			
-			LIBPUB void SetType(int type);
-			LIBPUB int GetType();
+			LIBPUB void SetOpcode(int opcode);
+			LIBPUB int GetOpcode();
 			
 			LIBPUB void SetData(std::string data);
 			LIBPUB std::string GetData();
 			
 			LIBPUB void SetMasked(bool mask);
 			LIBPUB bool IsMasked();
+
+			LIBPUB bool IsLegal();
 
 			LIBPUB void GenerateMask();
 			LIBPUB void SetMask(uint8_t mask[4]);
@@ -111,6 +113,7 @@ namespace sc {
 			
 			LIBPUB std::string Get();
 
+			LIBPUB static Frame ErrorFrame();
 			LIBPUB static Frame FromRaw(std::string raw);
 			LIBPUB static std::vector<Frame> GenerateFrameset(std::vector<std::string> data, bool mask = false, int opcode = Opcode::TEXT);
 		private:
@@ -120,6 +123,7 @@ namespace sc {
 			MaskData maskdata;
 			uint8_t rsv;
 			bool fin;
+			bool legal = true;
 		};
 	};
 

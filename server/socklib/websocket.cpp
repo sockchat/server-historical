@@ -36,8 +36,6 @@ bool sc::WebSocket::Handshake(std::string headers) {
 			this->headers[str::tolower(str::trim(keyval[0]))] = str::trim(keyval[1]);
 	}
 
-	//std::cout << this->headers["host"];
-
 	if(this->headers.count("host") > 0 && this->headers.count("upgrade") > 0 &&
 		this->headers.count("connection") > 0 && this->headers.count("sec-websocket-key") > 0 &&
 		this->headers.count("sec-websocket-version") > 0) {
@@ -62,45 +60,41 @@ bool sc::WebSocket::Handshake(std::string headers) {
 }
 
 int sc::WebSocket::Send(std::string str) {
+
 	return 0;
 }
 
 int sc::WebSocket::Recv(std::string &str) {
-	std::cout << "wowowowowowow" << std::endl;
 	if(!this->handshaked) return -1;
 
 	std::string buffer;
 	int status; bool fin = false;
 	while(!fin) {
 		if((status = Socket::Recv(buffer)) != 0) return status;
-		fin = (str[0] & 0x80) != 0;
-
-		if((str[0] & 0x70) != 0) {
-			this->Close();
-			return -1;
-		}
-
-		bool mask = (str[1] &  0x80) != 0;
-		uint8_t opcode = str[0] & 0x0F;
-		switch(opcode) {
-		case 0x1: // text frame start
-		case 0x2: // binary frame start
-			this->fragment = "";
-		case 0x0: // continuation frame
-
-			break;
-		case 0x8: // ping frame, respond with pong frame
-
-			break;
-		case 0xA: // pong frame, do nothing
-			break;
-		default: // unknown opcode or closing opcode, close connection cleanly
-			this->Close();
-			return -1;
-		}
+		auto frame = Frame::FromRaw(buffer);
+		if(frame.IsLegal()) {
+			switch(frame.GetOpcode()) {
+			case Frame::TEXT:
+			case Frame::BINARY:
+				this->fragment = "";
+			case Frame::CONTINUATION:
+				fragment += frame.GetData();
+				fin = frame.IsFin();
+				break;
+			case Frame::PING:
+				Socket::Send(Frame(frame.GetData(), false, Frame::PONG).Get());
+				break;
+			case Frame::PONG:
+				break;
+			case Frame::CLOSE:
+			default:
+				this->Close();
+				return -1;
+			}
+		} else return -1;
 	}
 
-	str = this->fragment + buffer;
+	str = this->fragment;
 	return 0;
 }
 
@@ -110,6 +104,12 @@ std::string sc::WebSocket::CalculateConnectionHash(std::string in) {
 	sha1::calc(in.c_str(), in.length(), hash);
 	return std::string(base64_encode(hash, 20));
 }
+
+///////////////////////////////////////
+//                                   //
+//        WEBSOCKET FRAME CODE       //
+//                                   //
+///////////////////////////////////////
 
 sc::WebSocket::Frame::Frame() {
 	this->maskdata.block = rand() % 0xFFFFFFFF;
@@ -131,11 +131,11 @@ sc::WebSocket::Frame::Frame(std::string data, uint8_t maskdata[4], bool mask, in
 		this->maskdata.bytes[i] = maskdata[i];
 }
 
-void sc::WebSocket::Frame::SetType(int opcode) {
+void sc::WebSocket::Frame::SetOpcode(int opcode) {
 	this->opcode = opcode;
 }
 
-int sc::WebSocket::Frame::GetType() {
+int sc::WebSocket::Frame::GetOpcode() {
 	return this->opcode;
 }
 
@@ -153,6 +153,10 @@ void sc::WebSocket::Frame::SetMasked(bool mask) {
 
 bool sc::WebSocket::Frame::IsMasked() {
 	return this->mask;
+}
+
+bool sc::WebSocket::Frame::IsLegal() {
+	return this->legal;
 }
 
 void sc::WebSocket::Frame::GenerateMask() {
@@ -210,6 +214,12 @@ std::string sc::WebSocket::Frame::Get() {
 	return ret;
 }
 
+sc::WebSocket::Frame sc::WebSocket::Frame::ErrorFrame() {
+	Frame f = Frame();
+	f.legal = false;
+	return f;
+}
+
 sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 	Frame f = Frame();
 	if(raw.length() >= 2) {
@@ -223,7 +233,7 @@ sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 		if(size == 126) {
 			if(raw.length() > 4)
 				size = (raw[2] << 8) | raw[3];
-			else return NULL;
+			else return ErrorFrame();
 			nextByte = 4;
 		} else if(size == 127) {
 			if(raw.length() > 10) {
@@ -231,14 +241,14 @@ sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 				for(int i = 0; i < 8; i++)
 					size = (raw[2 + i] << 8 * i) | size;
 				nextByte = 10;
-			}  else return NULL;
+			} else return ErrorFrame();
 		}
 
 		if(f.mask) {
 			if(raw.length() > nextByte + 4) {
 				for(int i = 0; i < 4; i++)
 					f.maskdata.bytes[i] = raw[nextByte + i];
-			} else return NULL;
+			} else return ErrorFrame();
 			nextByte += 4;
 		} else f.GenerateMask();
 
@@ -248,8 +258,8 @@ sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 					raw[i + nextByte] = raw[i + nextByte] ^ f.maskdata.bytes[i % 4];
 			}
 			f.data = raw.substr(nextByte, size);
-		} else return NULL;
-	} else return NULL;
+		} else return ErrorFrame();
+	} else return ErrorFrame();
 	return f;
 }
 
