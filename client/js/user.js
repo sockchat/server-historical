@@ -1,6 +1,6 @@
 var User = (function () {
     function User(id, u, c, p, v) {
-        if (v === void 0) { v = true; }
+        if (typeof v === "undefined") { v = true; }
         this.username = u;
         this.id = id;
         this.color = c;
@@ -11,14 +11,17 @@ var User = (function () {
     User.prototype.EvaluatePermString = function () {
         this.perms = this.permstr.split("\f");
     };
+
     User.prototype.getRank = function () {
         return +this.perms[0];
     };
+
     User.prototype.canModerate = function () {
         return this.perms[1] == "1";
     };
     return User;
 })();
+
 var UserContext = (function () {
     function UserContext() {
     }

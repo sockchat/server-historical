@@ -12,10 +12,6 @@ sc::Socket::Socket() {
 bool sc::Socket::Init(short port) {
 	if(this->type != ESOCKTYPE::UNINIT) return false;
 
-	WSADATA wdata;
-	if(WSAStartup(MAKEWORD(2, 2), &wdata) != 0)
-		return false;
-
 	struct addrinfo *result;
 	struct addrinfo hints;
 	ZeroMemory(&hints, sizeof(hints));
@@ -23,29 +19,24 @@ bool sc::Socket::Init(short port) {
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
-	if(getaddrinfo(NULL, std::to_string(port).c_str(), &hints, &result) != 0) {
-		WSACleanup();
+	if(getaddrinfo(NULL, std::to_string(port).c_str(), &hints, &result) != 0)
 		return false;
-	}
 
 	this->sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 	if(this->sock == INVALID_SOCKET) {
 		freeaddrinfo(result);
-		WSACleanup();
 		return false;
 	}
 
 	if(bind(this->sock, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR) {
 		freeaddrinfo(result);
 		closesocket(this->sock);
-		WSACleanup();
 		return false;
 	}
 
 	freeaddrinfo(result);
 	if(listen(this->sock, SOMAXCONN) == SOCKET_ERROR) {
 		closesocket(this->sock);
-		WSACleanup();
 		return false;
 	}
 
@@ -53,12 +44,28 @@ bool sc::Socket::Init(short port) {
 	return true;
 }
 
-bool sc::Socket::Init(char *addr, short port) {
-	return false;
-
+bool sc::Socket::Init(std::string addr, short port) {
 	if(this->type != ESOCKTYPE::UNINIT) return false;
 
-	// TODO: client socket
+	struct addrinfo hints, *results, *ptr;
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+	if(getaddrinfo(addr.c_str(), std::to_string(port).c_str(), &hints, &results) != 0) return false;
+
+	for(ptr = results; ptr != NULL; ptr = ptr->ai_next) {
+		if((this->sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol)) == INVALID_SOCKET) {
+			freeaddrinfo(results);
+			return false;
+		}
+		if(connect(this->sock, ptr->ai_addr, (int)ptr->ai_addrlen) != SOCKET_ERROR) break;
+		closesocket(this->sock);
+		this->sock = INVALID_SOCKET;
+	}
+
+	freeaddrinfo(results);
+	if(this->sock == INVALID_SOCKET) return false;
 
 	this->type = ESOCKTYPE::CLIENT;
 	return true;
@@ -148,3 +155,19 @@ sc::Socket::~Socket() {
 #else // posix (berkeley) socket implementation
 
 #endif
+
+/*
+	PARLA IMPONI
+
+	L'ARDITE MIE SCHIERE
+	SORGAN TUTTE ALLE TROMBE GUERRIERE
+	E WODAN CHE A GLORIA V'APPELLA
+	MOVIAM TOSTO
+
+	SIA GLORIA A WODAN SIA GLORIA A WODAN
+	SIA GLORIA A WODAN SIA GLORIA A WODAN
+	ALLO SQUILLO CHE AL SANGUE NE INVITA
+	PRONTI OGNORA I TUOI FIDI SARAN
+	SIA GLORIA A WODAN SIA GLORIA A WODAN
+	GLORIA GLORIA A WODAN
+*/

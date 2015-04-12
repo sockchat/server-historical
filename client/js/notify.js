@@ -2,7 +2,7 @@ var Notify = (function () {
     function Notify() {
     }
     Notify.Init = function (force) {
-        if (force === void 0) { force = false; }
+        if (typeof force === "undefined") { force = false; }
         if ("Notification" in window) {
             if (Notification.permission === "granted")
                 this.enabled = true;
@@ -14,12 +14,12 @@ var Notify = (function () {
             }
         }
     };
+
     Notify.Show = function (title, body, icon) {
         if (Notify.enabled) {
-            try {
+            try  {
                 var test = new Notification(title, { "body": body, "icon": icon });
-            }
-            catch (e) {
+            } catch (e) {
             }
         }
     };

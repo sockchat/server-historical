@@ -60,8 +60,7 @@ bool sc::WebSocket::Handshake(std::string headers) {
 }
 
 int sc::WebSocket::Send(std::string str) {
-
-	return 0;
+	return Socket::Send(Frame(str, this->type == ESOCKTYPE::CLIENT).Get());
 }
 
 int sc::WebSocket::Recv(std::string &str) {
@@ -96,6 +95,11 @@ int sc::WebSocket::Recv(std::string &str) {
 
 	str = this->fragment;
 	return 0;
+}
+
+void sc::WebSocket::Close() {
+	Socket::Send(Frame("", false, Frame::CLOSE).Get());
+	Socket::Close();
 }
 
 std::string sc::WebSocket::CalculateConnectionHash(std::string in) {

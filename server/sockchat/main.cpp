@@ -42,6 +42,12 @@ int main() {
 
 	//std::cout << base64_decode("HSmrc0sMlYUkAGmm5OPpG2HaGWk=");
 
+#ifdef _WIN32
+	WSADATA wdata;
+	if(WSAStartup(MAKEWORD(2, 2), &wdata) != 0)
+		return false;
+#endif
+
 	sc::Socket sock = sc::Socket();
 	sc::Socket client;
 	if(!sock.Init(6770)) {
@@ -80,7 +86,8 @@ int main() {
 						continue;
 					}
 				} else {
-
+					std::cout << in << std::endl;
+					i->sock->Send("1\ty\t2\talec\t#f00\t2\f1\f1\f1\f1\f1\f1\f1\f1\tLobby\t2000");
 				}
 				i++;
 			} else if(status == -1)

@@ -69,6 +69,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="base64.cpp" />
+    <ClCompile Include="http.cpp" />
     <ClCompile Include="library.cpp" />
     <ClCompile Include="sha1.cpp" />
     <ClCompile Include="socket.cpp" />
@@ -82,9 +83,6 @@
     <ClInclude Include="socklib\socket.hpp" />
     <ClInclude Include="socklib\stdcc.hpp" />
     <ClInclude Include="socklib\utf8.h" />
-    <ClInclude Include="socklib\utf8\checked.h" />
-    <ClInclude Include="socklib\utf8\core.h" />
-    <ClInclude Include="socklib\utf8\unchecked.h" />
     <ClInclude Include="socklib\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -38,7 +38,7 @@ namespace sc {
 		LIBPUB Socket();
 
 		LIBPUB bool Init(short port);
-		LIBPUB bool Init(char *addr, short port);
+		LIBPUB bool Init(std::string addr, short port);
 		LIBPUB bool Init(HSOCKET sock, HADDR addr, int addrlen);
 		
 		LIBPUB void SetBlocking(bool block);
@@ -78,6 +78,8 @@ namespace sc {
 
 		LIBPUB int Recv(std::string &str);
 		LIBPUB int Send(std::string str);
+
+		LIBPUB void Close();
 
 		class Frame {
 		public:
@@ -127,9 +129,24 @@ namespace sc {
 		};
 	};
 
-	class HTTPRequest {
-		Socket sock;
-		bool ready;
+	static class HTTPRequest {
+	public:
+		class Response {
+		public:
+			enum ESTATUSCODE { OK = 200, FORBIDDEN = 403, NOTFOUND = 404, INTERR = 500 };
+			int status;
+			std::map<std::string, std::string> headers;
+			std::string content;
+
+			LIBPUB Response();
+			LIBPUB Response(std::string raw);
+			LIBPUB Response(int status, std::map<std::string, std::string> headers, std::string content);
+		};
+
+		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
+		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
+
+		LIBPUB static Response Post(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
 	};
 }
 
