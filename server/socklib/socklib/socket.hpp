@@ -132,6 +132,8 @@ namespace sc {
 	static class HTTPRequest {
 	public:
 		class Response {
+		private:
+			LIBPUB void Error();
 		public:
 			enum ESTATUSCODE { OK = 200, FORBIDDEN = 403, NOTFOUND = 404, INTERR = 500 };
 			int status;

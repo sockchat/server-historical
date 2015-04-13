@@ -58,7 +58,7 @@ $chat["LOG_BATCH_SIZE"] = 50;
  * EXAMPLE: "nas.moe:6770" represents a connection to the address 'nas.moe'
  * on port 6770.
  */
-$chat["SERVER_ADDR"] = "127.0.0.1:6770";
+$chat["SERVER_ADDR"] = "146.151.37.194:6770";
 
 /* ROOT DIRECTORY parameter
  *

@@ -1,14 +1,59 @@
                       SOCK CHAT PROTOCOL INFORMATION
 
-    Messages sent between the client and server are a series of concatenat-
-ed strings delimited by the vertical tab character, represented in most la-
-nguages by the escape sequence \t and defined as the ASCII character 0x09. 
-The first string in this concatenation must be the packet identifier, sent
-as an integer. The packet identifiers are as follows.
+    Messages communicated between the client and server follow the same fo-
+rmat, but have different meanings depending on which end is the recipient.
+A message's intent is determined by its packet ID, a unique identifier that
+tells the client or server how it should react to the received message. A
+message id that incites bidirectional communication between the client and
+server should typically be associated with the same message id on the client
+as on the server, so as to avoid confusion.
+
+    A packet of communication between the client and server is considered to
+be a seamlessly connected regions of octets, the boundaries of which are de-
+fined in the header of the packet.
+
+    All binary-encoded multi-byte numbers sent in a packet are to be sent in
+network byte order (big endian).
+                      
+                              --- HEADER ---
+                      
+    Because the body of the packet is a sequence of many different regions of
+octet data that is not delimited, it is necessary for the header of the packet
+to determine boundaries for the regions of data.
+
+    The first two bytes are the packet id, the necessary ones of which are de-
+fined in the following two sections; interpret as a two-byte binary number.
+
+    The third byte is the number of octet regions, in the packet.
+    
+    The bytes following the third byte are a sequence of binary length segments,
+each of which correspond to the number of octets in its respective region. They
+each follow this format:
+
+        IF LENGTH IS LESS THAN 126, THE LENGTH OF THE REGION IS STORED IN A
+    SINGLE BYTE.
+        
+        IF LENGTH IS GREATER THAN OR EQUAL TO 126 BUT LESS THAN 65536, THE
+    FIRST BYTE OF THE LENGTH SEGMENT SHOULD BE 126 AND THE FOLLOWING TWO
+    BYTES SHOULD BE THE LENGTH OF THE REGION.
+    
+        IF LENGTH IS GREATER THAN OR EQUAL TO 65536, THE FIRST BYTE OF THE
+    LENGTH SEGMENT SHOULD BE 127 AND THE FOLLOWING FOUR BYTES SHOULD BE THE
+    LENGTH OF THE REGION.
+    
+    The number of length segments should be equal to the number of octet re-
+gions as defined in the third byte.
+
+                               --- BODY ---
+                               
+    The message body immediately follows the header with no separator, and con-
+sists of a sequence of octet regions as defined in the header that are joined
+together without any separator. The position of an octet region in the body should
+correspond to the offset of the length segment in the header.
 
                               --- SERVER ---                                
 
-0 - User keepalive ping. Done to prevent the client from closin the session
+0 - User keepalive ping. Done to prevent the client from closing the session
     due to socket inactivity. The only parameter is the user id.
     
 1 - User join request. Takes a variable number of parameters that are fed
