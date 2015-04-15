@@ -63,13 +63,13 @@ int sc::WebSocket::Send(std::string str) {
 	return Socket::Send(Frame(str, this->type == ESOCKTYPE::CLIENT).Get());
 }
 
-int sc::WebSocket::Recv(std::string &str) {
+int sc::WebSocket::Recv(std::string &str, uint32_t size) {
 	if(!this->handshaked) return -1;
 
 	std::string buffer;
 	int status; bool fin = false;
 	while(!fin) {
-		if((status = Socket::Recv(buffer)) != 0) return status;
+		if((status = Socket::Recv(buffer, size)) != 0) return status;
 		auto frame = Frame::FromRaw(buffer);
 		if(frame.IsLegal()) {
 			switch(frame.GetOpcode()) {
@@ -235,15 +235,15 @@ sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 		uint64_t size = raw[1] & 0x7F;
 		int nextByte = 2;
 		if(size == 126) {
-			if(raw.length() > 4)
-				size = (raw[2] << 8) | raw[3];
-			else return ErrorFrame();
+			if(raw.length() > 4) {
+				size = ((uint8_t)raw[2] << 8) | (uint8_t)raw[3];
+			} else return ErrorFrame();
 			nextByte = 4;
 		} else if(size == 127) {
 			if(raw.length() > 10) {
 				size = 0;
 				for(int i = 0; i < 8; i++)
-					size = (raw[2 + i] << 8 * i) | size;
+					size = ((uint8_t)raw[2 + i] << 8 * i) | size;
 				nextByte = 10;
 			} else return ErrorFrame();
 		}
@@ -272,4 +272,8 @@ std::vector<sc::WebSocket::Frame> sc::WebSocket::Frame::GenerateFrameset(std::ve
 	for(int i = 0; i < data.size(); i++)
 		ret.push_back(Frame(data[i], mask, opcode, i + 1 == data.size()));
 	return ret;
+}
+
+sc::WebSocket::~WebSocket() {
+
 }

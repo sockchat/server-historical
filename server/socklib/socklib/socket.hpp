@@ -38,15 +38,17 @@ namespace sc {
 		LIBPUB Socket();
 
 		LIBPUB bool Init(short port);
-		LIBPUB bool Init(std::string addr, short port);
+		LIBPUB bool Init(std::string addr, uint16_t port);
 		LIBPUB bool Init(HSOCKET sock, HADDR addr, int addrlen);
 		
 		LIBPUB void SetBlocking(bool block);
 		LIBPUB bool GetBlocking();
 
+		LIBPUB void SetTimeout(int seconds);
+
 		// all of the following return -1 on error, 0 on success, and 1 if the nonblocking process would block
 		LIBPUB virtual int Accept(Socket &conn);
-		LIBPUB virtual int Recv(std::string &str);
+		LIBPUB virtual int Recv(std::string &str, uint32_t size = SOCK_BUFLEN);
 		LIBPUB virtual int Send(std::string str);
 
 		LIBPUB virtual void Close();
@@ -63,6 +65,10 @@ namespace sc {
 		ESOCKTYPE type;
 	};
 
+	class TCPSocket : public Socket {
+
+	};
+
 	class WebSocket : public Socket {
 		bool handshaked;
 		std::map<const std::string, std::string> headers;
@@ -76,10 +82,12 @@ namespace sc {
 		LIBPUB int Handshake();
 		LIBPUB bool Handshake(std::string headers);
 
-		LIBPUB int Recv(std::string &str);
+		LIBPUB int Recv(std::string &str, uint32_t size = SOCK_BUFLEN);
 		LIBPUB int Send(std::string str);
 
 		LIBPUB void Close();
+
+		LIBPUB ~WebSocket();
 
 		class Frame {
 		public:
@@ -130,6 +138,16 @@ namespace sc {
 	};
 
 	static class HTTPRequest {
+	private:
+		struct URL {
+			std::string protocol;
+			std::string target;
+			std::string resource;
+			uint16_t port;
+		};
+
+		LIBPUB static uint16_t GetPortFromProtocol(std::string protocol);
+		LIBPUB static URL DecipherURL(std::string url);
 	public:
 		class Response {
 		private:
@@ -145,8 +163,12 @@ namespace sc {
 			LIBPUB Response(int status, std::map<std::string, std::string> headers, std::string content);
 		};
 
-		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
-		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
+		LIBPUB static std::string EncodeURI(std::string uri);
+		LIBPUB static std::string EncodeURIComponent(std::string comp);
+
+		LIBPUB static Response Raw(std::string action, std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>(), std::string body = "");
+
+		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> data = std::map<std::string, std::string>(), std::map<std::string, std::string> headers = std::map<std::string, std::string>());
 
 		LIBPUB static Response Post(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
 	};

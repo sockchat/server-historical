@@ -44,7 +44,7 @@ bool sc::Socket::Init(short port) {
 	return true;
 }
 
-bool sc::Socket::Init(std::string addr, short port) {
+bool sc::Socket::Init(std::string addr, uint16_t port) {
 	if(this->type != ESOCKTYPE::UNINIT) return false;
 
 	struct addrinfo hints, *results, *ptr;
@@ -93,6 +93,13 @@ bool sc::Socket::GetBlocking() {
 	return this->blocking;
 }
 
+void sc::Socket::SetTimeout(int seconds) {
+	struct timeval timeout;
+	timeout.tv_sec = seconds;
+	timeout.tv_usec = 0;
+	//setsockopt();
+}
+
 int sc::Socket::Accept(Socket &conn) {
 	if(this->type != ESOCKTYPE::SERVER) return -1;
 
@@ -111,10 +118,11 @@ int sc::Socket::Accept(Socket &conn) {
 	return 0;
 }
 
-int sc::Socket::Recv(std::string &str) {
+int sc::Socket::Recv(std::string &str, uint32_t length) {
 	if(this->type == ESOCKTYPE::UNINIT || this->type == ESOCKTYPE::SERVER) return -1;
 
-	int get = recv(this->sock, this->recvbuf, SOCK_BUFLEN-1, 0);
+	length = length > SOCK_BUFLEN ? SOCK_BUFLEN : length;
+	int get = recv(this->sock, this->recvbuf, length, 0);
 	if(WSAGetLastError() == WSAEWOULDBLOCK)
 		return 1;
 	else if(get <= 0) {
@@ -123,6 +131,12 @@ int sc::Socket::Recv(std::string &str) {
 	}
 
 	str = std::string(this->recvbuf, get);
+	if(get == 8) {
+		std::string buff;
+		int a = Socket::Recv(buff);
+		a = Socket::Recv(buff);
+		a = Socket::Recv(buff);
+	}
 	return 0;
 }
 

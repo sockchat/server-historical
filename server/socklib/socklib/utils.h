@@ -10,6 +10,7 @@
 #include <algorithm>
 
 class str {
+	LIBPRIV static short getCharSize(uint32_t);
 public:
 	typedef int(transformFunc)(int);
 
@@ -28,7 +29,6 @@ public:
 	LIBPUB static std::string trim(std::string str);
 	LIBPUB static std::string ftrim(std::string str);
 	LIBPUB static std::string btrim(std::string str);
-	LIBPRIV static short getCharSize(uint32_t);
 };
 
 #endif

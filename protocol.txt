@@ -22,7 +22,7 @@ octet data that is not delimited, it is necessary for the header of the packet
 to determine boundaries for the regions of data.
 
     The first two bytes are the packet id, the necessary ones of which are de-
-fined in the following two sections; interpret as a two-byte binary number.
+fined in the_SERVER_ and _CLIENT_ sections; a two-byte binary number.
 
     The third byte is the number of octet regions, in the packet.
     
@@ -30,15 +30,15 @@ fined in the following two sections; interpret as a two-byte binary number.
 each of which correspond to the number of octets in its respective region. They
 each follow this format:
 
-        IF LENGTH IS LESS THAN 126, THE LENGTH OF THE REGION IS STORED IN A
+        IF LENGTH IS LESS THAN 254, THE LENGTH OF THE REGION IS STORED IN A
     SINGLE BYTE.
         
-        IF LENGTH IS GREATER THAN OR EQUAL TO 126 BUT LESS THAN 65536, THE
-    FIRST BYTE OF THE LENGTH SEGMENT SHOULD BE 126 AND THE FOLLOWING TWO
+        IF LENGTH IS GREATER THAN OR EQUAL TO 254 BUT LESS THAN 65536, THE
+    FIRST BYTE OF THE LENGTH SEGMENT SHOULD BE 254 AND THE FOLLOWING TWO
     BYTES SHOULD BE THE LENGTH OF THE REGION.
     
         IF LENGTH IS GREATER THAN OR EQUAL TO 65536, THE FIRST BYTE OF THE
-    LENGTH SEGMENT SHOULD BE 127 AND THE FOLLOWING FOUR BYTES SHOULD BE THE
+    LENGTH SEGMENT SHOULD BE 255 AND THE FOLLOWING FOUR BYTES SHOULD BE THE
     LENGTH OF THE REGION.
     
     The number of length segments should be equal to the number of octet re-
@@ -50,6 +50,8 @@ gions as defined in the third byte.
 sists of a sequence of octet regions as defined in the header that are joined
 together without any separator. The position of an octet region in the body should
 correspond to the offset of the length segment in the header.
+
+                 ---- BASE PROTOCOL SPECIFIC PACKET IDS ----
 
                               --- SERVER ---                                
 

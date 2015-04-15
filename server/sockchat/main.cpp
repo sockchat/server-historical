@@ -8,22 +8,7 @@
 #include "socklib/socket.hpp"
 #include "socklib/library.hpp"
 #include "socklib/utils.h"
-
-typedef void(*modfunc)();
-
-struct Connection {
-	sc::Socket *sock;
-	time_t conn;
-	bool init;
-
-	Connection(sc::Socket *sock) {
-		this->sock = sock;
-		time(&this->conn);
-		this->init = false;
-	}
-};
-
-void CloseConnection(std::list<Connection>::iterator &i, std::list<Connection> &l);
+#include "cthread.h"
 
 int main() {
 	/*int c = 0;
@@ -48,6 +33,9 @@ int main() {
 		return false;
 #endif
 
+	auto req = sc::HTTPRequest::Get("http://iihsalf.net/");
+	std::cout << req.content;
+
 	sc::Socket sock = sc::Socket();
 	sc::Socket client;
 	if(!sock.Init(6770)) {
@@ -56,15 +44,16 @@ int main() {
 	}
 	sock.SetBlocking(false);
 
-	std::list<Connection> conns = std::list<Connection>();
 	std::string in;
 	int status;
+
 	while(true) {
 		if((status = sock.Accept(client)) == 0) {
-			client.SetBlocking(false);
-			conns.push_front(Connection(new sc::Socket(client)));
+			std::thread thr = std::thread(connectionThread, new sc::Socket(client));
+			//conns.push_front(Connection(new sc::Socket(client)));
 		} else if(status == -1) break;
 
+		/*
 		for(auto i = conns.begin(); i != conns.end();) {
 			if((status = i->sock->Recv(in)) == 0) {
 				if(!i->init) {
@@ -87,20 +76,17 @@ int main() {
 					}
 				} else {
 					std::cout << in << std::endl;
-					i->sock->Send("1\ty\t2\talec\t#f00\t2\f1\f1\f1\f1\f1\f1\f1\f1\tLobby\t2000");
+					//i->sock->Send(std::string(buffer));
 				}
 				i++;
-			} else if(status == -1)
+			} else if(status == -1) {
+				std::cout << WSAGetLastError();
 				CloseConnection(i, conns);
+			}
 		}
 	}
+	*/
 
 	WSACleanup();
 	return 0;
-}
-
-void CloseConnection(std::list<Connection>::iterator &i, std::list<Connection> &l) {
-	i->sock->Close();
-	delete i->sock;
-	i = l.erase(i);
 }
