@@ -66,12 +66,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cthread.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="threadctx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\socklib\socklib.vcxproj">
       <Project>{de701096-efb4-4999-963e-5fac413f05e1}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cthread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

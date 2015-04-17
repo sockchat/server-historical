@@ -165,3 +165,39 @@ short str::getCharSize(uint32_t c) {
 		  (c <= 0xFFFFFF	? 3 :
 		  (c <= 0xFFFFFFFF	? 4 : 5)));
 }
+
+std::string nethelp::htonl(uint32_t hostlong) {
+	std::string ret = "aaaa";
+	
+	for(int i = 0; i < 4; i++)
+		ret[3 - i] = (hostlong & (0xFF << 8 * i)) >> 8 * i;
+
+	return ret;
+}
+
+std::string nethelp::htons(uint16_t hostshort) {
+	std::string ret = "aa";
+
+	ret[0] = (hostshort & 0xFF00) >> 8;
+	ret[1] =  hostshort & 0x00FF;
+
+	return ret;
+}
+
+uint32_t nethelp::ntohl(std::string netlong) {
+	if(netlong.size() < 4) return 0;
+
+	uint32_t ret = 0;
+	for(int i = 0; i < 4; i++)
+		ret = ret | ((netlong[3 - i] & 0xFF) << 8 * i);
+
+	return ret;
+}
+
+uint16_t nethelp::ntohs(std::string netshort) {
+	if(netshort.size() < 2) return 0;
+
+	uint32_t ret = 0;
+	ret = ((netshort[0] & 0xFF) << 8) | (netshort[1] & 0xFF);
+	return ret;
+}

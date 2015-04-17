@@ -2,7 +2,6 @@
 // For interface, see socket.hpp
 
 #include "socklib/socket.hpp"
-#include <iostream>
 
 sc::WebSocket::WebSocket() : sc::Socket() {
 	this->handshaked = false;
@@ -14,42 +13,38 @@ sc::WebSocket::WebSocket(sc::Socket sock) : sc::Socket(sock) {
 	this->fragment = "";
 }
 
-int sc::WebSocket::Handshake() {
-	if(this->handshaked) return 0;
-
-	std::string tmp; int status;
-	if((status = Socket::Recv(tmp)) == 0) {
-		return this->Handshake(tmp) ? 0 : -1;
-	} else return status;
-}
-
-bool sc::WebSocket::Handshake(std::string headers) {
+bool sc::WebSocket::Handshake(std::string data) {
 	if(this->handshaked) return true;
 
-	if(headers.compare(0, 3, "GET") != 0) return false;
-
-	this->headers.clear();
-	auto lines = str::split(headers, "\r\n");
-	for(int i = 1; i < lines.size(); i++) {
-		auto keyval = str::split(lines[i], ':', 2);
-		if(keyval.size() == 2)
-			this->headers[str::tolower(str::trim(keyval[0]))] = str::trim(keyval[1]);
+	int status;
+	bool tmp = this->GetBlocking();
+	time_t start = time(NULL);
+	this->buffer = "";
+	this->SetBlocking(false);
+	while(!(this->header = HTTPRequest::Response(data, "GET")).IsValid() && difftime(time(NULL), start) <= 30) {
+		if(this->header.status == -2) return false;
+		if((status = Socket::Recv(this->buffer)) == -1) return false;
+		else if(status == 0)
+			data += this->buffer;
 	}
+	this->SetBlocking(tmp);
+	if(!this->header.IsValid()) return false;
 
-	if(this->headers.count("host") > 0 && this->headers.count("upgrade") > 0 &&
-		this->headers.count("connection") > 0 && this->headers.count("sec-websocket-key") > 0 &&
-		this->headers.count("sec-websocket-version") > 0) {
+	this->buffer = this->header.content;
+	if(this->header.headers.count("host") > 0 && this->header.headers.count("upgrade") > 0 &&
+		this->header.headers.count("connection") > 0 && this->header.headers.count("sec-websocket-key") > 0 &&
+		this->header.headers.count("sec-websocket-version") > 0) {
 
-		if(str::tolower(this->headers["upgrade"]) == "websocket" &&
-			str::tolower(this->headers["connection"]).find("upgrade") != std::string::npos &&
-			(this->headers["sec-websocket-version"] == "13")) {
+		if(str::tolower(this->header.headers["upgrade"]) == "websocket" &&
+			str::tolower(this->header.headers["connection"]).find("upgrade") != std::string::npos &&
+			(this->header.headers["sec-websocket-version"] == "13")) {
 
 			std::string shake =
 				"HTTP/1.1 101 Switching Protocols\r\n"
 				"Upgrade: websocket\r\n"
 				"Connection: Upgrade\r\n"
 				"Sec-WebSocket-Accept: ";
-			shake += this->CalculateConnectionHash(this->headers["sec-websocket-key"]) + "\r\n\r\n";
+			shake += this->CalculateConnectionHash(this->header.headers["sec-websocket-key"]) + "\r\n\r\n";
 
 			Socket::Send(shake);
 		} else return false;
@@ -69,28 +64,31 @@ int sc::WebSocket::Recv(std::string &str, uint32_t size) {
 	std::string buffer;
 	int status; bool fin = false;
 	while(!fin) {
-		if((status = Socket::Recv(buffer, size)) != 0) return status;
-		auto frame = Frame::FromRaw(buffer);
-		if(frame.IsLegal()) {
-			switch(frame.GetOpcode()) {
-			case Frame::TEXT:
-			case Frame::BINARY:
-				this->fragment = "";
-			case Frame::CONTINUATION:
-				fragment += frame.GetData();
-				fin = frame.IsFin();
-				break;
-			case Frame::PING:
-				Socket::Send(Frame(frame.GetData(), false, Frame::PONG).Get());
-				break;
-			case Frame::PONG:
-				break;
-			case Frame::CLOSE:
-			default:
-				this->Close();
-				return -1;
-			}
-		} else return -1;
+		sc::WebSocket::Frame frame;
+		while(!(frame = sc::WebSocket::Frame::FromRaw(this->buffer)).IsLegal()) {
+			if((status = Socket::Recv(buffer, size)) != 0) return status;
+			this->buffer += buffer;
+		}
+		this->buffer = /*this->buffer.length() == frame.Get().length() ? "" :*/ this->buffer.substr(frame.Get().length());
+
+		switch(frame.GetOpcode()) {
+		case Frame::TEXT:
+		case Frame::BINARY:
+			this->fragment = "";
+		case Frame::CONTINUATION:
+			fragment += frame.GetData();
+			fin = frame.IsFin();
+			break;
+		case Frame::PING:
+			Socket::Send(Frame(frame.GetData(), false, Frame::PONG).Get());
+			break;
+		case Frame::PONG:
+			break;
+		case Frame::CLOSE:
+		default:
+			this->Close();
+			return -1;
+		}
 	}
 
 	str = this->fragment;
@@ -243,13 +241,13 @@ sc::WebSocket::Frame sc::WebSocket::Frame::FromRaw(std::string raw) {
 			if(raw.length() > 10) {
 				size = 0;
 				for(int i = 0; i < 8; i++)
-					size = ((uint8_t)raw[2 + i] << 8 * i) | size;
+					size = ((uint8_t)raw[2 + i] << 8 * (7 - i)) | size;
 				nextByte = 10;
 			} else return ErrorFrame();
 		}
 
 		if(f.mask) {
-			if(raw.length() > nextByte + 4) {
+			if(raw.length() >= nextByte + 4) {
 				for(int i = 0; i < 4; i++)
 					f.maskdata.bytes[i] = raw[nextByte + i];
 			} else return ErrorFrame();

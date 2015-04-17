@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #define HSOCKET int
 #endif
@@ -25,10 +26,12 @@
 #include <map>
 #include <string>
 #include <random>
+#include <time.h>
 #include "stdcc.hpp"
 #include "utils.h"
-#include "socklib/sha1.h"
-#include "socklib/base64.h"
+#include "sha1.h"
+#include "base64.h"
+#include "msg.h"
 
 namespace sc {
 	class Socket {
@@ -41,6 +44,8 @@ namespace sc {
 		LIBPUB bool Init(std::string addr, uint16_t port);
 		LIBPUB bool Init(HSOCKET sock, HADDR addr, int addrlen);
 		
+		LIBPUB std::string GetIPAddress();
+
 		LIBPUB void SetBlocking(bool block);
 		LIBPUB bool GetBlocking();
 
@@ -65,22 +70,64 @@ namespace sc {
 		ESOCKTYPE type;
 	};
 
-	class TCPSocket : public Socket {
+	static class HTTPRequest {
+	private:
+		struct URL {
+			std::string protocol;
+			std::string target;
+			std::string resource;
+			uint16_t port;
+		};
 
+		LIBPUB static uint16_t GetPortFromProtocol(std::string protocol);
+		LIBPUB static URL DecipherURL(std::string url);
+	public:
+		class Response {
+		private:
+			LIBPUB void Error(int status = -1);
+		public:
+			enum ESTATUSCODE { OK = 200, FORBIDDEN = 403, NOTFOUND = 404, INTERR = 500 };
+			int status;
+			std::map<std::string, std::string> headers;
+			std::string content;
+
+			LIBPUB Response();
+			LIBPUB Response(std::string raw, std::string action = "HTTP");
+			LIBPUB Response(int status, std::map<std::string, std::string> headers, std::string content);
+
+			LIBPUB bool IsValid();
+		};
+
+		LIBPUB static std::string EncodeURI(std::string uri);
+		LIBPUB static std::string EncodeURIComponent(std::string comp);
+
+		LIBPUB static Response Raw(std::string action, std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>(), std::string body = "");
+
+		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> data = std::map<std::string, std::string>(), std::map<std::string, std::string> headers = std::map<std::string, std::string>());
+
+		LIBPUB static Response Post(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
+	};
+
+	class RawSocket : public Socket {
+		std::string buffer = "";
+	public:
+		LIBPUB RawSocket(Socket sock);
+
+		LIBPUB int Recv(std::string &str, uint32_t size = SOCK_BUFLEN);
 	};
 
 	class WebSocket : public Socket {
 		bool handshaked;
-		std::map<const std::string, std::string> headers;
+		sc::HTTPRequest::Response header;
 		std::string fragment;
+		std::string buffer;
 
 		LIBPRIV std::string CalculateConnectionHash(std::string in);
 	public:
 		LIBPUB WebSocket();
 		LIBPUB WebSocket(Socket sock);
 
-		LIBPUB int Handshake();
-		LIBPUB bool Handshake(std::string headers);
+		LIBPUB bool Handshake(std::string data = "");
 
 		LIBPUB int Recv(std::string &str, uint32_t size = SOCK_BUFLEN);
 		LIBPUB int Send(std::string str);
@@ -135,42 +182,6 @@ namespace sc {
 			bool fin;
 			bool legal = true;
 		};
-	};
-
-	static class HTTPRequest {
-	private:
-		struct URL {
-			std::string protocol;
-			std::string target;
-			std::string resource;
-			uint16_t port;
-		};
-
-		LIBPUB static uint16_t GetPortFromProtocol(std::string protocol);
-		LIBPUB static URL DecipherURL(std::string url);
-	public:
-		class Response {
-		private:
-			LIBPUB void Error();
-		public:
-			enum ESTATUSCODE { OK = 200, FORBIDDEN = 403, NOTFOUND = 404, INTERR = 500 };
-			int status;
-			std::map<std::string, std::string> headers;
-			std::string content;
-
-			LIBPUB Response();
-			LIBPUB Response(std::string raw);
-			LIBPUB Response(int status, std::map<std::string, std::string> headers, std::string content);
-		};
-
-		LIBPUB static std::string EncodeURI(std::string uri);
-		LIBPUB static std::string EncodeURIComponent(std::string comp);
-
-		LIBPUB static Response Raw(std::string action, std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>(), std::string body = "");
-
-		LIBPUB static Response Get(std::string url, std::map<std::string, std::string> data = std::map<std::string, std::string>(), std::map<std::string, std::string> headers = std::map<std::string, std::string>());
-
-		LIBPUB static Response Post(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers = std::map<std::string, std::string>());
 	};
 }
 

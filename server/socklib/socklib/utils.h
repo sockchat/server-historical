@@ -31,4 +31,12 @@ public:
 	LIBPUB static std::string btrim(std::string str);
 };
 
+class nethelp {
+public:
+	LIBPUB static std::string htonl(uint32_t hostlong);
+	LIBPUB static std::string htons(uint16_t hostshort);
+	LIBPUB static uint32_t ntohl(std::string netlong);
+	LIBPUB static uint16_t ntohs(std::string netshort);
+};
+
 #endif

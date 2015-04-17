@@ -44,15 +44,24 @@ int main() {
 	}
 	sock.SetBlocking(false);
 
-	std::string in;
 	int status;
-
+	auto conns = std::map<std::string, ThreadContext*>();
 	while(true) {
 		if((status = sock.Accept(client)) == 0) {
-			std::thread thr = std::thread(connectionThread, new sc::Socket(client));
-			//conns.push_front(Connection(new sc::Socket(client)));
+			if(conns.count(client.GetIPAddress()) == 0) {
+				auto tmp = new ThreadContext(new sc::Socket(client));
+				conns[client.GetIPAddress()] = tmp;
+				std::thread(connectionThread, tmp).detach();
+			} else
+				conns[client.GetIPAddress()]->PushSocket(new sc::Socket(client));
 		} else if(status == -1) break;
 
+		for(auto i = conns.begin(); i != conns.end(); ) {
+			if(i->second->IsDone()) {
+				delete i->second;
+				i = conns.erase(i);
+			} else ++i;
+		}
 		/*
 		for(auto i = conns.begin(); i != conns.end();) {
 			if((status = i->sock->Recv(in)) == 0) {
@@ -84,8 +93,8 @@ int main() {
 				CloseConnection(i, conns);
 			}
 		}
-	}
 	*/
+	}
 
 	WSACleanup();
 	return 0;

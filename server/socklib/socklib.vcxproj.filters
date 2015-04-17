@@ -36,6 +36,12 @@
     <ClCompile Include="http.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="msg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rawsock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="socklib\socket.hpp">
@@ -57,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="socklib\utf8.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="msg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

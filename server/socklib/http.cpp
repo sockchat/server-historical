@@ -6,8 +6,8 @@ sc::HTTPRequest::Response::Response() {
 	this->Error();
 }
 
-void sc::HTTPRequest::Response::Error() {
-	this->status = -1;
+void sc::HTTPRequest::Response::Error(int status) {
+	this->status = status;
 	this->headers = std::map<std::string, std::string>();
 	this->content = "";
 }
@@ -18,30 +18,47 @@ sc::HTTPRequest::Response::Response(int status, std::map<std::string, std::strin
 	this->content = content;
 }
 
-sc::HTTPRequest::Response::Response(std::string raw) {
+sc::HTTPRequest::Response::Response(std::string raw, std::string action) {
 	this->headers = std::map<std::string, std::string>();
-	if(raw.substr(0, 8) == "HTTP/1.1") {
+	if(raw.substr(0, action.length()) == action) {
 		auto lines = str::split(raw, "\r\n");
 		auto statusline = str::split(lines[0], ' ');
 
 		if(statusline.size() < 2) {
-			this->Error();
+			this->Error(-1);
 			return;
 		}
 
-		this->status = std::stoi(statusline[1]);
+		if(action == "HTTP") {
+			try {
+				this->status = std::stoi(statusline[1]);
+			} catch(std::exception e) {
+				this->Error(-2);
+				return;
+			}
+		} else
+			this->status = 0;
 
+		bool headersFinished = false;
 		int headersize = lines[0].length() + 2;
-		for(int i = 1; i < lines.size(); i++) {
+		for(int i = 1; i < lines.size() - 1; i++) {
 			headersize += lines[i].length() + 2;
-			if(str::trim(lines[i]) == "") break;
+			if(str::trim(lines[i]) == "") {
+				headersFinished = true;
+				break;
+			}
 
 			auto keyval = str::split(lines[i], ":", 2);
 			if(keyval.size() != 2) {
-				this->Error();
+				this->Error(-2);
 				return;
 			} else
 				this->headers[str::tolower(str::trim(keyval[0]))] = str::trim(keyval[1]);
+		}
+
+		if(!headersFinished) {
+			this->Error(-1);
+			return;
 		}
 
 		this->content =
@@ -49,7 +66,11 @@ sc::HTTPRequest::Response::Response(std::string raw) {
 				raw.substr(headersize) :
 				raw.substr(headersize, std::stoi(this->headers["content-length"]));
 
-	} else this->Error();
+	} else this->Error(-2);
+}
+
+bool sc::HTTPRequest::Response::IsValid() {
+	return this->status >= 0;
 }
 
 uint16_t sc::HTTPRequest::GetPortFromProtocol(std::string protocol) {
@@ -102,14 +123,28 @@ sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string u
 		request += body;
 
 		sc::Socket sock;
+		sock.SetBlocking(true);
 		sock.Init(urlparts.target, urlparts.port);
 		sock.Send(request);
-		sock.Recv(request);
-		Response tmp = Response(request);
+
+		sock.SetTimeout(60);
+		Response tmp = Response();
+		std::string buffer = "";
+		while(tmp.status == -1) {
+			if(sock.Recv(request) == -1) {
+				sock.Close();
+				return Response();
+			}
+			buffer += request;
+			tmp = Response(buffer);
+		}
 
 		if(tmp.headers.count("content-length") > 0) {
 			while(tmp.content.length() < std::stoi(tmp.headers["content-length"])) {
-				sock.Recv(request);
+				if(sock.Recv(request) == -1) {
+					sock.Close();
+					return Response();
+				}
 				tmp.content += request;
 			}
 			tmp.content = tmp.content.substr(0, std::stoi(tmp.headers["content-length"]));
@@ -128,15 +163,21 @@ sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string u
 
 				if(buffer.length() + request.length() >= size + 2) {
 					tmp.content += (buffer + request).substr(0, size);
-					if(buffer.length() + request.length() == size + 2)
-						sock.Recv(request);
-					else
+					if(buffer.length() + request.length() == size + 2) {
+						if(sock.Recv(request) == -1) {
+							sock.Close();
+							return Response();
+						}
+					} else
 						request = (buffer + request).substr(size + 2);
 					buffer = "";
 					size = UINT32_MAX;
 				} else {
 					buffer += request;
-					sock.Recv(request);
+					if(sock.Recv(request) == -1) {
+						sock.Close();
+						return Response();
+					}
 				}
 			}
 		}

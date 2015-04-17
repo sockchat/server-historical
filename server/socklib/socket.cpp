@@ -82,6 +82,13 @@ bool sc::Socket::Init(HSOCKET sock, HADDR addr, int addrlen) {
 	return true;
 }
 
+std::string sc::Socket::GetIPAddress() {
+	if(this->type != ESOCKTYPE::SERVERSPAWN) return "0.0.0.0";
+	char buffer[128];
+	inet_ntop(this->addr.sin_family, (PVOID)&this->addr.sin_addr, buffer, 128);
+	return std::string(buffer);
+}
+
 void sc::Socket::SetBlocking(bool block) {
 	if(this->type == ESOCKTYPE::UNINIT) return;
 	u_long blocking = block ? 0 : 1;
@@ -131,12 +138,12 @@ int sc::Socket::Recv(std::string &str, uint32_t length) {
 	}
 
 	str = std::string(this->recvbuf, get);
-	if(get == 8) {
+	/*if(get == 8) {
 		std::string buff;
 		int a = Socket::Recv(buff);
 		a = Socket::Recv(buff);
 		a = Socket::Recv(buff);
-	}
+	}*/
 	return 0;
 }
 
