@@ -17,34 +17,29 @@ var Title = (function () {
             document.title = (Title.on ? "[@ ]" : "[ @]") + " " + Title.username + " - " + UI.chatTitle;
             Title.num--;
             Title.on = !Title.on;
-        } else
+        }
+        else
             Title.Normalize();
     };
-
     Title.Strobe = function (name) {
         Title.num = Title.startNum;
         Title.username = name;
-
         if (!Title.started) {
             Title.started = true;
             setInterval("Title.strobeCallback();", 500);
         }
     };
-
     Title.Normalize = function () {
         document.title = UI.chatTitle;
     };
     Title.username = "";
     Title.num = 0;
-
     Title.startNum = 6;
     Title.enableStrobing = true;
-
     Title.started = false;
     Title.on = false;
     return Title;
 })();
-
 var UI = (function () {
     function UI() {
     }
@@ -55,16 +50,16 @@ var UI = (function () {
     UI.UpdateChatLists = function () {
         var chats = document.getElementsByName("chatList");
         for (var i in chats) {
-            try  {
+            try {
                 chats[i].className = UI.GetChatListClass();
-            } catch (e) {
+            }
+            catch (e) {
             }
         }
     };
     UI.ChangeSidebar = function (id) {
         if (UI.chatFlags[1] != null)
             document.getElementById(UI.chatFlags[1]).style.display = "none";
-
         if (id == UI.chatFlags[1] || id == null)
             UI.chatFlags[1] = null;
         else {
@@ -74,7 +69,7 @@ var UI = (function () {
         UI.UpdateChatLists();
     };
     UI.ToggleChannelMenu = function (val) {
-        if (typeof val === "undefined") { val = null; }
+        if (val === void 0) { val = null; }
         if (val == null)
             UI.chatFlags[0] = !UI.chatFlags[0];
         else
@@ -93,22 +88,20 @@ var UI = (function () {
         var self = document.getElementById("chat." + channel);
         self.parentElement.removeChild(self);
     };
-
     UI.IsMobileView = function () {
         return window.innerWidth <= 800;
     };
-
     UI.InsertChatText = function (before, after) {
-        if (typeof before === "undefined") { before = ""; }
-        if (typeof after === "undefined") { after = ""; }
+        if (before === void 0) { before = ""; }
+        if (after === void 0) { after = ""; }
         var element = document.getElementById("message");
-
         if (document.selection) {
             element.focus();
             var sel = document.selection.createRange();
             sel.text = before + sel.text + after;
             element.focus();
-        } else if (element.selectionStart || element.selectionStart === 0) {
+        }
+        else if (element.selectionStart || element.selectionStart === 0) {
             var startPos = element.selectionStart;
             var endPos = element.selectionEnd;
             var scrollTop = element.scrollTop;
@@ -117,43 +110,42 @@ var UI = (function () {
             element.selectionStart = startPos + before.length;
             element.selectionEnd = endPos + before.length;
             element.scrollTop = scrollTop;
-        } else {
+        }
+        else {
             element.value += before + after;
             element.focus();
         }
     };
-
     UI.ChangeActiveChat = function (name) {
-        if (typeof name === "undefined") { name = null; }
+        if (name === void 0) { name = null; }
         var chats = document.getElementsByName("chatList");
         for (var i in chats) {
-            try  {
+            try {
                 chats[i].style.display = "none";
-            } catch (e) {
+            }
+            catch (e) {
             }
         }
         if (name != null)
             document.getElementById("chat." + name).style.display = "block";
     };
-
     UI.GetCursorPosition = function () {
         var element = document.getElementById("message");
-
         if (document.selection) {
             var c = "\001", sel = document.selection.createRange(), dul = sel.duplicate(), len = 0;
-
             dul.moveToElementText(element);
             sel.text = c;
             len = dul.text.indexOf(c);
             sel.moveStart('character', -1);
             sel.text = "";
             return len;
-        } else if (element.selectionStart || element.selectionStart === 0) {
+        }
+        else if (element.selectionStart || element.selectionStart === 0) {
             return element.selectionStart;
-        } else
+        }
+        else
             return 0;
     };
-
     UI.RenderButtons = function () {
         document.getElementById("bbCodeContainer").innerHTML = "";
         UI.bbcode.forEach(function (elem, i, arr) {
@@ -185,7 +177,6 @@ var UI = (function () {
             }
         });
     };
-
     UI.RenderIcons = function () {
         document.getElementById("optionsContainer").innerHTML = "";
         UI.icons.forEach(function (elem, i, arr) {
@@ -203,7 +194,6 @@ var UI = (function () {
             document.getElementById("optionsContainer").appendChild(icon);
         });
     };
-
     UI.RenderEmotes = function () {
         document.getElementById("emotes").innerHTML = "";
         UI.emotes.forEach(function (elem, i, arr) {
@@ -217,7 +207,6 @@ var UI = (function () {
         });
         document.getElementById("message").value = "";
     };
-
     UI.RedrawDropDowns = function () {
         document.getElementById("langdd").innerHTML = "";
         UI.langs.forEach(function (elem, i, arr) {
@@ -227,87 +216,78 @@ var UI = (function () {
             document.getElementById("langdd").appendChild(e);
         });
     };
-
     UI.ChangeStyle = function () {
         var selected = document.getElementById("styledd").value;
         Cookies.Set(1 /* Style */, selected);
-
         var oldlink = document.getElementsByTagName("link").item(0);
-
         var newlink = document.createElement("link");
         newlink.setAttribute("rel", "stylesheet");
         newlink.setAttribute("type", "text/css");
         newlink.setAttribute("href", "./styles/" + selected + ".css");
-
         document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
     };
-
     UI.ChangeDisplay = function (chat, msgid, indicator, err, link) {
-        if (typeof msgid === "undefined") { msgid = "chan"; }
-        if (typeof indicator === "undefined") { indicator = true; }
-        if (typeof err === "undefined") { err = ""; }
-        if (typeof link === "undefined") { link = false; }
+        if (msgid === void 0) { msgid = "chan"; }
+        if (indicator === void 0) { indicator = true; }
+        if (err === void 0) { err = ""; }
+        if (link === void 0) { link = false; }
         if (chat) {
             document.getElementById("connmsg").style.display = "none";
             document.getElementById("chat").style.display = "block";
-        } else {
+        }
+        else {
             document.getElementById("chat").style.display = "none";
             document.getElementById("connmsg").style.display = "block";
             document.getElementById("conntxt").innerHTML = UI.langs[UI.currentLang].menuText[msgid] + err + (link ? "<br/><br/><a href='" + Socket.redirectUrl + "'>" + UI.langs[UI.currentLang].menuText["back"] + "</a>" : "");
             document.getElementById("indicator").style.display = indicator ? "block" : "none";
         }
     };
-
     UI.RenderLanguage = function () {
         var id = document.getElementById("langdd").selectedIndex;
         this.currentLang = id;
-
         Cookies.Set(0 /* Language */, UI.langs[id].code);
-
         document.getElementById("chanbtn").value = UI.langs[id].menuText["chan"];
         document.getElementById("tstyle").innerHTML = UI.langs[id].menuText["style"];
         document.getElementById("tlang").innerHTML = UI.langs[id].menuText["lang"];
-
         document.getElementsByClassName("top")[0].innerHTML = UI.langs[id].menuText["channels"];
         document.getElementsByClassName("top")[1].innerHTML = UI.langs[id].menuText["online"];
         document.getElementsByClassName("top")[2].innerHTML = UI.langs[id].menuText["sets"];
         UI.RedrawHelpList();
         document.getElementById("sendmsg").value = UI.langs[id].menuText["submit"];
-
-        try  {
+        try {
             document.getElementById("namelabel").innerHTML = UI.langs[id].menuText["username"];
-        } catch (e) {
         }
-        try  {
+        catch (e) {
+        }
+        try {
             document.getElementById("msglabel").innerHTML = UI.langs[id].menuText["message"];
-        } catch (e) {
         }
-
+        catch (e) {
+        }
         var rows = document.getElementById("settingsList").getElementsByTagName("table")[0].getElementsByTagName("tr");
         console.log(rows);
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].getAttribute("name").substr(0, 2) == ";;") {
                 var code = rows[i].getAttribute("name").substr(2);
                 rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].menuText["persist"].replace("{0}", UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code);
-            } else if (rows[i].getAttribute("name").substr(0, 2) == "||") {
+            }
+            else if (rows[i].getAttribute("name").substr(0, 2) == "||") {
                 var code = rows[i].getAttribute("name").substr(2);
                 rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].menuText["enable"].replace("{0}", UI.langs[UI.currentLang].bbCodeText[code] != undefined ? UI.langs[UI.currentLang].bbCodeText[code] : code);
-            } else {
+            }
+            else {
                 if (UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] != undefined)
                     rows[i].cells[0].innerHTML = UI.langs[UI.currentLang].settingsText[rows[i].getAttribute("name")] + ":";
             }
         }
-
         var btns = document.getElementById("bbCodeContainer").getElementsByTagName("input");
         for (var i = 0; i < btns.length; i++) {
             if (btns[i].getAttribute("name") != ";;")
                 btns[i].value = UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] != undefined ? UI.langs[UI.currentLang].bbCodeText[btns[i].getAttribute("name")] : btns[i].getAttribute("name");
         }
-
         if (UserContext.self != undefined)
             UI.RedrawUserList();
     };
-
     UI.GenerateContextMenu = function (u) {
         var ret = document.createElement("ul");
         ret.id = "sock_menu_" + u.id;
@@ -351,16 +331,14 @@ var UI = (function () {
         });
         return ret;
     };
-
     UI.AddMessage = function (msgid, date, u, msg, strobe, playsound, flags, fulldate) {
-        if (typeof strobe === "undefined") { strobe = true; }
-        if (typeof playsound === "undefined") { playsound = true; }
-        if (typeof flags === "undefined") { flags = "10010"; }
-        if (typeof fulldate === "undefined") { fulldate = false; }
+        if (strobe === void 0) { strobe = true; }
+        if (playsound === void 0) { playsound = true; }
+        if (flags === void 0) { flags = "10010"; }
+        if (fulldate === void 0) { fulldate = false; }
         var msgDiv = document.createElement("div");
         msgDiv.id = "sock_msg_" + msgid;
         msgDiv.className = (this.rowEven[0]) ? "rowEven" : "rowOdd";
-
         /*var timecorrection = (new Date()).getTimezoneOffset()*60000;
         var dateval = new Date((date + ((((UI.dst)?0:1)+UI.timezone)*3600))*1000 + timecorrection);*/
         var dateval = new Date(date * 1000);
@@ -368,10 +346,8 @@ var UI = (function () {
         if (fulldate)
             datestr = dateval.getFullYear() + "-" + Utils.AddZero(dateval.getMonth() + 1) + "-" + Utils.AddZero(dateval.getDate()) + " " + datestr;
         var outmsg = msg;
-
         if (u.id == -1)
             outmsg = UI.langs[UI.currentLang].interpretBotString(msg);
-
         if (playsound) {
             if (u.id == -1)
                 Sounds.Play(UI.langs[UI.currentLang].isBotMessageError(msg) ? 1 /* Error */ : 0 /* ChatBot */);
@@ -380,29 +356,27 @@ var UI = (function () {
             else
                 Sounds.Play(4 /* Receive */);
         }
-
         var mention = false;
-        try  {
+        try {
             if (!Utils.ContainsSpecialChar(UserContext.self.username))
                 mention = (new RegExp("\\b" + Utils.SanitizeRegex(UserContext.self.username) + "\\b", "i")).test(outmsg);
             else
                 mention = (outmsg.toLowerCase()).indexOf(UserContext.self.username.toLowerCase()) != -1;
-        } catch (e) {
         }
-
+        catch (e) {
+        }
         if (flags.charAt(4) == "1") {
             if (u.id == UserContext.self.id) {
                 var p = outmsg.split(" ");
                 outmsg = "<i>" + UI.langs[UI.currentLang].menuText['whisperto'].replace('{0}', p[0]) + "</i> " + p.slice(1).join(" ");
-            } else
+            }
+            else
                 outmsg = "<i>" + UI.langs[UI.currentLang].menuText['whisper'] + "</i> " + outmsg;
         }
-
         if (strobe && !document.hasFocus() && (flags.charAt(4) == "1" || mention)) {
             var strip = outmsg.replace(new RegExp("\\[.*?\\]", "g"), "").replace(new RegExp("\\<.*?\\>", "g"), "");
             Notify.Show(u.username, strip, "img/alert.png");
         }
-
         if (UI.enableBBCode) {
             for (var i = 0; i < UI.bbcode.length; i++) {
                 if (!UI.bbcode[i]["arg"]) {
@@ -416,10 +390,12 @@ var UI = (function () {
                                 replace = inner;
                             outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
                             at += replace.length;
-                        } else
+                        }
+                        else
                             break;
                     }
-                } else {
+                }
+                else {
                     var at = 0;
                     while ((at = outmsg.indexOf("[" + UI.bbcode[i]['tag'] + "=", at)) != -1) {
                         var start, end;
@@ -432,15 +408,16 @@ var UI = (function () {
                                     replace = inner;
                                 outmsg = outmsg.substring(0, at) + replace + outmsg.substring(end + ("[/" + UI.bbcode[i]['tag'] + "]").length);
                                 at += replace.length;
-                            } else
+                            }
+                            else
                                 break;
-                        } else
+                        }
+                        else
                             break;
                     }
                 }
             }
         }
-
         if (UI.enableLinks) {
             var tmp = outmsg.split(' ');
             for (var i = 0; i < tmp.length; i++) {
@@ -450,30 +427,24 @@ var UI = (function () {
                     continue;
                 }
                 var text = tmp[i].replace(/(<([^>]+)>)/ig, "");
-
                 if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || text.substr(0, 6) == "ftp://")
                     tmp[i] = "<a href='" + text + "' onclick='window.open(this.href);return false;'>" + text + "</a>";
             }
             outmsg = tmp.join(" ");
         }
-
         if (UI.enableEmotes) {
             UI.emotes.forEach(function (elem, i, arr) {
                 var args = [];
                 elem[1].forEach(function (elt, j, akbar) {
                     args.push(Utils.SanitizeRegex(Utils.Sanitize(elt)));
                 });
-
                 outmsg = outmsg.replace(new RegExp("(" + args.join("|") + ")(?![^\\<]*\\>)", "g"), "<img src='img/emotes/" + elem[0] + "' class='chatEmote' />");
             });
         }
-
         var namestyle = (flags.charAt(0) == "1" ? "font-weight: bold;" : "") + (flags.charAt(1) == "1" ? "font-style: italic;" : "") + (flags.charAt(2) == "1" ? "text-decoration: underline;" : "");
         var colon = flags.charAt(3) == "1" ? ":" : "";
-
         var name = (u.id == -1) ? "<span class='botName'>" + u.username + "</span>" : u.username;
         msgDiv.innerHTML = "<span class='date'>(" + datestr + ")</span> <span onclick='UI.InsertChatText(this.innerHTML.replace(/<[^>]*>/g, \"\"));' style='" + namestyle + "color:" + u.color + ";'>" + name + "</span><span class='msgColon'>" + colon + " </span><span class='msgBreak'><br /></span>" + outmsg + "";
-
         if (UserContext.self != undefined && !isNaN(+msgid)) {
             if (UserContext.self.canModerate() && u.id != -1 && u.getRank() <= UserContext.self.getRank()) {
                 var del = document.createElement("img");
@@ -489,23 +460,19 @@ var UI = (function () {
                 msgDiv.insertBefore(del, msgDiv.childNodes[0]);
             }
         }
-
         document.getElementById("chatList").appendChild(msgDiv);
         this.rowEven[0] = !this.rowEven[0];
         if (UI.autoscroll)
             document.getElementById("chatList").scrollTop = document.getElementById("chatList").scrollHeight;
-
         if (strobe && u.id != UserContext.self.id)
             Title.Strobe(u.username);
     };
-
     UI.ToggleUserMenu = function (id) {
         var menu = document.getElementById("sock_menu_" + id);
         menu.style.display = menu.style.display == "none" ? "block" : "none";
     };
-
     UI.AddUser = function (u, addToContext) {
-        if (typeof addToContext === "undefined") { addToContext = true; }
+        if (addToContext === void 0) { addToContext = true; }
         if (u.visible) {
             var msgDiv = document.createElement("div");
             msgDiv.className = (this.rowEven[1]) ? "rowEven" : "rowOdd";
@@ -515,41 +482,34 @@ var UI = (function () {
             document.getElementById("userList").appendChild(msgDiv);
             this.rowEven[1] = !this.rowEven[1];
         }
-
         if (addToContext) {
             UserContext.users["" + u.id] = u;
         }
     };
-
     UI.ModifyUser = function (u) {
         var tmp = document.getElementById("sock_user_" + u.id).getElementsByTagName("a")[0];
         tmp.style.color = u.color;
         tmp.innerHTML = u.username;
     };
-
     UI.AddChannel = function (name, ispwd, istemp) {
         var opt = document.createElement("option");
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + name + (istemp ? "]" : "");
         opt.value = name;
         //(<HTMLSelectElement>document.getElementById("channeldd")).add(opt);
     };
-
     UI.ModifyChannel = function (oldname, newname, ispwd, istemp) {
         /*var opt = Utils.GetOptionByValue(<HTMLSelectElement>document.getElementById("channeldd"), oldname);
         opt.value = newname;
         opt.text = (ispwd ? "*" : "") + (istemp ? "[" : "") + newname + (istemp ? "]" : "");*/
     };
-
     UI.RemoveChannel = function (name) {
         /*var cdd = <HTMLSelectElement>document.getElementById("channeldd");
         cdd.remove(Utils.GetOptionIndexByValue(cdd, name));*/
     };
-
     UI.RemoveUser = function (id) {
         delete UserContext.users["" + id];
         this.RedrawUserList();
     };
-
     UI.RedrawUserList = function () {
         document.getElementById("userList").innerHTML = '<div class="top">' + UI.langs[UI.currentLang].menuText["online"] + '</div>';
         this.rowEven[1] = false;
@@ -559,7 +519,6 @@ var UI = (function () {
                 this.AddUser(UserContext.users[key], false);
         }
     };
-
     UI.RedrawHelpList = function () {
         document.getElementById("helpList").innerHTML = '<div class="top">' + UI.langs[UI.currentLang].menuText["help"] + '</div>';
         var table = document.createElement("table");
@@ -577,9 +536,8 @@ var UI = (function () {
         }
         document.getElementById("helpList").appendChild(table);
     };
-
     UI.GenerateChannelDiv = function (c, row, open) {
-        if (typeof open === "undefined") { open = false; }
+        if (open === void 0) { open = false; }
         var ret = document.createElement("div");
         ret.className = row ? 'rowEven' : 'rowOdd';
         if (open) {
@@ -607,10 +565,8 @@ var UI = (function () {
             list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven, true));
             rowEven = !rowEven;
         }
-
         list.innerHTML += "<div class='" + (rowEven ? 'rowEven' : 'rowOdd') + "'>&nbsp;</div>";
         rowEven = !rowEven;
-
         for (var name in ChannelContext.channels) {
             if (ChannelContext.openChannels[name] == undefined) {
                 list.appendChild(UI.GenerateChannelDiv(ChannelContext.channels[name], rowEven));
@@ -624,24 +580,18 @@ var UI = (function () {
     UI.maxMsgLen = 2000;
     UI.ChatBot = new User(-1, "ChatBot", "inherit", "");
     UI.autoscroll = true;
-
     UI.enableBBCode = true;
     UI.enableEmotes = true;
     UI.enableLinks = true;
-
     UI.contextMenuFields = Array();
     UI.bbcode = Array();
     UI.emotes = Array();
     UI.icons = Array();
-
     UI.spacks = Array();
     UI.currentPack = 0;
-
     UI.currentLang = 0;
-
     UI.styles = Array();
     UI.currentStyle = 0;
-
     UI.chatFlags = [false, "userList"];
     return UI;
 })();

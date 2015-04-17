@@ -324,7 +324,7 @@ class Chat {
     }
 
     static SendMessageWrapper(msg: string) {
-        if(msg.trim() != "") Socket.Send(Message.Pack(2, ChannelContext.activeChannel, ""+ UserContext.self.id, msg));
+        if(msg.trim() != "") Socket.Send(Message.Pack(2, [ChannelContext.activeChannel, msg]));
     }
 
     static ChangeChannel() {

@@ -105,4 +105,55 @@ class Utils {
         }
         return out;
     }
+
+    static PackBytes(num: number, bytes: number = 4): Uint8Array {
+        var ret = new Uint8Array(bytes);
+        for(var i = 0; i < bytes; i++)
+            ret[i] = (num & (0xFF << 8 * (bytes - 1 - i))) >>> 8 * (bytes - 1 - i);
+        return ret;
+    }
+
+    static UnpackBytes(bytes: Uint8Array): number {
+        var ret = 0;
+        for(var i = 0; i < bytes.length; i++)
+            ret = ret | ((bytes[i] & 0xFF) << 8*(bytes.length - 1 - i));
+        return ret;
+    }
+}
+
+class utf8 {
+    public static byteLength(str: string): number {
+        return encodeURI(str).split(/%..|./).length - 1;
+    }
+
+    public static toByteArray(str: string): number[] {
+        var byteArray = [];
+        for (var i = 0; i < str.length; i++)
+            if (str.charCodeAt(i) <= 0x7F)
+                byteArray.push(str.charCodeAt(i));
+            else {
+                var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
+                for (var j = 0; j < h.length; j++)
+                    byteArray.push(parseInt(h[j], 16));
+            }
+        return byteArray;
+    }
+
+    public static byteArrayToString(arr: Uint8Array): string {
+        var tmp: number[] = [];
+        for(var i = 0; i < arr.length; i++)
+            tmp.push(arr[i]);
+
+        return utf8.toString(tmp);
+    }
+
+    public static toString(byteArray: number[]) {
+        var str = '';
+        for (var i = 0; i < byteArray.length; i++)
+            str +=  byteArray[i] <= 0x7F?
+                byteArray[i] === 0x25 ? "%25" : // %
+                    String.fromCharCode(byteArray[i]) :
+            "%" + byteArray[i].toString(16).toUpperCase();
+        return decodeURIComponent(str);
+    }
 }

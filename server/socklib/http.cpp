@@ -1,7 +1,5 @@
 #include "socklib/socket.hpp"
 
-#include <iostream>
-
 sc::HTTPRequest::Response::Response() {
 	this->Error();
 }
@@ -80,7 +78,7 @@ uint16_t sc::HTTPRequest::GetPortFromProtocol(std::string protocol) {
 
 sc::HTTPRequest::URL sc::HTTPRequest::DecipherURL(std::string url) {
 	URL ret;
-	int pos, ppos;
+	int pos;
 	if((pos = url.find("://")) != std::string::npos) {
 		ret.protocol = url.substr(0, pos);
 		url = url.substr(pos + 3);

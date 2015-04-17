@@ -79,9 +79,10 @@
     <ClCompile Include="websocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="msg.h" />
     <ClInclude Include="socklib\base64.h" />
+    <ClInclude Include="socklib\dirent.h" />
     <ClInclude Include="socklib\library.hpp" />
+    <ClInclude Include="socklib\msg.h" />
     <ClInclude Include="socklib\sha1.h" />
     <ClInclude Include="socklib\socket.hpp" />
     <ClInclude Include="socklib\stdcc.hpp" />

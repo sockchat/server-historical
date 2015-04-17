@@ -70,7 +70,7 @@ namespace sc {
 		ESOCKTYPE type;
 	};
 
-	static class HTTPRequest {
+	class HTTPRequest {
 	private:
 		struct URL {
 			std::string protocol;
@@ -146,8 +146,8 @@ namespace sc {
 			LIBPUB enum Opcode { CONTINUATION = 0x0, TEXT = 0x1, BINARY = 0x2, CLOSE = 0x8, PING = 0x9, PONG = 0xA };
 
 			LIBPUB Frame();
-			LIBPUB Frame(std::string data, bool mask = false, int type = Opcode::TEXT, bool fin = true, uint8_t rsv = 0x0);
-			LIBPUB Frame(std::string data, uint8_t maskdata[4], bool mask = false, int type = Opcode::TEXT, bool fin = true, uint8_t rsv = 0x0);
+			LIBPUB Frame(std::string data, bool mask = false, int type = Opcode::BINARY, bool fin = true, uint8_t rsv = 0x0);
+			LIBPUB Frame(std::string data, uint8_t maskdata[4], bool mask = false, int type = Opcode::BINARY, bool fin = true, uint8_t rsv = 0x0);
 			
 			LIBPUB void SetOpcode(int opcode);
 			LIBPUB int GetOpcode();

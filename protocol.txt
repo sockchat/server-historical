@@ -61,8 +61,8 @@ correspond to the offset of the length segment in the header.
 1 - User join request. Takes a variable number of parameters that are fed
     into the authentication script associated with the chat.
     
-2 - User message. The first parameter is the user id, the second parameter
-    is the channel, the third parameter is the message.
+2 - User message. The first parameter is the channel, the second parameter
+    is the message.
                               
                               --- CLIENT ---
                               

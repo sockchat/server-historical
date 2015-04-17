@@ -65,7 +65,10 @@
     <ClInclude Include="socklib\utf8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="msg.h">
+    <ClInclude Include="socklib\msg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="socklib\dirent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

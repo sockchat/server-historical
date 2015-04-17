@@ -13,17 +13,16 @@ var Logs = (function () {
     }
     Logs.HandleDataChange = function (e) {
         var key = ('which' in e) ? e.which : e.keyCode;
-
         if (key == 13) {
             Logs.BindParameters();
             e.preventDefault();
             return false;
-        } else
+        }
+        else
             return true;
     };
-
     Logs.FetchUpdate = function (id, off) {
-        if (typeof off === "undefined") { off = 0; }
+        if (off === void 0) { off = 0; }
         var params = "";
         for (var p in Logs.params) {
             if (Logs.params[p] != null)
@@ -36,7 +35,6 @@ var Logs = (function () {
         var data = Utils.FetchPage("./?view=rawlogs" + Logs.authString + params);
         if (Logs.fetchId != id)
             return;
-
         var more;
         switch (data[0]) {
             case "x":
@@ -66,19 +64,17 @@ var Logs = (function () {
         if (more)
             this.thread = setTimeout("Logs.FetchUpdate(" + Logs.fetchId + ", " + (+msgs[0] + 1) + ");", 1000);
     };
-
     Logs.BindParameters = function (force) {
-        if (typeof force === "undefined") { force = false; }
+        if (force === void 0) { force = false; }
         if (!Logs.ready)
             return;
-
-        try  {
+        try {
             clearTimeout(Logs.thread);
-        } catch (e) {
+        }
+        catch (e) {
         }
         document.getElementById("chatList").innerHTML = "";
         Logs.fetchId++;
-
         if (!force) {
             var data = ["channeldd", "username", "msg", "year", "month", "day", "time"];
             for (var i in data)
@@ -95,19 +91,22 @@ var Logs = (function () {
                             start.setHours(+data[6], 0, 0, 0);
                             end.setFullYear(+data[3], +data[4], +data[5]);
                             end.setHours(+data[6] + 1, 0, 0, 0);
-                        } else {
+                        }
+                        else {
                             start.setFullYear(+data[3], +data[4], +data[5]);
                             start.setHours(0, 0, 0, 0);
                             end.setFullYear(+data[3], +data[4], +data[5] + 1);
                             end.setHours(0, 0, 0, 0);
                         }
-                    } else {
+                    }
+                    else {
                         start.setFullYear(+data[3], +data[4], 0);
                         start.setHours(0, 0, 0, 0);
                         end.setFullYear(+data[3], +data[4] + 1, 0);
                         end.setHours(0, 0, 0, 0);
                     }
-                } else {
+                }
+                else {
                     start.setFullYear(+data[3], 0, 0);
                     start.setHours(0, 0, 0, 0);
                     end.setFullYear(+data[3] + 1, 0, 0);
@@ -115,26 +114,23 @@ var Logs = (function () {
                 }
                 Logs.params["high"] = Utils.UnixTime(end) - 1;
                 Logs.params["low"] = Utils.UnixTime(start);
-            } else {
+            }
+            else {
                 Logs.params["high"] = null;
                 Logs.params["low"] = null;
             }
         }
-
         this.thread = setTimeout("Logs.FetchUpdate(" + Logs.fetchId + ");", 0);
     };
-
     Logs.Main = function () {
         var elements = ["channeldd", "username", "msg", "year", "month", "day", "time"];
         for (var ifdg in elements) {
             document.getElementById(elements[ifdg]).value = "";
         }
-
         Logs.authString = "&";
         for (var i = 0; i < Socket.args.length; i++) {
             Logs.authString += (i != 0 ? "&" : "") + "arg" + (i + 1) + "=" + Socket.args[i];
         }
-
         var channels = Utils.FetchPage("./?view=rawlogs" + Logs.authString + "&channels=list");
         switch (channels[0]) {
             case "x":
@@ -151,7 +147,8 @@ var Logs = (function () {
                         opt.text = " ";
                         opt.disabled = true;
                         document.getElementById("channeldd").add(opt);
-                    } else {
+                    }
+                    else {
                         UI.AddChannel(chans[chan], false, false);
                     }
                 }
@@ -159,7 +156,6 @@ var Logs = (function () {
             default:
                 UI.AddMessage("log", Utils.UnixNow(), UI.ChatBot, Utils.formatBotMessage("1", "generr", []), false, false, "10010", true);
         }
-
         Logs.ready = true;
         Logs.params["high"] = Utils.UnixNow();
         Logs.params["low"] = Utils.UnixNow() - 1800;

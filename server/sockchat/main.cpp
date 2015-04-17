@@ -62,38 +62,6 @@ int main() {
 				i = conns.erase(i);
 			} else ++i;
 		}
-		/*
-		for(auto i = conns.begin(); i != conns.end();) {
-			if((status = i->sock->Recv(in)) == 0) {
-				if(!i->init) {
-					if(in.compare(0, 3, "GET") == 0) {
-						auto tmp = new sc::WebSocket(*(i->sock));
-						delete i->sock;
-						i->sock = tmp;
-
-						if(((sc::WebSocket*)i->sock)->Handshake(in))
-							i->init = true;
-						else {
-							CloseConnection(i, conns);
-							continue;
-						}
-					} else if(in.compare(0, 3, "TCP") == 0)
-						i->init = true;
-					else {
-						CloseConnection(i, conns);
-						continue;
-					}
-				} else {
-					std::cout << in << std::endl;
-					//i->sock->Send(std::string(buffer));
-				}
-				i++;
-			} else if(status == -1) {
-				std::cout << WSAGetLastError();
-				CloseConnection(i, conns);
-			}
-		}
-	*/
 	}
 
 	WSACleanup();

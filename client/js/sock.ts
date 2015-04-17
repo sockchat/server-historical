@@ -14,13 +14,14 @@ class Socket {
     static kicked: boolean = false;
     static pinging: boolean = false;
 
-    static Send(msg: string) {
+    static Send(msg: Uint8Array) {
         this.sock.send(msg);
     }
 
     static Init(addr: string) {
         this.addr = addr;
         this.sock = new WebSocket(addr);
+        this.sock.binaryType = "arraybuffer";
         this.sock.onopen = this.onConnOpen;
         this.sock.onmessage = this.onMessageRecv;
         this.sock.onerror = this.onConnError;
@@ -28,7 +29,7 @@ class Socket {
     }
 
     static ping() {
-        this.sock.send(Message.Pack(0, ""+UserContext.self.id));
+        this.sock.send(Message.Pack(0, [""+UserContext.self.id]));
     }
 
     static onConnOpen(e) {
@@ -48,16 +49,16 @@ class Socket {
         }
 
         //document.getElementById("channeldd").innerHTML = "";
-        Socket.Send(Message.Pack(1, Message.PackArray(Socket.args)));
+        Socket.Send(Message.Pack(1, Socket.args));
     }
 
     static onMessageRecv(e) {
-        console.log(<string>e.data);
-        var parts = (<string>e.data).split(Message.Separator);
-        var msgid = +parts[0];
-        parts = parts.slice(1);
+        var msgobj = Message.Unpack(new Uint8Array(e.data));
+        console.log(msgobj);
+        if(!msgobj.valid) return;
+        var parts = msgobj.parts;
 
-        switch (msgid) {
+        switch (msgobj.id) {
             case 1:
                 if(parts[0] != "y" && parts[0] != "n") {
                     UI.AddUser(new User(+parts[1], parts[2], parts[3], parts[4]));
