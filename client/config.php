@@ -59,6 +59,7 @@ $chat["LOG_BATCH_SIZE"] = 50;
  * on port 6770.
  */
 $chat["SERVER_ADDR"] = "146.151.37.194:6770";
+//$chat["SERVER_ADDR"] = "aroltd.com:6770";
 
 /* ROOT DIRECTORY parameter
  *

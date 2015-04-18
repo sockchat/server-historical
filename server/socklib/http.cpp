@@ -1,4 +1,5 @@
 #include "socklib/socket.hpp"
+#define UINT32_MAX 0xFFFFFFFF
 
 sc::HTTPRequest::Response::Response() {
 	this->Error();
@@ -6,18 +7,18 @@ sc::HTTPRequest::Response::Response() {
 
 void sc::HTTPRequest::Response::Error(int status) {
 	this->status = status;
-	this->headers = std::map<std::string, std::string>();
+    this->headers = std::map<std::string, std::string, compimap>();
 	this->content = "";
 }
 
-sc::HTTPRequest::Response::Response(int status, std::map<std::string, std::string> headers, std::string content) {
+sc::HTTPRequest::Response::Response(int status, std::map<std::string, std::string, compimap> headers, std::string content) {
 	this->status = status;
 	this->headers = headers;
 	this->content = content;
 }
 
 sc::HTTPRequest::Response::Response(std::string raw, std::string action) {
-	this->headers = std::map<std::string, std::string>();
+    this->headers = std::map<std::string, std::string, compimap>();
 	if(raw.substr(0, action.length()) == action) {
 		auto lines = str::split(raw, "\r\n");
 		auto statusline = str::split(lines[0], ' ');
@@ -51,7 +52,7 @@ sc::HTTPRequest::Response::Response(std::string raw, std::string action) {
 				this->Error(-2);
 				return;
 			} else
-				this->headers[str::tolower(str::trim(keyval[0]))] = str::trim(keyval[1]);
+				this->headers[str::trim(keyval[0])] = str::trim(keyval[1]);
 		}
 
 		if(!headersFinished) {
@@ -166,14 +167,17 @@ std::string sc::HTTPRequest::EncodeURIComponentStrict(std::string comp, bool spa
     return ret;
 }
 
-sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string url, std::map<std::string, std::string> headers, std::string body) {
+sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string url, std::map<std::string, std::string, compimap> headers, std::string body) {
 	auto urlparts = DecipherURL(url);
 
 	if(urlparts.protocol == "http") {
 		std::string request = action + std::string(" ") + urlparts.resource + std::string(" HTTP/1.1\r\n")
 			+ std::string("Host: ") + urlparts.target + "\r\n";
+
+        if(body != "")
+            headers["Content-Length"] = std::to_string(body.length());
 		for(auto it = headers.begin(); it != headers.end(); ++it)
-			request += it->first + std::string(": ") + it->second;
+			request += it->first + std::string(": ") + it->second + std::string("\r\n");
 		request += "\r\n";
 		request += body;
 
@@ -237,15 +241,14 @@ sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string u
 			}
 		}
 
-		sock.Close();
-
+        sock.Close();
 		return tmp;
 	}
 	
 	return Response();
 }
 
-sc::HTTPRequest::Response sc::HTTPRequest::Get(std::string url, std::map<std::string, std::string> data, std::map<std::string, std::string> headers) {
+sc::HTTPRequest::Response sc::HTTPRequest::Get(std::string url, std::map<std::string, std::string, compimap> data, std::map<std::string, std::string, compimap> headers) {
 	bool first = url.find('?') == std::string::npos;
 	for(auto it = data.begin(); it != data.end(); ++it) {
 		url += (first ? std::string("?") : std::string("&")) + EncodeURIComponent(it->first) + std::string("=") + EncodeURIComponent(it->second);
@@ -253,4 +256,13 @@ sc::HTTPRequest::Response sc::HTTPRequest::Get(std::string url, std::map<std::st
 	}
 
 	return Raw("GET", url, headers);
+}
+
+sc::HTTPRequest::Response sc::HTTPRequest::Post(std::string url, std::map<std::string, std::string, compimap> data, std::map<std::string, std::string, compimap> headers) {
+    std::vector<std::string> parts = std::vector<std::string>();
+    for(auto it = data.begin(); it != data.end(); ++it)
+        parts.push_back(EncodeURIComponentStrict(it->first, true) + std::string("=") + EncodeURIComponentStrict(it->second, true));
+
+    headers["Content-Type"] = "application/x-www-form-urlencoded";
+    return Raw("POST", url, headers, str::join(parts, "&"));
 }

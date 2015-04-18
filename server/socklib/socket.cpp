@@ -103,8 +103,10 @@ bool sc::Socket::GetBlocking() {
 void sc::Socket::SetTimeout(int seconds) {
 	struct timeval timeout;
 	timeout.tv_sec = seconds;
-	timeout.tv_usec = 0;
-	//setsockopt();
+    timeout.tv_usec = 0;
+
+    setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+    setsockopt(this->sock, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout));
 }
 
 int sc::Socket::Accept(Socket &conn) {
@@ -164,7 +166,7 @@ int sc::Socket::GetLastError() {
 }
 
 void sc::Socket::Close() {
-	shutdown(this->sock, SD_SEND);
+	shutdown(this->sock, SD_BOTH);
 	closesocket(this->sock);
 	this->type = ESOCKTYPE::UNINIT;
 }
@@ -185,7 +187,7 @@ bool sc::Socket::Init(short port) {
 
     struct addrinfo *result;
     struct addrinfo hints;
-    ZeroMemory(&hints, sizeof(hints));
+    bzero((char*)&hints, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
@@ -194,20 +196,20 @@ bool sc::Socket::Init(short port) {
         return false;
 
     this->sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if(this->sock == INVALID_SOCKET) {
+    if(this->sock < 0) {
         freeaddrinfo(result);
         return false;
     }
 
-    if(bind(this->sock, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR) {
+    if(bind(this->sock, result->ai_addr, (int)result->ai_addrlen) < 0) {
         freeaddrinfo(result);
-        closesocket(this->sock);
+        close(this->sock);
         return false;
     }
 
     freeaddrinfo(result);
-    if(listen(this->sock, SOMAXCONN) == SOCKET_ERROR) {
-        closesocket(this->sock);
+    if(listen(this->sock, SOMAXCONN) < 0) {
+        close(this->sock);
         return false;
     }
 
@@ -219,24 +221,24 @@ bool sc::Socket::Init(std::string addr, uint16_t port) {
     if(this->type != ESOCKTYPE::UNINIT) return false;
 
     struct addrinfo hints, *results, *ptr;
-    ZeroMemory(&hints, sizeof(hints));
+    bzero((char*)&hints, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     if(getaddrinfo(addr.c_str(), std::to_string(port).c_str(), &hints, &results) != 0) return false;
 
     for(ptr = results; ptr != NULL; ptr = ptr->ai_next) {
-        if((this->sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol)) == INVALID_SOCKET) {
+        if((this->sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol)) < 0) {
             freeaddrinfo(results);
             return false;
         }
-        if(connect(this->sock, ptr->ai_addr, (int)ptr->ai_addrlen) != SOCKET_ERROR) break;
-        closesocket(this->sock);
-        this->sock = INVALID_SOCKET;
+        if(connect(this->sock, ptr->ai_addr, (int)ptr->ai_addrlen) == 0) break;
+        close(this->sock);
+        this->sock = -1;
     }
 
     freeaddrinfo(results);
-    if(this->sock == INVALID_SOCKET) return false;
+    if(this->sock < 0) return false;
 
     this->type = ESOCKTYPE::CLIENT;
     return true;
@@ -256,37 +258,43 @@ bool sc::Socket::Init(HSOCKET sock, HADDR addr, int addrlen) {
 std::string sc::Socket::GetIPAddress() {
     if(this->type != ESOCKTYPE::SERVERSPAWN) return "0.0.0.0";
     char buffer[128];
-    inet_ntop(this->addr.sin_family, (PVOID)&this->addr.sin_addr, buffer, 128);
+    inet_ntop(this->addr.sin_family, (void*)&this->addr.sin_addr, buffer, 128);
     return std::string(buffer);
 }
 
 void sc::Socket::SetBlocking(bool block) {
     if(this->type == ESOCKTYPE::UNINIT) return;
-    u_long blocking = block ? 0 : 1;
-    ioctlsocket(this->sock, FIONBIO, &blocking);
+    int flags = fcntl(this->sock, F_GETFL, 0);
+    flags = block ? flags & ~O_NONBLOCK : flags | O_NONBLOCK;
+    fcntl(this->sock, F_SETFL, flags);
     this->blocking = block;
 }
 
 bool sc::Socket::GetBlocking() {
-    return this->blocking;
+    if(this->type == ESOCKTYPE::UNINIT) return false;
+    int flags = fcntl(this->sock, F_GETFL, 0);
+    return (flags & O_NONBLOCK) > 0;
 }
 
 void sc::Socket::SetTimeout(int seconds) {
+    if(this->type == ESOCKTYPE::UNINIT) return;
     struct timeval timeout;
     timeout.tv_sec = seconds;
     timeout.tv_usec = 0;
-    //setsockopt();
+
+    setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+    setsockopt(this->sock, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout));
 }
 
 int sc::Socket::Accept(Socket &conn) {
     if(this->type != ESOCKTYPE::SERVER) return -1;
 
-    HSOCKET newsock; SOCKADDR_IN newaddr = {0}; int newlen = sizeof(newaddr);
+    HSOCKET newsock; struct sockaddr_in newaddr = {0}; unsigned int newlen = sizeof(newaddr);
     newsock = accept(this->sock, (struct sockaddr *)&newaddr, &newlen);
 
-    if(WSAGetLastError() == WSAEWOULDBLOCK)
+    if(newsock < 0 && (errno == EWOULDBLOCK || errno == EAGAIN)) {
         return 1;
-    else if(newsock == INVALID_SOCKET) {
+    } else if(newsock < 0) {
         this->Close();
         return -1;
     }
@@ -300,8 +308,8 @@ int sc::Socket::Recv(std::string &str, uint32_t length) {
     if(this->type == ESOCKTYPE::UNINIT || this->type == ESOCKTYPE::SERVER) return -1;
 
     length = length > SOCK_BUFLEN ? SOCK_BUFLEN : length;
-    int get = recv(this->sock, this->recvbuf, length, 0);
-    if(WSAGetLastError() == WSAEWOULDBLOCK)
+    int get = read(this->sock, this->recvbuf, length);
+    if(get < 0 && (errno == EWOULDBLOCK || errno == EAGAIN))
         return 1;
     else if(get <= 0) {
         this->Close();
@@ -309,20 +317,14 @@ int sc::Socket::Recv(std::string &str, uint32_t length) {
     }
 
     str = std::string(this->recvbuf, get);
-    /*if(get == 8) {
-    std::string buff;
-    int a = Socket::Recv(buff);
-    a = Socket::Recv(buff);
-    a = Socket::Recv(buff);
-    }*/
     return 0;
 }
 
 int sc::Socket::Send(std::string str) {
     if(this->type == ESOCKTYPE::UNINIT || this->type == ESOCKTYPE::SERVER) return -1;
 
-    int sent = send(this->sock, str.c_str(), str.length(), 0);
-    if(sent == SOCKET_ERROR) {
+    int sent = write(this->sock, str.c_str(), str.length());
+    if(sent < 0) {
         this->Close();
         return -1;
     }
@@ -331,12 +333,12 @@ int sc::Socket::Send(std::string str) {
 }
 
 int sc::Socket::GetLastError() {
-    return WSAGetLastError();
+    return errno;
 }
 
 void sc::Socket::Close() {
-    shutdown(this->sock, SD_SEND);
-    closesocket(this->sock);
+    shutdown(this->sock, SHUT_RDWR);
+    close(this->sock);
     this->type = ESOCKTYPE::UNINIT;
 }
 

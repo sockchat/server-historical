@@ -10,6 +10,24 @@
 #include "socklib/utils.h"
 #include "cthread.h"
 
+sc::Socket sock = sc::Socket();
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+BOOL ctrlHandler(DWORD ctrlno) {
+    sock.Close();
+    WSACleanup();
+    exit(0);
+}
+#else
+#include <signal.h>
+void sigHandler(int signo) {
+    sock.Close();
+    exit(0);
+}
+#endif
+
 int main() {
 	/*int c = 0;
 	std::thread t(shit, 2, 3, std::ref(c));
@@ -28,15 +46,22 @@ int main() {
 	//std::cout << base64_decode("HSmrc0sMlYUkAGmm5OPpG2HaGWk=");
 
 #ifdef _WIN32
+    SetConsoleCtrlHandler((PHANDLER_ROUTINE)&ctrlHandler, TRUE);
 	WSADATA wdata;
 	if(WSAStartup(MAKEWORD(2, 2), &wdata) != 0)
 		return false;
+#else
+    signal(SIGINT, sigHandler);
+    signal(SIGTERM, sigHandler);
+    signal(SIGABRT, sigHandler);
 #endif
 
-    //auto req = sc::HTTPRequest::EncodeURIComponentStrict("T\xE2\x82\xACyme &time=again"); //sc::HTTPRequest::Get("http://iihsalf.net/");
-	//std::cout << req;
+    auto req = sc::HTTPRequest::Get("http://aroltd.com/wow.php", {
+        std::make_pair("creat#(!@&", "forkfa"),
+        std::make_pair("$%NI$$ER*&", "c@cks@ck")
+    });
+	std::cout << req.content;
 
-	sc::Socket sock = sc::Socket();
 	sc::Socket client;
 	if(!sock.Init(6770)) {
 		std::cout << "Could not open socket on port 6770! Error: " << std::endl;
@@ -64,6 +89,11 @@ int main() {
 		}
 	}
 
+    sock.Close();
+
+#ifdef _WIN32
 	WSACleanup();
+#endif
+
 	return 0;
 }
