@@ -1,4 +1,5 @@
 /// <reference path="ui.ts" />
+/// <reference path="utf8.d.ts" />
 
 class Utils {
     static replaceAll(haystack: string, needle: string, replace: string, ignore = false): string {
@@ -119,41 +120,27 @@ class Utils {
             ret = ret | ((bytes[i] & 0xFF) << 8*(bytes.length - 1 - i));
         return ret;
     }
-}
 
-class utf8 {
-    public static byteLength(str: string): number {
-        return encodeURI(str).split(/%..|./).length - 1;
+    static ByteLength(str: string): number {
+        return utf8.encode(str).length;
     }
 
-    public static toByteArray(str: string): number[] {
-        var byteArray = [];
-        for (var i = 0; i < str.length; i++)
-            if (str.charCodeAt(i) <= 0x7F)
-                byteArray.push(str.charCodeAt(i));
-            else {
-                var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
-                for (var j = 0; j < h.length; j++)
-                    byteArray.push(parseInt(h[j], 16));
-            }
-        return byteArray;
+    static StringToByteArray(str: string): Uint8Array {
+        str = utf8.encode(str);
+        var ret = new Uint8Array(str.length);
+        for(var i = 0; i < str.length; i++)
+            ret[i] = str.charCodeAt(i);
+
+        return ret;
     }
 
-    public static byteArrayToString(arr: Uint8Array): string {
-        var tmp: number[] = [];
-        for(var i = 0; i < arr.length; i++)
-            tmp.push(arr[i]);
-
-        return utf8.toString(tmp);
-    }
-
-    public static toString(byteArray: number[]) {
-        var str = '';
-        for (var i = 0; i < byteArray.length; i++)
-            str +=  byteArray[i] <= 0x7F?
-                byteArray[i] === 0x25 ? "%25" : // %
-                    String.fromCharCode(byteArray[i]) :
-            "%" + byteArray[i].toString(16).toUpperCase();
-        return decodeURIComponent(str);
+    static ByteArrayToString(bytes: Uint8Array): string {
+        var chunkSize = 10000;
+        var raw = "";
+        for(var i = 0;; i++) {
+            if(bytes.length < chunkSize*i) break;
+            raw += String.fromCharCode.apply(null, bytes.subarray(chunkSize*i, chunkSize*i + chunkSize));
+        }
+        return utf8.decode(raw);
     }
 }

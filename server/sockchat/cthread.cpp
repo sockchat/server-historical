@@ -43,7 +43,8 @@ void connectionThread(ThreadContext *ctx) {
 				} else if(status == 0) {
 					auto test = sc::Message(in);
 					std::cout << str::join(test.GetParts(), ", ") << std::endl;
-					i->sock->Send(sc::Message(1, {"fuck", "you", "goyim"}).Get());
+                    std::cout << str::valid(test.GetParts()[0]) << std::endl;
+                    i->sock->Send(sc::Message(2, {test.GetParts()[0]}).Get());
 					//std::cout << i->sock->GetIPAddress() << ": " << in << std::endl;
 				}
 				++i;

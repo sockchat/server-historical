@@ -1,4 +1,5 @@
 /// <reference path="ui.ts" />
+/// <reference path="utf8.d.ts" />
 var Utils = (function () {
     function Utils() {
     }
@@ -105,38 +106,26 @@ var Utils = (function () {
             ret = ret | ((bytes[i] & 0xFF) << 8 * (bytes.length - 1 - i));
         return ret;
     };
-    return Utils;
-})();
-var utf8 = (function () {
-    function utf8() {
-    }
-    utf8.byteLength = function (str) {
-        return encodeURI(str).split(/%..|./).length - 1;
+    Utils.ByteLength = function (str) {
+        return utf8.encode(str).length;
     };
-    utf8.toByteArray = function (str) {
-        var byteArray = [];
+    Utils.StringToByteArray = function (str) {
+        str = utf8.encode(str);
+        var ret = new Uint8Array(str.length);
         for (var i = 0; i < str.length; i++)
-            if (str.charCodeAt(i) <= 0x7F)
-                byteArray.push(str.charCodeAt(i));
-            else {
-                var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
-                for (var j = 0; j < h.length; j++)
-                    byteArray.push(parseInt(h[j], 16));
-            }
-        return byteArray;
+            ret[i] = str.charCodeAt(i);
+        return ret;
     };
-    utf8.byteArrayToString = function (arr) {
-        var tmp = [];
-        for (var i = 0; i < arr.length; i++)
-            tmp.push(arr[i]);
-        return utf8.toString(tmp);
+    Utils.ByteArrayToString = function (bytes) {
+        var chunkSize = 10000;
+        var raw = "";
+        for (var i = 0;; i++) {
+            if (bytes.length < chunkSize * i)
+                break;
+            raw += String.fromCharCode.apply(null, bytes.subarray(chunkSize * i, chunkSize * i + chunkSize));
+        }
+        return utf8.decode(raw);
     };
-    utf8.toString = function (byteArray) {
-        var str = '';
-        for (var i = 0; i < byteArray.length; i++)
-            str += byteArray[i] <= 0x7F ? byteArray[i] === 0x25 ? "%25" : String.fromCharCode(byteArray[i]) : "%" + byteArray[i].toString(16).toUpperCase();
-        return decodeURIComponent(str);
-    };
-    return utf8;
+    return Utils;
 })();
 //# sourceMappingURL=utils.js.map

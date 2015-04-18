@@ -18,7 +18,7 @@ var Message = (function () {
         var headerSize = 3;
         var bodySize = 0;
         for (var i in arr) {
-            var length = utf8.byteLength(arr[i]);
+            var length = Utils.ByteLength(arr[i]);
             if (length < 254)
                 headerSize += 1;
             else if (length <= 0xFFFF)
@@ -34,7 +34,7 @@ var Message = (function () {
         ret.set(Utils.PackBytes(id, 2));
         var actualSize = 0;
         for (var i in arr) {
-            var length = utf8.byteLength(arr[i]);
+            var length = Utils.ByteLength(arr[i]);
             if (length < 254) {
                 ret[ptrs[0]] = length;
                 ++ptrs[0];
@@ -52,7 +52,7 @@ var Message = (function () {
             else
                 continue;
             ++actualSize;
-            ret.set(utf8.toByteArray(arr[i]), ptrs[1]);
+            ret.set(Utils.StringToByteArray(arr[i]), ptrs[1]);
             ptrs[1] += length;
         }
         ret[2] = actualSize;
@@ -90,7 +90,7 @@ var Message = (function () {
         for (var i = 0; i < segments; i++) {
             if (raw.length < ptr + segmentLengths[i])
                 return Message.Error();
-            ret.parts[i] = utf8.byteArrayToString(raw.subarray(ptr, ptr + segmentLengths[i]));
+            ret.parts[i] = Utils.ByteArrayToString(raw.subarray(ptr, ptr + segmentLengths[i]));
             ptr += segmentLengths[i];
         }
         return ret;

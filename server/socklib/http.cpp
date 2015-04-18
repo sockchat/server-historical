@@ -101,12 +101,69 @@ sc::HTTPRequest::URL sc::HTTPRequest::DecipherURL(std::string url) {
 	return ret;
 }
 
-std::string sc::HTTPRequest::EncodeURI(std::string uri) {
-	return uri;
+std::string sc::HTTPRequest::URIEscapeCharacter(uint32_t c) {
+    std::stringstream ss;
+    ss << "%" << std::setfill('0') << std::setw(2) << std::hex << c;
+    return str::toupper(ss.str());
 }
 
-std::string sc::HTTPRequest::EncodeURIComponent(std::string comp) {
-	return comp;
+std::string sc::HTTPRequest::EncodeURI(std::string uri, bool spaceIsPlus) {
+    std::string ret = uri;
+
+    uint64_t ptr = 0;
+    std::string ignore = "-_.~!*();,/#?:@&=+$'";
+    for(int i = 0; i < uri.length(); i++) {
+        if(!isalnum(uri[i]) && ignore.find_first_of(uri[i]) == std::string::npos) {
+            if(spaceIsPlus && uri[i] == ' ') {
+                ret.replace(ptr, 1, "+");
+                ++ptr;
+            } else {
+                ret.replace(ptr, 1, URIEscapeCharacter(uri[i]));
+                ptr += 3;
+            }
+        } else ++ptr;
+    }
+
+    return ret;
+}
+
+std::string sc::HTTPRequest::EncodeURIComponent(std::string comp, bool spaceIsPlus) {
+	std::string ret = comp;
+
+	uint64_t ptr = 0;
+	for(int i = 0; i < comp.length(); i++) {
+        if(!isalnum(comp[i]) && comp[i] != '-' && comp[i] != '_'
+                             && comp[i] != '.' && comp[i] != '~') {
+            if(spaceIsPlus && comp[i] == ' ') {
+                ret.replace(ptr, 1, "+");
+                ++ptr;
+            } else {
+                ret.replace(ptr, 1, URIEscapeCharacter(comp[i]));
+                ptr += 3;
+            }
+		} else ++ptr;
+	}
+
+	return ret;
+}
+
+std::string sc::HTTPRequest::EncodeURIComponentStrict(std::string comp, bool spaceIsPlus) {
+    std::string ret = comp;
+
+    uint64_t ptr = 0;
+    for(int i = 0; i < comp.length(); i++) {
+        if(!isalnum(comp[i])) {
+            if(spaceIsPlus && comp[i] == ' ') {
+                ret.replace(ptr, 1, "+");
+                ++ptr;
+            } else {
+                ret.replace(ptr, 1, URIEscapeCharacter(comp[i]));
+                ptr += 3;
+            }
+        } else ++ptr;
+    }
+
+    return ret;
 }
 
 sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string url, std::map<std::string, std::string> headers, std::string body) {

@@ -27,6 +27,7 @@
 #include <string>
 #include <random>
 #include <time.h>
+#include <iomanip>
 #include "stdcc.hpp"
 #include "utils.h"
 #include "sha1.h"
@@ -80,7 +81,8 @@ namespace sc {
 		};
 
 		LIBPUB static uint16_t GetPortFromProtocol(std::string protocol);
-		LIBPUB static URL DecipherURL(std::string url);
+        LIBPUB static URL DecipherURL(std::string url);
+        LIBPUB static std::string URIEscapeCharacter(uint32_t c);
 	public:
 		class Response {
 		private:
@@ -98,8 +100,9 @@ namespace sc {
 			LIBPUB bool IsValid();
 		};
 
-		LIBPUB static std::string EncodeURI(std::string uri);
-		LIBPUB static std::string EncodeURIComponent(std::string comp);
+		LIBPUB static std::string EncodeURI(std::string uri, bool spaceIsPlus = false);
+        LIBPUB static std::string EncodeURIComponent(std::string comp, bool spaceIsPlus = false);
+        LIBPUB static std::string EncodeURIComponentStrict(std::string comp, bool spaceIsPlus = false);
 
 		LIBPUB static Response Raw(std::string action, std::string url, std::map<std::string, std::string> headers = std::map<std::string, std::string>(), std::string body = "");
 

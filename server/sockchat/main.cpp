@@ -33,8 +33,8 @@ int main() {
 		return false;
 #endif
 
-	auto req = sc::HTTPRequest::Get("http://iihsalf.net/");
-	std::cout << req.content;
+    //auto req = sc::HTTPRequest::EncodeURIComponentStrict("T\xE2\x82\xACyme &time=again"); //sc::HTTPRequest::Get("http://iihsalf.net/");
+	//std::cout << req;
 
 	sc::Socket sock = sc::Socket();
 	sc::Socket client;
