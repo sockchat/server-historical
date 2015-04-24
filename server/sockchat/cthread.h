@@ -15,31 +15,32 @@
 
 class ThreadContext {
 public:
-	struct Connection {
-		sc::Socket *sock;
-		bool initialized = false;
+    struct Connection {
+        sc::Socket *sock;
+        bool initialized = false;
 
-		Connection(sc::Socket *sock);
-	};
+        Connection(sc::Socket *sock);
+    };
 
-	ThreadContext(sc::Socket *sock);
+    ThreadContext(sc::Socket *sock);
 
-	void PushSocket(sc::Socket *sock);
-	void HandlePendingConnections();
+    void PushSocket(sc::Socket *sock);
+    void HandlePendingConnections();
 
-	std::vector<Connection>::iterator CloseConnection(std::vector<Connection>::iterator i);
+    std::vector<Connection>::iterator CloseConnection(std::vector<Connection>::iterator i);
 
-	void Finish();
-	bool IsDone();
+    void Finish();
+    bool IsDone();
 
-	std::vector<Connection> conns = std::vector<Connection>();
+    std::vector<Connection> conns = std::vector<Connection>();
 private:
-	std::vector<Connection> pendingConns = std::vector<Connection>();
-	std::mutex _pendingConns;
+    std::vector<Connection> pendingConns = std::vector<Connection>();
+    std::mutex _pendingConns;
 
-	bool done = false;
+    bool done = false;
 };
 
 void connectionThread(ThreadContext *ctx);
+void interpretMessage(sc::Message msg);
 
 #endif

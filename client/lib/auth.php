@@ -28,9 +28,9 @@ class Auth {
     public static $out = "";
 
     public static function GetPageType() {
-        if(isset($_GET["arg1"])) return AUTH_CONFIRM;
-        else if(isset($_GET["validate"])) return AUTH_VALIDATE;
-        else if(isset($_GET["reserve"])) return AUTH_RESERVED;
+        if(isset($_POST["arg1"])) return AUTH_CONFIRM;
+        else if(isset($_POST["validate"])) return AUTH_VALIDATE;
+        else if(isset($_POST["reserve"])) return AUTH_RESERVED;
         else return AUTH_FETCH;
     }
 

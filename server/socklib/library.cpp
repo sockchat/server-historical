@@ -5,75 +5,75 @@
 #ifdef _WIN32 // DLL loading
 
 sc::Library::Library(char *file) {
-	this->lib = NULL;
-	this->Load(file);
+    this->lib = NULL;
+    this->Load(file);
 }
 
 bool sc::Library::Load(char *file) {
-	if(this->lib != NULL)
-		this->Unload();
-	this->lib = LoadLibrary(file);
-	return this->IsLoaded();
+    if(this->lib != NULL)
+        this->Unload();
+    this->lib = LoadLibrary(file);
+    return this->IsLoaded();
 }
 
 
 FUNCPTR sc::Library::GetSymbol(char *sym) {
-	if(this->lib != NULL)
-		return GetProcAddress(this->lib, sym);
-	else
-		return NULL;
+    if(this->lib != NULL)
+        return GetProcAddress(this->lib, sym);
+    else
+        return NULL;
 }
 
 bool sc::Library::IsLoaded() {
-	return this->lib != NULL;
+    return this->lib != NULL;
 }
 
 void sc::Library::Unload() {
-	if(this->lib != NULL) {
-		FreeLibrary(this->lib);
-		this->lib = NULL;
-	}
+    if(this->lib != NULL) {
+        FreeLibrary(this->lib);
+        this->lib = NULL;
+    }
 }
 
 sc::Library::~Library() {
-	this->Unload();
+    this->Unload();
 }
 
 #else // Shared Library (ELF or whatever) loading
 
 sc::Library::Library(char *file) {
-	this->lib = NULL;
-	this->Load(file);
+    this->lib = NULL;
+    this->Load(file);
 }
 
 bool sc::Library::Load(char *file) {
-	if(this->lib != NULL)
-		this->Unload();
-	this->lib = dlopen(file, RTLD_LAZY);
-	return this->IsLoaded();
+    if(this->lib != NULL)
+        this->Unload();
+    this->lib = dlopen(file, RTLD_LAZY);
+    return this->IsLoaded();
 }
 
 
 FUNCPTR sc::Library::GetSymbol(char *sym) {
-	if(this->lib != NULL)
-		return dlsym(this->lib, sym);
-	else
-		return NULL;
+    if(this->lib != NULL)
+        return dlsym(this->lib, sym);
+    else
+        return NULL;
 }
 
 bool sc::Library::IsLoaded() {
-	return this->lib != NULL;
+    return this->lib != NULL;
 }
 
 void sc::Library::Unload() {
-	if(this->lib != NULL) {
-		dlclose(this->lib);
-		this->lib = NULL;
-	}
+    if(this->lib != NULL) {
+        dlclose(this->lib);
+        this->lib = NULL;
+    }
 }
 
 sc::Library::~Library() {
-	this->Unload();
+    this->Unload();
 }
 
 #endif

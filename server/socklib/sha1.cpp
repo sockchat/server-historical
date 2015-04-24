@@ -66,14 +66,14 @@ namespace sha1
             int round = 0;
 
             #define sha1macro(func,val) \
-			{ \
+            { \
                 const unsigned int t = rol(a, 5) + (func) + e + val + w[round]; \
-				e = d; \
-				d = c; \
-				c = rol(b, 30); \
-				b = a; \
-				a = t; \
-			}
+                e = d; \
+                d = c; \
+                c = rol(b, 30); \
+                b = a; \
+                a = t; \
+            }
 
             while (round < 16)
             {
@@ -183,10 +183,10 @@ namespace sha1
         hexstring[40] = 0;
     }
 
-	std::string hash(std::string in) {
-		unsigned char hashhash[20]; char hashret[41];
-		sha1::calc(in.c_str(), in.length(), hashhash);
-		sha1::toHexString(hashhash, hashret);
-		return std::string(hashret);
-	}
+    std::string hash(std::string in) {
+        unsigned char hashhash[20]; char hashret[41];
+        sha1::calc(in.c_str(), in.length(), hashhash);
+        sha1::toHexString(hashhash, hashret);
+        return std::string(hashret);
+    }
 } // namespace sha1

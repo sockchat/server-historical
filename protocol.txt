@@ -218,3 +218,42 @@ correspond to the offset of the length segment in the header.
     First argument is a 0, representing a kick, or a 1, representing a ban.
     If the first argument is 1, then the following argument is a length sp-
     ecifier for the ban duration in unix epoch time.
+    
+                             --- TIME STAMPS ---          
+                             
+    Because epoch time is not standardized across systems, an intermediate
+layer of date/time transmission must be used between the client and server
+so as to handle time dependent interactions. Therefore, a "sockstamp" will
+be used in place of the context-dependent implementations of epoch time.
+
+    The client and server do not have to internally store datetime values
+in this way, but they _MUST_ be able to comprehend them when they occur in
+a packet and be able to translate their context-dependent times into this
+format when sending time specific information in a packet.
+
+    A sockstamp is a sequence of six octets that represent a fully qualif-
+ied date and time. For the best usage of space without obfuscating the data
+too much, the year's lower four bits and the four bits signifying a month
+are shared in the same byte, but no other components are joined.
+
+    The 12 bits signifying the year are a signed quanitity, and indicate
+the number of years since 2015; obviously, a negative value indicates a
+year that occurred prior to 2015. This gives a possible range of 2015 CE
++/- 2047/8 years, or 33 BCE to 4062 CE.
+    
+    The sequence of octets will be as defined below:
+    
+    BYTE 1 - Upper 8 bits of the year quantifier. The most significant bit
+             acts as the sign bit for the 12-bit year sequence.
+             
+    BYTE 2 - Upper 4 bits are the four least significant bits of the 12-bit
+             year quantifier. The lower 4 bits are the month quantifier, ra-
+             nging from 0 to 11.
+             
+    BYTE 3 - Day of month quanitifier. Ranges from 0 to 30.
+    
+    BYTE 4 - Hour quantifier. Ranges from 0 to 23.
+    
+    BYTE 5 - Minute quantifier. Ranges from 0 to 59.
+    
+    BYTE 6 - Second quantifier. Ranges from 0 to 59.

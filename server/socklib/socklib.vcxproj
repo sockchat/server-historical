@@ -70,22 +70,26 @@
   <ItemGroup>
     <ClCompile Include="base64.cpp" />
     <ClCompile Include="http.cpp" />
+    <ClCompile Include="ini.cpp" />
     <ClCompile Include="library.cpp" />
     <ClCompile Include="msg.cpp" />
     <ClCompile Include="rawsock.cpp" />
     <ClCompile Include="sha1.cpp" />
     <ClCompile Include="socket.cpp" />
+    <ClCompile Include="user.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="websocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="socklib\base64.h" />
     <ClInclude Include="socklib\dirent.h" />
+    <ClInclude Include="socklib\ini.h" />
     <ClInclude Include="socklib\library.hpp" />
     <ClInclude Include="socklib\msg.h" />
     <ClInclude Include="socklib\sha1.h" />
     <ClInclude Include="socklib\socket.hpp" />
     <ClInclude Include="socklib\stdcc.hpp" />
+    <ClInclude Include="socklib\context.h" />
     <ClInclude Include="socklib\utf8.h" />
     <ClInclude Include="socklib\utils.h" />
   </ItemGroup>

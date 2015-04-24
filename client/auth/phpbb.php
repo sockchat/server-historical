@@ -40,7 +40,7 @@ if(Auth::GetPageType() == AUTH_FETCH) {
             "user_password" => request_var("arg2", "e")
         );
     } else {
-        if(isset($_GET["uid"])) {
+        if(isset($_POST["uid"])) {
             $qdata = array(
                 "user_id" => request_var("uid", -1)
             );

@@ -18,7 +18,13 @@ var Message = (function () {
         var headerSize = 3;
         var bodySize = 0;
         for (var i in arr) {
-            var length = Utils.ByteLength(arr[i]);
+            if ((typeof arr[i]).toLowerCase() == "string" || (typeof arr[i]).toLowerCase() == "number") {
+                if ((typeof arr[i]).toLowerCase() == "number")
+                    arr[i] = "" + arr[i];
+                var length = Utils.ByteLength(arr[i]);
+            }
+            else
+                var length = arr[i].length;
             if (length < 254)
                 headerSize += 1;
             else if (length <= 0xFFFF)
@@ -34,7 +40,10 @@ var Message = (function () {
         ret.set(Utils.PackBytes(id, 2));
         var actualSize = 0;
         for (var i in arr) {
-            var length = Utils.ByteLength(arr[i]);
+            if ((typeof arr[i]).toLowerCase() == "string")
+                var length = Utils.ByteLength(arr[i]);
+            else
+                var length = arr[i].length;
             if (length < 254) {
                 ret[ptrs[0]] = length;
                 ++ptrs[0];
@@ -52,7 +61,10 @@ var Message = (function () {
             else
                 continue;
             ++actualSize;
-            ret.set(Utils.StringToByteArray(arr[i]), ptrs[1]);
+            if ((typeof arr[i]).toLowerCase() == "string")
+                ret.set(Utils.StringToByteArray(arr[i]), ptrs[1]);
+            else
+                ret.set(arr[i], ptrs[1]);
             ptrs[1] += length;
         }
         ret[2] = actualSize;

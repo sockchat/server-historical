@@ -15,16 +15,16 @@
 #include "stdcc.hpp"
 
 namespace sc {
-	class Library {
-		LIBHANDLE lib;
-	public:
-		LIBPUB Library(char *file);
-		LIBPUB bool Load(char *file);
-		LIBPUB bool IsLoaded();
-		LIBPUB FUNCPTR GetSymbol(char *sym);
-		LIBPUB void Unload();
-		LIBPUB ~Library();
-	};
+    class Library {
+        LIBHANDLE lib;
+    public:
+        LIBPUB Library(char *file);
+        LIBPUB bool Load(char *file);
+        LIBPUB bool IsLoaded();
+        LIBPUB FUNCPTR GetSymbol(char *sym);
+        LIBPUB void Unload();
+        LIBPUB ~Library();
+    };
 }
 
 #endif
