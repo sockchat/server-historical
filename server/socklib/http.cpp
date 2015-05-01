@@ -64,11 +64,6 @@ sc::HTTPRequest::Response::Response(std::string raw, std::string action) {
             this->headers.count("content-length") == 0 ?
                 raw.substr(headersize) :
                 raw.substr(headersize, std::stoi(this->headers["content-length"]));
-
-        if(this->content.length() >= 3) {
-            if(this->content.substr(0, 3) == "\xEF\xBB\xBF")
-                this->content = this->content.substr(3);
-        }
     } else this->Error(-2);
 }
 
@@ -246,6 +241,16 @@ sc::HTTPRequest::Response sc::HTTPRequest::Raw(std::string action, std::string u
         }
 
         sock.Close();
+
+        if(tmp.content.length() >= 3) {
+            if(tmp.content.substr(0, 3) == "\xEF\xBB\xBF") {
+                tmp.content = tmp.content.substr(3);
+
+                if(tmp.headers.count("content-length") > 0)
+                    tmp.headers["content-length"] = std::to_string(std::stoi(tmp.headers["content-length"]) - 3);
+            }
+        }
+
         return tmp;
     }
     

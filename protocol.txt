@@ -97,21 +97,27 @@ correspond to the offset of the length segment in the header.
     - USER NAME
     - USER COLOR
     - PERMISSION STRING
-    - MESSAGE (SANITIZED)
+    - MESSAGE
     - MESSAGE ID
 	- MESSAGE FLAGS [SET OF BOOLEANS ('1'/'0')]
         - BOLD USERNAME
         - ITALICIZED USERNAME
         - UNDERLINED USERNAME
         - COLON AFTER MESSAGE
-    - ALERT [BOOLEAN '1'/'0']
-    - CHANNEL
+        - ALERT
+    - CHANNEL ID
     
-    If the channel begins with an @, it's a special condition. Two special
-    conditions can arise with the channel.
-        - IF CHANNEL IS @all, WRITE MESSAGE TO ALL OPEN CHATS
-        - IF CHANNEL IS @priv, MESSAGE IS A PRIVATE MESSAGE
-        - IF CHANNEL IS @local, WRITE MESSAGE TO ACTIVE CHAT
+    If the channel id is 0, it's a special condition. An additional pa-
+    rameter, an unsigned octet enum, is appended to the above list if
+    this is the case. The additional parameter is to be interpreted as
+    follows:
+        - IF PARAMETER IS 1, WRITE MESSAGE TO ALL OPEN CHATS
+        - IF PARAMETER IS 2, WRITE MESSAGE TO ACTIVE CHAT
+        - IF PARAMETER IS 3, MESSAGE IS A PRIVATE MESSAGE
+        
+        If the parameter is 3, then an additional parameter is appended
+        to the above parameters, following the special condition enum.
+        
     
     If the message is sent by the chat bot, the USER ID will be set to -1,
     and the MESSAGE will be a series of strings concatenated by the form

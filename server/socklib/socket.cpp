@@ -101,12 +101,9 @@ bool sc::Socket::GetBlocking() {
 }
 
 void sc::Socket::SetTimeout(int seconds) {
-    struct timeval timeout;
-    timeout.tv_sec = seconds;
-    timeout.tv_usec = 0;
-
-    setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
-    setsockopt(this->sock, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout));
+    seconds *= 1000;
+    setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, (const char *)&seconds, sizeof(int));
+    setsockopt(this->sock, SOL_SOCKET, SO_SNDTIMEO, (const char *)&seconds, sizeof(int));
 }
 
 int sc::Socket::Accept(Socket &conn) {
@@ -140,12 +137,6 @@ int sc::Socket::Recv(std::string &str, uint32_t length) {
     }
 
     str = std::string(this->recvbuf, get);
-    /*if(get == 8) {
-        std::string buff;
-        int a = Socket::Recv(buff);
-        a = Socket::Recv(buff);
-        a = Socket::Recv(buff);
-    }*/
     return 0;
 }
 

@@ -57,13 +57,16 @@ int main() {
     signal(SIGABRT, sigHandler);
 #endif
 
-    /*auto req = sc::HTTPRequest::Get("http://aroltd.com/wow.php", {
-        std::make_pair("creat#(!@&", "forkfa"),
-        std::make_pair("$%NI$$ER*&", "c@cks@ck")
+    auto req = sc::HTTPRequest::Get("http://chat.flashii.net/", {
+        {"view", "auth"},
+        {"arg1", "303"},
+        {"arg2", "2ef2094972cc00f0860cd85e96a243eaac67497d"}
     });
-    std::cout << req.content;*/
+    std::cout << req.content;
 
-    std::string wowo = sc::net::packTime();
+    //auto req = sc::HTTPRequest::Get("http://aroltd.com/");
+
+    //std::string wowo = sc::net::packTime();
 
     sc::INI test;
     try {

@@ -32,6 +32,7 @@
 #include <random>
 #include <time.h>
 #include <iomanip>
+#include <thread>
 #include "stdcc.hpp"
 #include "utils.h"
 #include "sha1.h"
