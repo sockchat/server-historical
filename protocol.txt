@@ -105,6 +105,7 @@ correspond to the offset of the length segment in the header.
         - UNDERLINED USERNAME
         - COLON AFTER MESSAGE
         - ALERT
+        - SANITIZE MESSAGE
     - CHANNEL ID
     
     If the channel id is 0, it's a special condition. An additional pa-
@@ -113,10 +114,10 @@ correspond to the offset of the length segment in the header.
     follows:
         - IF PARAMETER IS 1, WRITE MESSAGE TO ALL OPEN CHATS
         - IF PARAMETER IS 2, WRITE MESSAGE TO ACTIVE CHAT
-        - IF PARAMETER IS 3, MESSAGE IS A PRIVATE MESSAGE
-        
-        If the parameter is 3, then an additional parameter is appended
-        to the above parameters, following the special condition enum.
+        - IF PARAMETER IS 3, MESSAGE IS A PRIVATE MESSAGE SENT TO USER BY
+          THE USER SPECIFIED IN PARAMETERS 2-5.
+        - IF PARAMETER IS 4, MESSAGE IS A PRIVATE MESSAGE SENT BY USER TO
+          THE USER SPECIFIED IN PARAMETERS 2-5.
         
     
     If the message is sent by the chat bot, the USER ID will be set to -1,

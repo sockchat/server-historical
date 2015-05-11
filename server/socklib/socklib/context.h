@@ -34,20 +34,20 @@ namespace sc {
     };
 
     struct MessageFlags {
-        bool flags[5];
+        bool flags[6];
 
-        MessageFlags() : MessageFlags(true, false, false, true, true) {}
+        MessageFlags() : MessageFlags(true, false, false, true, true, true) {}
 
         MessageFlags(bool boldName, bool italicName, bool underlineName,
-                     bool colon, bool alert) {
+                     bool colon, bool alert, bool sanitize) {
             flags[0] = boldName; flags[1] = italicName;
             flags[2] = underlineName; flags[3] = colon;
-            flags[4] = alert;
+            flags[4] = alert; flags[5] = sanitize;
         }
 
         std::string Get() const {
             std::stringstream ss;
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < 6; i++)
                 ss << flags[i] ? "1" : "0";
             return ss.str();
         }
@@ -59,6 +59,9 @@ namespace sc {
             uint16_t rank;
             uint8_t stdperms[4];
             std::map<std::string, uint8_t> custom;
+
+            LIBPUB void Error();
+            LIBPUB bool Bound(uint8_t check, uint8_t lower, uint8_t upper) const;
         public:
             LIBPUB enum UserType           { ILLEGAL = -1, NORMAL, MODERATOR, ADMIN };
             LIBPUB enum CreateChannelType  { ILLEGAL = -1, DISABLED, TEMPORARY, PERMANENT };
@@ -68,13 +71,10 @@ namespace sc {
             LIBPUB Permissions(uint16_t rank, uint8_t stdperms[4], std::map<std::string, uint8_t> custom);
 
             LIBPUB uint16_t GetRank() const;
-            LIBPUB void SetRank(uint8_t rank);
+            LIBPUB void SetRank(uint16_t rank);
 
             LIBPUB UserType GetUserType() const;
             LIBPUB void SetUserType(UserType type);
-
-            LIBPUB CreateChannelType GetCreateChannelType() const;
-            LIBPUB void SetCreateChannelType() const;
 
             LIBPUB bool CanViewLogs() const;
             LIBPUB void CanViewLogs(bool can);
@@ -82,15 +82,18 @@ namespace sc {
             LIBPUB bool CanChangeUsername() const;
             LIBPUB void CanChangeUsername(bool can);
 
+            LIBPUB CreateChannelType GetCreateChannelType() const;
+            LIBPUB void SetCreateChannelType(CreateChannelType type);
+
             LIBPUB bool CheckCustomPermission(std::string name) const;
             LIBPUB uint8_t GetCustomPermission(std::string name);
             LIBPUB void SetCustomPermission(std::string name, uint8_t value);
 
             LIBPUB std::string Get();
-            LIBPUB operator std::string() const;
+            LIBPUB operator std::string();
         };
 
-        LIBPUB User()/* : id(-1), bot(false)*/;
+        LIBPUB User();
 
         // constructor for a legitimate user
         LIBPUB User(int64_t id, std::string ip, std::string username, std::string color,
@@ -122,9 +125,14 @@ namespace sc {
         LIBPUB void SetPermissions(Permissions perms);
         LIBPUB void ResetPermissions();
 
-
         LIBPUB void Send(sc::Message msg);
-        LIBPUB void Send(User u, std::string message, sc::MessageFlags flags = sc::MessageFlags(),
+        LIBPUB void Send(User u, std::string message, Channel chan,
+                         sc::MessageFlags flags = sc::MessageFlags(),
+                         std::string sockstamp = "", uint64_t msgId = 0);
+
+        LIBPUB enum SendEnum { ALL = 1, LOCAL, PRIVBY, PRIVTO };
+        LIBPUB void Send(User u, std::string message, SendEnum stype,
+                         sc::MessageFlags flags = sc::MessageFlags(),
                          std::string sockstamp = "", uint64_t msgId = 0);
 
         LIBPUB typedef std::queue<std::pair<sc::Message, bool>> ActionQueue;
@@ -134,10 +142,10 @@ namespace sc {
         friend Channel;
         friend Context;
     private:
-        const int64_t id;
-        const bool bot;
+        int64_t id;
+        bool bot;
 
-        const std::string ip;
+        std::string ip;
 
         std::string username; // clean username
         std::string _username; // original clean username
@@ -152,8 +160,8 @@ namespace sc {
         Permissions _permissions; // original user permissions
         std::mutex permissions_m;
 
-        const std::vector<std::string> args;
-
+        std::vector<std::string> args;
+        
         std::map<uint32_t, Channel*> channels = std::map<uint32_t, Channel*>();
         std::mutex channels_m;
 
