@@ -139,6 +139,8 @@ namespace sc {
         LIBPUB void HookActionQueue(ActionQueue *aq);
         LIBPUB void UnhookActionQueue(ActionQueue *aq);
 
+        LIBPUB static std::string SanitizeUsername(std::string name);
+
         friend Channel;
         friend Context;
     private:

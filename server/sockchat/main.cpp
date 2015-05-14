@@ -70,7 +70,7 @@ int main() {
 
     sc::INI test;
     try {
-        test = sc::INI("sc_config.ini", {
+        test = sc::INI("c_config.ini", {
             {"socket", {
                 {"client_root", sc::INI::STRING},
                 {"port",        sc::INI::INTEGER}

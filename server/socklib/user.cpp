@@ -112,7 +112,40 @@ sc::User::Permissions::operator std::string() {
     return Get();
 }
 
-sc::User::User() : id(-1), bot(false) {
-    this->ip = "0.0.0.0";
+std::string sc::User::SanitizeUsername(std::string name) {
+    // TODO this
+    return name;
+}
 
+sc::User::User() : id(0), bot(false) {
+    this->ip = "0";
+}
+
+sc::User::User(int64_t id, std::string ip, std::string username, 
+               std::string color, Permissions permissions) {
+    this->bot = false;
+
+    this->id = id;
+    this->ip = ip;
+    this->__username = username;
+
+    this->username = this->_username = SanitizeUsername(username);
+    this->color = this->_color = color;
+    this->permissions = this->_permissions = permissions;
+
+    this->args = std::vector<std::string>();
+}
+
+sc::User::User(std::string username, std::string color) {
+    this->bot = true;
+    
+    this->id = -2;
+    this->ip = "127.0.0.1";
+    this->__username = username;
+
+    this->username = this->_username = SanitizeUsername(username);
+    this->color = this->_color = color;
+    this->permissions = Permissions();
+
+    this->args = std::vector<std::string>();
 }
