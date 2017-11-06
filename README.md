@@ -1,5 +1,4 @@
-SockChat
-========
+# SockChat (Historical)
 
 SockChat is a new, rewritten version of AJAX chat that utilizes the WebSocket protocol.
 
